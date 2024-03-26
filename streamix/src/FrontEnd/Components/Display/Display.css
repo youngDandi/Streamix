@@ -1,0 +1,178 @@
+.Apresentacao{
+   align-items: center;
+    justify-content: center;
+}
+
+.Apre{
+    background-image: url("../../img/radioBackground.jpg");
+    width: 720px;
+    height: 400px;
+    margin-left: 27%;
+    margin-top: 10%;
+    box-shadow: 10px 10px 10px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 30px;
+    
+    font-weight: bold;
+    font-family: 'Inter', sans-serif;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+.Categorias{
+    margin-top: 30%;
+    margin-left: 17%;
+    align-items: center;
+    display: flex;
+}
+
+#nameV{
+    color: white;
+    margin-left: 110px;
+    font-size: 60px;
+}
+
+#soundTypeV{
+    color: white;
+    margin-left: -229px;
+    font-size: 20px;
+}
+
+#numberV{
+    margin-top: 30px;
+    color: white;
+    font-size: 50px;
+}
+
+#leftStyle{
+    border: 2px solid black;
+}
+
+.RadioDiv{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+
+#maisPopu{
+    color: white;
+    align-items: center;
+}
+
+#daSema{
+    color: #8A8484;
+}
+
+
+.MaisPopulares{
+   
+    margin-left: 27%;
+    margin-right: -27%;
+}
+
+.TopMusicos{
+    border: 2px solid black;
+    margin-left: 22%;
+    
+}
+
+.borda{
+    border-bottom: 1px solid #8A8484;
+    width: 720px;
+}
+
+.live {
+    width: 40px;
+    height: 20px;
+    background-color: #8A8484;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+  }
+  
+  .playing {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 80px;
+    height: 20px;
+  }
+  
+  .playing div {
+    width: 8px;
+    height: 20px;
+    background-color: #8A8484;
+    animation: wave 1s infinite alternate;
+  }
+  
+  @keyframes wave {
+    from {
+      height: 10px;
+    }
+    to {
+      height: 20px;
+    }
+  }
+  
+  .rect1, .rect2, .rect3, .rect4, .rect5 {
+    width: 8px;
+    height: 20px;
+    background-color: blue;
+    animation: wave 1s infinite alternate;
+  }
+  
+
+  #nome1{
+    color: white;
+    align-items: center;
+}
+
+#frequencia1{
+    color: #8A8484;
+}
+
+#numero1{
+    color: #8A8484;
+}
+
+#nome2{
+    color: white;
+    align-items: center;
+}
+
+#frequencia2{
+    color: #8A8484;
+}
+
+#numero2{
+    color: #8A8484;
+}
+
+#nome3{
+    color: white;
+    align-items: center;
+}
+
+#frequencia3{
+    color: #8A8484;
+}
+
+#numero3{
+    color: #8A8484;
+}
+
+#nome4{
+    color: white;
+    align-items: center;
+}
+
+#frequencia4{
+    color: #8A8484;
+}
+
+#numero4{
+    color: #8A8484;
+}
