@@ -1,0 +1,151 @@
+
+
+.BarraMenu{
+    background-image: url('../../assets/img/barraMenu.png');
+    width: 220px;
+    height: 958px;
+    background-size: cover;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+    
+}
+
+.appName{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    
+}
+
+#logo{
+    width: 40px;
+    height: 44px;
+}
+
+#logoName{
+    font-size: 20px;
+    color: #FFFFFF;
+    margin-bottom: 11%;
+    margin-left: 3%;
+    
+}
+
+.Menu{
+    
+    margin-top: 120%;
+}
+
+.MenuButton{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+#iconRadio{
+    width: 22px;
+    height: 22px;
+    margin-left: -26%;
+}
+
+#radioMenu{
+    color: #ffffff;
+    font-size: 13px;
+    margin-left: 5%;
+    margin-top: 8.9%;  
+}
+
+#iconHome{
+    width: 28px;
+    height: 29px;
+    margin-left: -28%;
+}
+
+#homeMenu{
+    color: #ffffff;
+    font-size: 13px;
+    margin-left: 5%;
+    margin-top: 7%;  
+}
+
+#iconFavorito{
+    width: 28px;
+    height: 29px;
+    margin-left: -18%;
+}
+
+#FavoritoMenu{
+    color: #ffffff;
+    font-size: 13px;
+    margin-left: 5%;
+    margin-top: 7%;
+}
+
+#iconNotificacao{
+    width: 21px;
+    height: 21px;
+    margin-left: -8%;
+}
+
+#NotificacaoMenu{
+    color: #ffffff;
+    font-size: 13px;
+    margin-left: 5%;
+    margin-top: 7%;
+}
+
+#iconVideo{
+    width: 21px;
+    height: 21px;
+    margin-left: -24%;
+}
+
+#VideoMenu{
+    color: #ffffff;
+    font-size: 13px;
+    margin-left: 5%;
+    margin-top: 7%;
+}
+
+#iconAudio{
+    width: 32px;
+    height: 31px;
+    margin-left: -26%;
+}
+
+#AudioMenu{
+    color: #ffffff;
+    font-size: 13px;
+    margin-left: 2%;
+    margin-top: 7%;
+}
+
+#iconUser{
+    width: 23px;
+    height: 23px;
+    margin-left: -28%;
+}
+
+#UserMenu{
+    color: #ffffff;
+    font-size: 13px;
+    margin-left: 5%;
+    margin-top: 7%;
+}
+
+#FotoPerfil{
+    width: 60px;
+    height: 60px;
+    margin-top: 80%;
+    margin-left: 20%;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 50px;
+}
+
+
+.radioSpace{
+    border: 2px solid black;
+    margin-left: 40%;
+
+}

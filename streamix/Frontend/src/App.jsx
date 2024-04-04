@@ -1,6 +1,6 @@
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
-import Home from './FrontEnd/View/Home.js';
-import Radio from './FrontEnd/View/Radio.js';
+import Home from './View/Home.jsx';
+import Radio from './View/Radio.jsx';
 
 
 function App() {
