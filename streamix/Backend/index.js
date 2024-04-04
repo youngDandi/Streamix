@@ -1,4 +1,6 @@
-const express = require('express')
+const express = require('express');
+require('dotenv').config();
+// process.env.{nomedavariável}
 const app = express();
 const port = 3001;
 
