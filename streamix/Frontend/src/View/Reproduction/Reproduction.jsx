@@ -1,10 +1,8 @@
 import './Reproduction.css';
-
 import MenuDiv from "../../Components/MenuDiv/MenuDiv";
-import VideoPlayer from '../../Components/VideoPlayer/VideoPlayer';
 import videoPath from '../../assets/img/Interstellar_Trailer.mp4';
 import thumbPath from "../../assets/img/interstellar.jpg";
-
+import VideoJS from '../../Components/VideoJs/videoJs';
 function Reproduction() {
 
   
@@ -23,7 +21,7 @@ function Reproduction() {
                   </div>    
               </div>
               <div className='videoPlayer'>
-                <VideoPlayer  videoPath={videoPath} thumbPath={thumbPath}/>
+                <VideoJS source={videoPath} thumbnail={thumbPath}/>
                 
                 
               </div>
