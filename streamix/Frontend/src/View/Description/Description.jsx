@@ -1,7 +1,7 @@
 import './Description.css';
 
 import MenuDiv from "../../Components/MenuDiv/MenuDiv";
-import VideoPlayer from '../../Components/VideoPlayer/VideoPlayer';
+// import VideoPlayer from '../../Components/VideoPlayer/VideoPlayer';
 import videoPath from '../../assets/img/Interstellar_Trailer.mp4';
 import thumbPath from "../../assets/img/interstellar.jpg";
 
