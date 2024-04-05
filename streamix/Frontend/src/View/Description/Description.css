@@ -1,0 +1,123 @@
+*{
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .todaPaginaD{
+      background-color: #11181D;
+      display: flex;
+      flex-direction: row;
+    }
+  
+    .videoPage-Items{
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .Items{
+      background-image: url("../../assets/img/interstellar.jpg");
+      width: 100%;
+      height: 160vh;
+      
+  
+     
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(to bottom, transparent 0%, rgba(17, 24, 29, 0.8) 90%, rgba(17, 24, 29, 1) 100%), url("../../assets/img/interstellar.jpg");
+      background-size: cover;
+    }
+  
+   
+  /*  .Video:before{  */
+     /*  content: '';*/
+    /*  position: absolute; */
+    /*  top: 0; */
+    /*  left: 0; */
+    /*   width: 100%;   */
+    /*  height: 100%;  */
+    /*  background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);  */
+    /*  opacity: 0;   */
+    /*  transition: opacity 0.5s ease; */
+  /*  } */
+  
+  /* .Video:hover::before {   */
+  /*    opacity: 1; /* Faz o fade aparecer quando o mouse passa por cima */
+  
+  /*  }  */
+  
+  
+  
+  .itemInfo{
+    margin-left: 35%;
+    margin-top: 20%;
+  }
+  .itemInfo #titleD{
+    color: white;
+    font-size: 72px;
+    font-weight: bold;
+    
+  }
+  
+  .itemInfo #descriptionD{
+    color: white;
+    font-size: 16px;
+    font-weight: lighter;
+  
+  }
+  
+  .videoClassification{
+    font-weight: lighter;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    
+  }
+  
+  .category1D{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 8%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 2%;
+  }
+  
+  .category2D{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 9.5%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 2%;
+  }
+  
+  .category3D{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 13%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 1%;
+  }
+
+  .buttonPlayer{
+    margin-top: 0.5%;
+    margin-left: 40%;
+  }
+
+  button{
+    width: 30%;
+    height: 8vh;
+    border-radius: 5px;
+    background-color: white;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+  }
