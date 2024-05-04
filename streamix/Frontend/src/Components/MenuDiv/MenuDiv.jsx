@@ -8,6 +8,7 @@ import video from '../../assets/img/icons8-imac-50.png';
 import audio from '../../assets/img/icons8-music-library-50.png';
 import perfil from '../../assets/img/icons8-user-50.png';
 import user from '../../assets/img/perfil.jpeg';
+import { Link } from "react-router-dom";
 function MenuDiv() {
   return (
     
@@ -17,27 +18,35 @@ function MenuDiv() {
                 <h2 id="logoName">Streamix</h2>
             </div>
             
-            <div className='Menu'>
-                <div className='MenuButton'>
-                    <img src={home} id="iconHome" alt=""/>
-                    <h4 id='homeMenu'>Home</h4>
-                </div>
+            <div className='Menu' >
+               <Link to={"/Home"} className='link'>
+                    <div className='MenuButton'>
+                        <img src={home} id="iconHome" alt=""/>
+                        <h4 id='homeMenu'>Home</h4>
+                    </div>
+                </Link>
+                
                 <div className='MenuButton'>
                     <img src={favorito} id="iconFavorito" alt=""/>
                     <h4 id='FavoritoMenu'>Favoritos</h4>
                 </div>
+
                 <div className='MenuButton'>
                     <img src={notificacao} id="iconNotificacao" alt=""/>
                     <h4 id='NotificacaoMenu'>Notificações</h4>
                 </div>
-                <div className='MenuButton'>
-                    <img src={video} id="iconVideo" alt=""/>
-                    <h4 id='VideoMenu'>Vídeos</h4>
-                </div>
-                <div className='MenuButton'>
-                    <img src={radio} id="iconRadio" alt=""/>
-                    <h4 id='radioMenu'>Rádio</h4>
-                </div>
+                <Link to={"/Streaming"} className='link'>
+                    <div className='MenuButton'>
+                        <img src={video} id="iconVideo" alt=""/>
+                        <h4 id='VideoMenu'>Vídeos</h4>
+                    </div>
+                </Link>
+                <Link to={"/Radio"} className='link'>
+                    <div className='MenuButton'>
+                        <img src={radio} id="iconRadio" alt=""/>
+                        <h4 id='radioMenu'>Rádio</h4>
+                    </div>
+                </Link>
                 <div className='MenuButton'>
                     <img src={audio} id="iconAudio" alt=""/>
                     <h4 id='AudioMenu'>Áudios</h4>
