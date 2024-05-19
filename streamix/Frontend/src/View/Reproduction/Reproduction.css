@@ -47,11 +47,13 @@
 .videoPlayer{
   margin-top: 0.5%;
   margin-left: 25%;
+  
 }
 
 .videoInfo{
   margin-left: 5%;
   margin-top: 10%;
+  
 }
 .videoInfo #title{
   color: white;

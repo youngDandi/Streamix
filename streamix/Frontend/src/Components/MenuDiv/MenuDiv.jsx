@@ -35,7 +35,7 @@ function MenuDiv() {
                     <img src={notificacao} id="iconNotificacao" alt=""/>
                     <h4 id='NotificacaoMenu'>Notificações</h4>
                 </div>
-                <Link to={"/Streaming"} className='link'>
+                <Link to={"/Reproduction"} className='link'>
                     <div className='MenuButton'>
                         <img src={video} id="iconVideo" alt=""/>
                         <h4 id='VideoMenu'>Vídeos</h4>

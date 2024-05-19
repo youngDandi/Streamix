@@ -1,0 +1,95 @@
+.todaPaginaL{
+    background-color: #394248;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center; /* centraliza horizontalmente */
+    align-items: center; /* centraliza verticalmente */
+    height: 100vh;
+}
+
+.logotipo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 10px;
+}
+
+#logo1{
+    width: 40px;
+    height: 44px;
+}
+
+#logoName1{
+    font-size: 20px;
+    color: #FFFFFF;
+    
+    margin-left: 3%;
+    
+}
+
+.Section{
+    border: 1px solid #11181D;
+    height: 70vh;
+    width: 460px;
+    background-color: #11181D;
+    border-radius: 10px;
+    box-shadow: 
+    19px 26px 4px rgba(0, 0, 0, 0.2),
+    -19px -26px 4px rgba(0, 0, 0, 0.2);
+}
+
+#base{
+    margin-top: 50px;
+}
+.inputSection{
+    position: relative;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ label {
+    position: absolute;
+    left: 0;
+    bottom: 5px;
+    transition: all 0.2s;
+    cursor: text;
+    color: white;
+  }
+
+  #btn{
+    background-color: #6F7376;
+    width: 82%;
+    height: 5vh;
+    color: white;
+  }
+
+  p{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+  }
+
+  .input{
+    width: 80%;
+    border: none;
+    border-bottom: 2px solid white;
+    padding: 5px;
+    font-size: 17px;
+    outline: none;
+    background-color: #11181D;
+    color: white;
+  }
+
+  .input::placeholder {
+    color: white; /* Cor desejada para o placeholder */
+  }
+form .inputSection .input:focus ~ label,
+form .inputSection .input:valid ~ label{
+    transform: translateY(-24px);
+    font-size: 12px;
+}

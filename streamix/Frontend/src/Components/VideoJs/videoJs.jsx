@@ -14,7 +14,7 @@ const VideoJS = ({source, thumbnail}) => {
       height={400}
       >
       
-      
+      <source src={source} type="video/mp4" />
   </video>
     );
 };
