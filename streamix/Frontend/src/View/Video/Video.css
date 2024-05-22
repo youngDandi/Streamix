@@ -1,0 +1,292 @@
+
+.todaPaginaV{
+    background-color: #11181D;
+    display: flex;
+    flex-direction: row;
+  }
+
+
+.multimediaDivV{
+  display: flex;
+  flex-direction: column;
+} 
+
+.filmDivV{
+  display: flex;
+  flex-direction: row;
+}
+
+.filmPlayerV{
+    cursor: pointer;
+    background-size: cover;
+    
+    width: 125vh;
+    height: 75vh;
+  }
+
+  #filmPlayer1V{
+    background-image: url("../../assets/img/interstellar.jpg");
+    
+  }
+
+  #filmPlayer2V{
+    background-image: url("../../assets/img/oppenheimer.jpg");
+  }
+
+  #filmPlayer3V{
+    background-image: url("../../assets/img/dark.jpg");
+  }
+
+  .filmPlayerV:before{  
+      content: '';
+    position: absolute; 
+    top: 0; 
+    left: 1; 
+    width: 125vh;
+    height: 75vh;  
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);  
+     opacity: 0;   
+     transition: opacity 0.5s ease; 
+   } 
+ 
+ .filmPlayerV:hover::before {   
+     opacity: 1; 
+ 
+  } 
+
+  .filmPlayerMiniV:before{  
+    content: '';
+  position: absolute; 
+  top: 1; 
+  left: 1; 
+  width: 64vh;
+  height: 37vh; 
+  background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 100%);  
+   opacity: 0;   
+   transition: opacity 0.5s ease; 
+ } 
+
+.filmPlayerMiniV:hover::before {   
+   opacity: 1; 
+
+}
+
+  .filmPlayerV #titleV{
+    color: white;
+    font-size: 62px;
+    font-weight: bold;
+    
+  }
+
+  .filmPlayerMiniV #title_miniV{
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    
+  }
+
+  .filmPlayerV #descriptionV{
+    color: white;
+    font-size: 14px;
+    font-weight: lighter;
+  
+  }
+
+  .filmPlayerMiniV #descriptionV_mini{
+    color: white;
+    font-size: 10px;
+    font-weight: lighter;
+  
+  }
+
+  .filmPlayerMiniDivV{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .filmPlayerMiniV{
+    cursor: pointer;
+    background-size: cover;
+    
+    width: 64vh;
+    height: 37vh;
+  }
+
+  .viDescriptionV{
+    margin-left: 7%;
+    margin-top: 15%;
+  }
+
+  .videoDescriptionV_mini{
+    margin-left: 7%;
+    margin-top: 5%;
+  }
+
+  .videoClassificationV{
+    font-weight: lighter;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    
+  }
+
+  .videoClassificationV_mini{
+    font-weight: lighter;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    font-size: 11px;
+    font-weight: bold;
+  }
+
+  .category1V{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 8%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 2%;
+  }
+  
+  .category2V{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 10%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 2%;
+  }
+  
+  .category3V{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 14%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 1%;
+  }
+
+
+  .category1V_mini{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 10%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 2%;
+  }
+  
+  .category2V_mini{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 13%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 2%;
+  }
+  
+  .category3V_mini{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 17%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 1%;
+  }
+
+
+  .videoDiv{
+    display: flex;
+    flex-direction: column;
+    margin-top: 15%;
+    margin-left: 3%;
+  }
+
+  .videoPlayerDiv{
+    display: flex;
+    flex-direction: row;
+    margin-top: 7%;
+    margin-left: 3%;
+    gap: 25px; 
+  }
+
+  h2{
+    color: white;
+  }
+  
+  .videoPlayerDiv .viPlayer{
+    cursor: pointer;
+    width: 40vh;
+    height: 25vh;
+    background-size: cover;
+  }
+
+  #viPlayer1{
+    background-image: url("../../assets/img/1899.jpg");
+  }
+
+  #viPlayer2{
+    background-image: url("../../assets/img/peakyblinders.jpg");
+  }
+
+  #viPlayer3{
+    background-image: url("../../assets/img/vikingsvalhalla.jpg");
+  }
+
+  #viPlayer4{
+    background-image: url("../../assets/img/dark.jpg");
+  }
+ .videoDescriptionV{
+  margin-left: 5%;
+  margin-top: 35%;
+
+ }
+
+ #videoTitle{
+  font-weight: bold;
+
+ }
+
+ #videoInfo{
+  margin-top: -5%;
+  margin-left: 2%;
+  color: white;
+  font-weight: lighter;
+ }
+ 
+ .viPlayer:before{  
+  content: '';
+position: absolute; 
+top: 2; 
+left: 1; 
+width: 40vh;
+height: 25vh;  
+background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);  
+ opacity: 0;   
+ transition: opacity 0.5s ease; 
+} 
+
+.viPlayer:hover::before {   
+ opacity: 1; 
+
+} 
+
+.searchAdd{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+}

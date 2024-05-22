@@ -4,3 +4,279 @@
     display: flex;
     flex-direction: row;
   }
+
+
+.multimediaDiv{
+  display: flex;
+  flex-direction: column;
+} 
+
+.filmDiv{
+  display: flex;
+  flex-direction: row;
+}
+
+.filmPlayer{
+    cursor: pointer;
+    background-size: cover;
+    
+    width: 125vh;
+    height: 75vh;
+  }
+
+  #filmPlayer1{
+    background-image: url("../../assets/img/interstellar.jpg");
+    
+  }
+
+  #filmPlayer2{
+    background-image: url("../../assets/img/oppenheimer.jpg");
+  }
+
+  #filmPlayer3{
+    background-image: url("../../assets/img/dark.jpg");
+  }
+
+  .filmPlayer:before{  
+      content: '';
+    position: absolute; 
+    top: 0; 
+    left: 1; 
+    width: 125vh;
+    height: 75vh;  
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);  
+     opacity: 0;   
+     transition: opacity 0.5s ease; 
+   } 
+ 
+ .filmPlayer:hover::before {   
+     opacity: 1; 
+ 
+  } 
+
+  .filmPlayerMini:before{  
+    content: '';
+  position: absolute; 
+  top: 1; 
+  left: 1; 
+  width: 64vh;
+  height: 37vh; 
+  background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 100%);  
+   opacity: 0;   
+   transition: opacity 0.5s ease; 
+ } 
+
+.filmPlayerMini:hover::before {   
+   opacity: 1; 
+
+}
+
+  .filmPlayer #title{
+    color: white;
+    font-size: 62px;
+    font-weight: bold;
+    
+  }
+
+  .filmPlayerMini #title_mini{
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    
+  }
+
+  .filmPlayer #descriptionH{
+    color: white;
+    font-size: 14px;
+    font-weight: lighter;
+  
+  }
+
+  .filmPlayerMini #descriptionH_mini{
+    color: white;
+    font-size: 10px;
+    font-weight: lighter;
+  
+  }
+
+  .filmPlayerMiniDiv{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .filmPlayerMini{
+    cursor: pointer;
+    background-size: cover;
+    
+    width: 64vh;
+    height: 37vh;
+  }
+
+  .videoDescriptionH{
+    margin-left: 7%;
+    margin-top: 15%;
+  }
+
+  .videoDescriptionH_mini{
+    margin-left: 7%;
+    margin-top: 5%;
+  }
+
+  .videoClassificationH{
+    font-weight: lighter;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    
+  }
+
+  .videoClassificationH_mini{
+    font-weight: lighter;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    font-size: 11px;
+    font-weight: bold;
+  }
+
+  .category1H{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 8%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 2%;
+  }
+  
+  .category2H{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 10%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 2%;
+  }
+  
+  .category3H{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 14%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 1%;
+  }
+
+
+  .category1H_mini{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 10%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 2%;
+  }
+  
+  .category2H_mini{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 13%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 2%;
+  }
+  
+  .category3H_mini{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    width: 17%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding-left: 1%;
+  }
+
+
+  .musicDiv{
+    display: flex;
+    flex-direction: column;
+    margin-top: 15%;
+    margin-left: 3%;
+  }
+
+  .musicPlayerDiv{
+    display: flex;
+    flex-direction: row;
+    margin-top: 7%;
+    margin-left: 3%;
+    gap: 25px; 
+  }
+
+  h2{
+    color: white;
+  }
+  
+  .musicPlayer{
+    cursor: pointer;
+    width: 40vh;
+    height: 25vh;
+    background-size: cover;
+  }
+
+  #musicPlayer1{
+    background-image: url("../../assets/img/drake.jpg");
+  }
+
+  #musicPlayer2{
+    background-image: url("../../assets/img/jcole.jpg");
+  }
+
+  #musicPlayer3{
+    background-image: url("../../assets/img/kendrickLamar.png");
+  }
+
+
+ .musicDescriptionH{
+  margin-left: 5%;
+  margin-top: 35%;
+
+ }
+
+ #musicTitle{
+  font-weight: bold;
+
+ }
+
+ #artistName{
+  margin-top: -5%;
+  margin-left: 2%;
+  color: white;
+  font-weight: lighter;
+ }
+ 
+ .musicPlayer:before{  
+  content: '';
+position: absolute; 
+top: 2; 
+left: 1; 
+width: 40vh;
+height: 25vh;  
+background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);  
+ opacity: 0;   
+ transition: opacity 0.5s ease; 
+} 
+
+.musicPlayer:hover::before {   
+ opacity: 1; 
+
+} 
