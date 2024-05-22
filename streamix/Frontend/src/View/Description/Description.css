@@ -107,7 +107,11 @@
 
   .buttonPlayer{
     margin-top: 0.5%;
-    margin-left: 40%;
+    margin-left: 37%;
+    display: flex;
+    flex-direction: row;
+    
+    gap: 10px;
   }
 
   button{
@@ -120,4 +124,24 @@
     font-weight: bold;
     font-size: 16px;
     cursor: pointer;
+  }
+
+  .likeBtn{
+    cursor: pointer;
+    width: 7%;
+    border-radius: 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.25);
+    transition: background-color 0.3s ease;
+  }
+
+  .likeBtn:hover {
+    background-color: rgba(255, 255, 255, 0.5); /* altere a opacidade quando passar o mouse */
+}
+
+  #iconLike{
+    width: 46px;
+    height: 46px;
   }

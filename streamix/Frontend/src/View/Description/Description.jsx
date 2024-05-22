@@ -1,14 +1,24 @@
+import React, { useState } from 'react';
 import './Description.css';
 
 import MenuDiv from "../../Components/MenuDiv/MenuDiv";
-// import VideoPlayer from '../../Components/VideoPlayer/VideoPlayer';
-import videoPath from '../../assets/img/Interstellar_Trailer.mp4';
-import thumbPath from "../../assets/img/interstellar.jpg";
-
+import heart from '../../assets/img/icons8-gostar-50.png';
+import redHeart from '../../assets/img/icons8-gostar-50_1.png';
+import { useNavigate } from 'react-router-dom';
 
 function Description() {
 
-  
+  const navigate = useNavigate();
+  const [liked, setLiked] = useState(false);
+
+  const handleClick = () => {
+    setLiked(!liked);
+  };
+
+  const handleBtnAssistir = () => {
+    navigate('/Reproduction');
+  };
+
   return (
     <div className="todaPaginaD">
         <MenuDiv></MenuDiv>
@@ -25,11 +35,13 @@ function Description() {
               </div>
               <div className='buttonPlayer'>
                 
-                <button >
-                
-                  Assistir
-                  </button>
-                
+                  
+                    <button onClick={handleBtnAssistir}>Assistir</button>
+                     
+                    
+                    <div className="likeBtn" onClick={handleClick}>
+                      <img src={liked ? redHeart : heart} id="iconLike" alt=""/>
+                    </div>
               </div>
             </div>
         

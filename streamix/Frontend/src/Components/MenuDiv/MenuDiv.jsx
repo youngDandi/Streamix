@@ -35,7 +35,7 @@ function MenuDiv() {
                     <img src={notificacao} id="iconNotificacao" alt=""/>
                     <h4 id='NotificacaoMenu'>Notificações</h4>
                 </div>
-                <Link to={"/Reproduction"} className='link'>
+                <Link to={"/Video"} className='link'>
                     <div className='MenuButton'>
                         <img src={video} id="iconVideo" alt=""/>
                         <h4 id='VideoMenu'>Vídeos</h4>
@@ -47,10 +47,12 @@ function MenuDiv() {
                         <h4 id='radioMenu'>Rádio</h4>
                     </div>
                 </Link>
-                <div className='MenuButton'>
-                    <img src={audio} id="iconAudio" alt=""/>
-                    <h4 id='AudioMenu'>Áudios</h4>
-                </div>
+                <Link to={"/Audio"} className='link'>
+                    <div className='MenuButton'>
+                        <img src={audio} id="iconAudio" alt=""/>
+                        <h4 id='AudioMenu'>Áudios</h4>
+                    </div>
+                </Link>
                 <div className='MenuButton'>
                     <img src={perfil} id="iconUser" alt=""/>
                     <h4 id='UserMenu'>Perfil</h4>

@@ -1,0 +1,74 @@
+.todaPaginaA{
+    background-color: #11181D;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .searchAdd_audio{
+    
+    display: flex;
+    margin-left: 9%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 8vh;
+    width: 160vh;
+    gap: 60px;
+  }
+
+  .Apre_audio{
+    
+    width: 720px;
+    height: 400px;
+    margin-left: 20%;
+    margin-top: 10%;
+    box-shadow: 10px 10px 10px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 30px;
+    font-weight: bold;
+    font-family: 'Inter', sans-serif;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    background-image: url("../../assets/img/drake.jpg");
+    color: white;
+  }
+
+  .Categorias_audio{
+    margin-top: 30%;
+    margin-left: 17%;
+  }
+ .Categorias{
+    
+    
+    align-items: center;
+    display: flex;
+ }
+
+ #nameV{
+    color: white;
+    margin-left: 110px;
+    font-size: 60px;
+ }
+ 
+ #radio{
+    color: white;
+    margin-left: -229px;
+    font-size: 20px;
+ }
+ 
+ #numberV{
+    margin-top: 30px;
+    color: white;
+    font-size: 50px;
+ }
+
+ .borda_audio{
+    border-bottom: 1px solid #8A8484;
+    width: 520px;
+ }
+
+ .borda{
+    border-bottom: 1px solid #8A8484;
+    width: 720px;
+  }
