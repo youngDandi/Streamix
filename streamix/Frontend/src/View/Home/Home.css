@@ -212,6 +212,7 @@
     flex-direction: column;
     margin-top: 15%;
     margin-left: 3%;
+   
   }
 
   .musicPlayerDiv{
@@ -231,20 +232,29 @@
     width: 40vh;
     height: 25vh;
     background-size: cover;
+    border-radius: 5px;
   }
 
   #musicPlayer1{
     background-image: url("../../assets/img/drake.jpg");
+    box-shadow: 0 0 400px #9DBCD3;
+    
   }
 
   #musicPlayer2{
-    background-image: url("../../assets/img/jcole.jpg");
+    background-image: url("../../assets/img/6lack.jpg");
+    
   }
 
   #musicPlayer3{
-    background-image: url("../../assets/img/kendrickLamar.png");
+    background-image: url("../../assets/img/bigsean.jpg");
+    
   }
 
+  #musicPlayer4{
+    background-image: url("../../assets/img/travis.jpg");
+    
+  }
 
  .musicDescriptionH{
   margin-left: 5%;

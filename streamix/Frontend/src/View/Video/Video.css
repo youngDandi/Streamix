@@ -231,22 +231,27 @@
     width: 40vh;
     height: 25vh;
     background-size: cover;
+    border-radius: 5px;
   }
 
   #viPlayer1{
     background-image: url("../../assets/img/1899.jpg");
+    box-shadow: 0 0 400px #9DBCD3;
   }
 
   #viPlayer2{
     background-image: url("../../assets/img/peakyblinders.jpg");
+    
   }
 
   #viPlayer3{
     background-image: url("../../assets/img/vikingsvalhalla.jpg");
+    
   }
 
   #viPlayer4{
     background-image: url("../../assets/img/dark.jpg");
+    
   }
  .videoDescriptionV{
   margin-left: 5%;
@@ -289,4 +294,5 @@ background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);
   justify-content: center;
   align-items: center;
   gap: 50px;
+  margin-left: 15%;
 }
