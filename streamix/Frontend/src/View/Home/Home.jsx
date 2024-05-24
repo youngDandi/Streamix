@@ -59,20 +59,20 @@ function Home() {
                   </div>
                   <div className="musicPlayer" id='musicPlayer2'>
                         <div className="musicDescriptionH">
-                                        <h2 id='musicTitle'>Middle Child</h2>
-                                        <h4 id='artistName'>J.Cole</h4>            
+                                        <h2 id='musicTitle'>Freeblack</h2>
+                                        <h4 id='artistName'>6lack</h4>            
                         </div>
                   </div>
                   <div className="musicPlayer" id='musicPlayer3'>
                         <div className="musicDescriptionH">
-                                        <h2 id='musicTitle'>Alright</h2>
-                                        <h4 id='artistName'>Kendrick Lamar</h4>            
+                                        <h2 id='musicTitle'>Dark Sky Paradise</h2>
+                                        <h4 id='artistName'>Big Sean</h4>            
                         </div>
                   </div>
-                  <div className="musicPlayer" id='musicPlayer3'>
+                  <div className="musicPlayer" id='musicPlayer4'>
                         <div className="musicDescriptionH">
-                                        <h2 id='musicTitle'>Alright</h2>
-                                        <h4 id='artistName'>Kendrick Lamar</h4>            
+                                        <h2 id='musicTitle'>Jackboys</h2>
+                                        <h4 id='artistName'>Travis Scott</h4>            
                         </div>
                   </div>
               </div>
