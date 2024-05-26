@@ -1,8 +1,9 @@
 import './Radio.css';
 import React, { useState } from 'react';
 import MenuDiv from "../../Components/MenuDiv/MenuDiv";
-
+import plusIcon from '../../assets/img/icons8-soma-30_1.png';
 import ReactHowler from 'react-howler';
+import SearchBar from "../../Components/SearchBar/SearchBar";
 
 function Radio() {
   const [isPlayingRadio1, setIsPlayingRadio1] = useState(false);
@@ -11,6 +12,7 @@ function Radio() {
   const [isPlayingRadio4, setIsPlayingRadio4] = useState(false);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const [open, setOpen] = useState(false);
 
   const handleTogglePlayRadio1 = () => {
     setIsPlayingRadio1(!isPlayingRadio1);
@@ -36,18 +38,31 @@ function Radio() {
     setNumber(document.getElementById('frequencia4').innerText);
   };
 
+  const handleAddBtnClick = () => {
+        
+    setOpen(true);
+    
+};
 
   return (
     <div className='todaPaginaR'>
         <MenuDiv></MenuDiv>
-
+        
         <div className='Apresentacao'>
+          <div className="searchAdd_radio">
+                    <SearchBar type='Pesquisa por vídeos e etc...' />
+                    
+                    <button className='addContent' onClick={handleAddBtnClick}>
+                    <img src={plusIcon} alt="search" className="plusIcon" />
+                    
+                    </button>
+            </div>
       <div className='Apre'>
         <div className='Categorias'>
           <text id='radio'>Rádio</text>
-          <text id='name'> Kairos</text>
+          <text id='nameR'> Kairos</text>
         </div>
-        <text id='numberV'>99.1</text>
+        <text id='numberR'>99.1</text>
       </div>
       <div className='MaisPopulares'>
         <h1 id='maisPopu'>Lista de Rádios</h1>
