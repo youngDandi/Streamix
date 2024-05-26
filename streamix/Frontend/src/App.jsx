@@ -4,7 +4,7 @@ import Radio from './View/Radio/Radio.jsx';
 import Video from "./View/Video/Video.jsx";
 import Description from './View/Description/Description.jsx';
 import Reproduction from "./View/Reproduction/Reproduction.jsx";
-import Streaming from "./View/Streaming/Streaming.jsx";
+
 import Login from "./View/Login/Login.jsx";
 import SignUp from "./View/SignUp/SignUp.jsx";
 import Audio from "./View/Audio/Audio.jsx";
@@ -20,7 +20,7 @@ function App() {
           <Route path='/Video' element={<Video />} />
           <Route path='/Description' element={<Description />} />
           <Route path='/Reproduction' element={<Reproduction />} />
-          <Route path='/Streaming' element={<Streaming />} />
+          
           <Route path='/Login' element={<Login />} />
           <Route path='/SignUp' element={<SignUp />} />
           <Route path='/Audio' element={<Audio />} />

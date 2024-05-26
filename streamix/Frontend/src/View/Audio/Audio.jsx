@@ -1,23 +1,25 @@
 import './Audio.css';
 import MenuDiv from "../../Components/MenuDiv/MenuDiv";
 import SearchBar from "../../Components/SearchBar/SearchBar";
-import AddBar from "../../Components/AddBtn/AddBtn";
-import { useNavigate } from 'react-router-dom';
+
+
 import audioFile from '../../assets/audio/imperfeito.mp3';
 import artistPhoto from '../../assets/img/drake.jpg';
-import backward from '../../assets/img/backward.png';
+import plusIcon from '../../assets/img/icons8-soma-30_1.png';
 import pause from '../../assets/img/pause.png';
-import forward from '../../assets/img/forward.png';
 import play from '../../assets/img/play.png';
+import Modal1 from '../../Components/Modal1/Modal1';
 import { useEffect, useRef, useState } from 'react';
+import addVideo from "../../assets/img/addVideo.png";
+import addThumb from "../../assets/img/addThumb.png";
 
 function Audio() {
-    const navigate = useNavigate();
     const audioRef = useRef(null);
     const progressRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         const audioElement = audioRef.current;
@@ -64,29 +66,36 @@ function Audio() {
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
 
+    const handleAddBtnClick = () => {
+        
+        setOpen(true);
+        
+    };
+
     return (
         <div className='todaPaginaA'>
-            <MenuDiv></MenuDiv>
+            <MenuDiv />
             <div className="audioPresentation">
                 <div className="searchAdd_audio">
                     <SearchBar type='Pesquisa por vídeos e etc...' />
-                    <AddBar id="addBtn" />
+                    
+                    <button className='addContent' onClick={handleAddBtnClick}>
+                    <img src={plusIcon} alt="search" className="plusIcon" />
+                    
+                    </button>
                 </div>
                 <div className='Apre_audio'>
-                    
                     <div className="CA">
-                        
                         <div className='Categorias_audio1'>
-                        <h1>#1</h1>    
-                        <h4>Playlist</h4>
-                        <h1>Rap Caviar</h1>
+                            <h1>#1</h1>    
+                            <h4>Playlist</h4>
+                            <h1>Rap Caviar</h1>
                         </div>
                         <div className="Categorias_audio2">
                             <h4>Artista</h4>
                             <h1>Drake</h1>
                         </div>
                     </div>
-                    
                 </div>
                 <div className="audioPerfil">
                     <div className="maisPopularesDiv">
@@ -156,7 +165,6 @@ function Audio() {
                     <img src={artistPhoto} id="artistP" alt=""/>
                     <h9 id='artisTitle'>Drake - Take Care</h9>
                     <div className="controls">
-                        
                         <img 
                             src={isPlaying ? pause : play} 
                             className="icons" 
@@ -164,7 +172,6 @@ function Audio() {
                             alt="Play/Pause" 
                             onClick={playPause}
                         />
-                        
                     </div>
                     <h9 id="range1">{formatTime(currentTime)}</h9>
                     <input 
@@ -177,6 +184,33 @@ function Audio() {
                     <h9 id="range2">{formatTime(duration)}</h9>
                 </div>
             </div>
+            
+            {open && <Modal1 open={open} onClose={() => setOpen(false)}>
+                        <div className="text-center w-56">
+                            
+                            <div className="corpo">
+                                <h3 className="titleModel">Adicione o seu áudio</h3>
+
+                                <input placeholder='Titulo' type='text' className='Input' id='i1'/>
+                                <button className='Input' id='i2'>
+                                    <img src={addThumb} alt="search" className="addVideo_Thumb" />
+                                    Carregar a thumbnail
+                                </button>
+                                <button className='Input' id='i2'>
+                                    <img src={addVideo} alt="search" className="addVideo_Thumb" />
+                                    Carregar o áudio
+                                    </button>
+                                
+                                <div className="btnDiv">
+                                    <button className="btn-confirmar">Confirmar</button>
+                                    <button className="btn-cancelar" onClick={() => setOpen(false)}>Cancelar</button>
+
+                                </div>
+                            </div>
+                            
+                        </div>
+                        </Modal1>
+                        }  
         </div>
     );
 }
