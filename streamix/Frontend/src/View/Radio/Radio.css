@@ -11,44 +11,46 @@
 }
 
 .Apre{
-   background-image: url("../../assets/img/radioBackground.jpg");
+   background-image: url("../../assets/img/drake.jpg");
    width: 720px;
    height: 400px;
-   margin-left: 27%;
+   margin-left: 20%;
    margin-top: 10%;
    box-shadow: 10px 10px 10px 0px rgba(0, 0, 0, 0.5);
    border-radius: 30px;
-   
+   background-size: cover;
    font-weight: bold;
    font-family: 'Inter', sans-serif;
    align-items: center;
    justify-content: center;
    display: flex;
    flex-direction: column;
+   
 }
 .Categorias{
-   margin-top: 30%;
-   margin-left: 17%;
+  
+   margin-top: 25%;
    align-items: center;
    display: flex;
 }
 
-#nameV{
+#nameR{
    color: white;
    margin-left: 110px;
-   font-size: 60px;
+   font-size: 80px;
 }
 
 #radio{
    color: white;
-   margin-left: -229px;
+   
    font-size: 20px;
 }
 
-#numberV{
+#numberR{
    margin-top: 30px;
    color: white;
    font-size: 50px;
+   margin-left: -60px;
 }
 
 #leftStyle{
@@ -60,7 +62,25 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  margin-right: 44px;
   cursor: pointer;
+  
+}
+
+.searchAdd_radio{
+    
+  display: flex;
+  margin-left: 9%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 8vh;
+  width: 160vh;
+  gap: 60px;
+}
+
+.RadioDiv:hover {
+  background-color: rgba(116, 109, 109, 0.7); /* altere a opacidade quando passar o mouse */
 }
 
 #maisPopu{
@@ -74,13 +94,14 @@
 
 
 .MaisPopulares{
- 
-  margin-left: 27%;
-  margin-right: -27%;
+  margin-top: 3%;
+  margin-left: 20%;
+  
+  
 }
 
 .TopMusicos{
-  border: 2px solid black;
+ 
   margin-left: 22%;
   
 }
