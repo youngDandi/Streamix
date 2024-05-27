@@ -194,7 +194,7 @@ function Audio() {
                                 <input placeholder='Titulo' type='text' className='Input' id='i1'/>
                                 <button className='Input' id='i2'>
                                     <img src={addThumb} alt="search" className="addVideo_Thumb" />
-                                    Carregar a thumbnail
+                                    Carregar a capa
                                 </button>
                                 <button className='Input' id='i2'>
                                     <img src={addVideo} alt="search" className="addVideo_Thumb" />
