@@ -101,7 +101,7 @@ function Video() {
                         <div className="text-center w-56">
                             
                             <div className="corpo">
-                                <h3 className="titleModel">Adicione o seu áudio</h3>
+                                <h3 className="titleModel">Adicione o seu video</h3>
 
                                 <input placeholder='Titulo' type='text' className='Input' id='i1'/>
                                 <button className='Input' id='i2'>
@@ -110,7 +110,7 @@ function Video() {
                                 </button>
                                 <button className='Input' id='i2'>
                                     <img src={addVideo} alt="search" className="addVideo_Thumb" />
-                                    Carregar o áudio
+                                    Carregar o video
                                     </button>
                                 
                                 <div className="btnDiv">
