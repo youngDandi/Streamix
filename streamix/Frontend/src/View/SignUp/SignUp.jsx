@@ -2,6 +2,7 @@ import  { useState } from 'react';
 import './SignUp.css';
 import logo from '../../assets/img/icons8-video-96.png';
 import firebase from '../../../firebase.js';
+import axios from 'axios';
 
 function SignUp() {
   const [nome, setNome] = useState('');
@@ -11,27 +12,23 @@ function SignUp() {
   const [error, setError] = useState('');
 
   const handleSignUp = () => {
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        alert("User signed up: ", user);
-        // Save additional user information in Firestore
-        return firebase.firestore().collection('users').doc(user.uid).set({
-          nome: nome,
-          email: email,
-          tipo: tipo
-        });
-      })
-      .then(() => {
-        // Redirect to another page or update UI
-        alert("User data saved successfully!");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        setError(errorMessage);
-        alert("Error: " + errorCode + " " + errorMessage);
-      });
+    axios.post('http://localhost:3001/register',{
+      nome: nome,
+      email: email,
+      tipo: tipo,
+      password: password 
+    }).then((response)=>
+    {
+      // Redirect to another page or update UI
+      alert("User data saved successfully!");
+    
+    }).catch((error) =>{
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      setError(errorMessage);
+      alert("Error:" + errorCode + " " + errorMessage);
+    })
+    
   };
 
   return (

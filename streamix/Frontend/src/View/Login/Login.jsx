@@ -3,9 +3,7 @@ import  { useState } from 'react';
 import logo from '../../assets/img/icons8-video-96.png';
 import { Link, Navigate } from "react-router-dom";
 import firebase from '../../../firebase.js';
-
-
-
+import axios from 'axios';
 function Login() {
 
     const [email, setEmail] = useState('');
@@ -24,6 +22,7 @@ function Login() {
             const userData = doc.data();
             alert(`Seja Bem-Vindo Sr.(a) ${userData.nome}`);
             setRedirectToHome(true);
+            
           } else {
             alert('Usuário não encontrado');
           }

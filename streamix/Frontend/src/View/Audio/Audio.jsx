@@ -189,6 +189,7 @@ function Audio() {
                         <div className="text-center w-56">
                             
                             <div className="corpo">
+                                
                                 <h3 className="titleModel">Adicione o seu áudio</h3>
 
                                 <input placeholder='Titulo' type='text' className='Input' id='i1'/>
@@ -206,6 +207,7 @@ function Audio() {
                                     <button className="btn-cancelar" onClick={() => setOpen(false)}>Cancelar</button>
 
                                 </div>
+
                             </div>
                             
                         </div>
