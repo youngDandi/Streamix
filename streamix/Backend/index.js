@@ -5,7 +5,8 @@ const bodyParser = require("body-parser");
 const path = require("path");
 let multer = require("multer");
 const { db, userAuth } = require("./Database/firebase.js");
-
+const mm = require('music-metadata');
+const { Stream } = require("stream");
 const app = express();
 const port = 3001;
 
@@ -13,7 +14,9 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+
 const storage = multer.diskStorage({
+
   destination: (req, file, cb) => {
     let uploadPath = "assets/";
 
@@ -93,6 +96,9 @@ app.post("/upload", upload.any(), async (req, res) => {
     } else {
       
       const docRef = db.collection('audio').doc();
+      const metadata = await mm.parseFile(docData.audio);
+      docData.metadata = metadata;
+
       await docRef.set(docData);
       return res.status(200).send({ message: "Success in upload", Sent: "Audio" });
     } 
