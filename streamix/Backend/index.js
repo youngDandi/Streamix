@@ -7,6 +7,8 @@ let multer = require("multer");
 const { db, userAuth } = require("./Database/firebase.js");
 const mm = require('music-metadata');
 const { Stream } = require("stream");
+const fs = require('fs');
+const mime = require('mime-types');
 const app = express();
 const port = 3001;
 
@@ -108,6 +110,57 @@ app.post("/upload", upload.any(), async (req, res) => {
     return res.status(400).send({
       message: "Server Error",
     });
+  }
+});
+
+app.get('/assets/:type/:id', async (req, res) => {
+
+  /* 
+  Manual testing function, after we will 
+  have to adjust this to search the database
+  for the file, return the path and stream
+  it. */
+  const fileType = req.params.type;
+  const fileId = req.params.id;
+  const filePath = path.join(__dirname, 'assets', fileType, fileId);
+
+  if (fileType === 'videos' && fs.existsSync(filePath)) {
+      const stat = await fs.promises.stat(filePath);
+      const fileSize = stat.size;
+      const range = req.headers.range;
+      const contentType = mime.lookup(filePath) || 'application/octet-stream';
+      
+      if (range) {
+          const parts = range.replace(/bytes=/, "").split("-");
+          const start = parseInt(parts[0], 10);
+          const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+          const chunksize = (end - start) + 1;
+          const file = fs.createReadStream(filePath, { start, end });
+          const head = {
+              'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+              'Accept-Ranges': 'bytes',
+              'Content-Length': chunksize,
+              'Content-Type': contentType,
+          };    
+          res.writeHead(206, head);
+          file.pipe(res);
+      
+      } else {
+          const head = {
+              'Content-Length': fileSize,
+              'Content-Type': contentType
+          };
+          res.writeHead(200, head);
+          fs.createReadStream(filePath).pipe(res);
+      }
+  } else {
+      res.sendFile(filePath, (err) => {
+          if (err) {
+              console.error("Failed to send file:", err);
+              res.status(err.status || 500).send("File not found");
+          }
+      }
+    );
   }
 });
 
