@@ -11,16 +11,16 @@ import Audio from "./View/Audio/Audio.jsx";
 
 function App() {
   return (
-    <div className="App">
+    <div className='App'>
       <Router>
         <Routes>
           <Route path='/' element={<Login />} />
           <Route path='/Home' element={<Home />} />
           <Route path='/Radio' element={<Radio />} />
           <Route path='/Video' element={<Video />} />
-          <Route path='/Description' element={<Description />} />
-          <Route path='/Reproduction' element={<Reproduction />} />
-          
+          <Route path='/Video/:slug' element={<Description />} />
+          <Route path='/Play/:slug' element={<Reproduction />} />
+
           <Route path='/Login' element={<Login />} />
           <Route path='/SignUp' element={<SignUp />} />
           <Route path='/Audio' element={<Audio />} />

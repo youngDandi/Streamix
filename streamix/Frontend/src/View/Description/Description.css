@@ -14,16 +14,12 @@
     }
   
     .Items{
-      background-image: url("../../assets/img/interstellar.jpg");
       width: 100%;
-      height: 160vh;
-      
-  
-     
+      height: 100vh;
       position: relative;
       overflow: hidden;
-      background: linear-gradient(to bottom, transparent 0%, rgba(17, 24, 29, 0.8) 90%, rgba(17, 24, 29, 1) 100%), url("../../assets/img/interstellar.jpg");
-      background-size: cover;
+      background-size: contain;
+      background-repeat: no-repeat;
     }
   
    
