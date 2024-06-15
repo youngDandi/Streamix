@@ -8,23 +8,25 @@ import Reproduction from "./View/Reproduction/Reproduction.jsx";
 import Login from "./View/Login/Login.jsx";
 import SignUp from "./View/SignUp/SignUp.jsx";
 import Audio from "./View/Audio/Audio.jsx";
-
+import { AuthProvider } from '../../Frontend/src/hooks/AuthContext.jsx';
 function App() {
   return (
     <div className='App'>
       <Router>
-        <Routes>
-          <Route path='/' element={<Login />} />
-          <Route path='/Home' element={<Home />} />
-          <Route path='/Radio' element={<Radio />} />
-          <Route path='/Video' element={<Video />} />
-          <Route path='/Video/:slug' element={<Description />} />
-          <Route path='/Play/:slug' element={<Reproduction />} />
+      <AuthProvider>
+          <Routes>
+            <Route path='/' element={<Login />} />
+            <Route path='/Home' element={<Home />} />
+            <Route path='/Radio' element={<Radio />} />
+            <Route path='/Video' element={<Video />} />
+            <Route path='/Video/:slug' element={<Description />} />
+            <Route path='/Play/:slug' element={<Reproduction />} />
 
-          <Route path='/Login' element={<Login />} />
-          <Route path='/SignUp' element={<SignUp />} />
-          <Route path='/Audio' element={<Audio />} />
-        </Routes>
+            <Route path='/Login' element={<Login />} />
+            <Route path='/SignUp' element={<SignUp />} />
+            <Route path='/Audio' element={<Audio />} />
+          </Routes>
+        </AuthProvider>
       </Router>
     </div>
   );

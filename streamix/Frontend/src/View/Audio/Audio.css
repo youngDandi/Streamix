@@ -2,6 +2,7 @@
     background-color: #11181D;
     display: flex;
     flex-direction: row;
+    overflow-y: hidden;
   }
 
   .audioPerfil{
@@ -12,6 +13,10 @@
    margin-top: 2%;
   }
 
+  .controls{
+    display: flex;
+    flex-direction: row;
+  }
   .searchAdd_audio{
     
     display: flex;

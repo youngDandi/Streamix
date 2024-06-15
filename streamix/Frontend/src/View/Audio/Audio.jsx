@@ -1,10 +1,13 @@
 import "./Audio.css";
 import MenuDiv from "../../Components/MenuDiv/MenuDiv";
 import SearchBar from "../../Components/SearchBar/SearchBar";
-
+import avancar from '../../assets/img/forward.png';
+import recuar from '../../assets/img/backward.png';
 import audioFile from "../../assets/audio/imperfeito.mp3";
 import artistPhoto from "../../assets/img/drake.jpg";
 import plusIcon from "../../assets/img/icons8-soma-30_1.png";
+import addVideo from "../../assets/img/addVideo.png";
+import addThumb from "../../assets/img/addThumb.png";
 import pause from "../../assets/img/pause.png";
 import play from "../../assets/img/play.png";
 import Modal1 from "../../Components/Modal1/Modal1";
@@ -232,10 +235,10 @@ function Audio() {
           </h9>
           <div className='controls'>
             <img
-              src={prevSong}
+              src={recuar}
               className='icons'
               id='ctrlIcon'
-              alt='Previous'
+              alt='Recuar'
               onClick={prevSong}
             />
             <img
@@ -246,7 +249,7 @@ function Audio() {
               onClick={playPause}
             />
             <img
-              src={nextSong}
+              src={avancar}
               className='icons'
               id='ctrlIcon'
               alt='Next'
@@ -279,17 +282,39 @@ function Audio() {
                   id='i1'
                 />
                 <input
+                  placeholder='Artista'
+                  onChange={handleInputChange}
+                  type='text'
+                  className='Input'
+                  id='i1'
+                />
+                <input
+                  placeholder='Genero'
+                  onChange={handleInputChange}
+                  type='text'
+                  className='Input'
+                  id='i1'
+                />
+                <input
                   type='file'
                   id='thumb-select'
                   accept='image/*'
                   onChange={handleThumbnailChange}
                 />
+                <button className='Input' id='i2' onClick={() => document.getElementById('thumb-select').click()}>
+                    <img src={addThumb} alt="search" className="addVideo_Thumb" />
+                    Carregar a capa
+                </button>
                 <input
                   type='file'
                   id='audio-select'
                   accept='audio/*'
                   onChange={handleAudioChange}
                 />
+                  <button className='Input' id='i2' onClick={() => document.getElementById('audio-select').click()}>
+                    <img src={addVideo} alt="search" className="addVideo_Thumb" />
+                      Carregar o áudio
+                  </button>
                 <div className='btnDiv'>
                   <button className='btn-confirmar'>Confirmar</button>
                   <button

@@ -1,11 +1,11 @@
-import "./Video.css";
+import './Video.css';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import MenuDiv from '../../Components/MenuDiv/MenuDiv';
 import SearchBar from '../../Components/SearchBar/SearchBar';
 import plusIcon from '../../assets/img/icons8-soma-30_1.png';
-
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import Modal1 from '../../Components/Modal1/Modal1';
@@ -13,7 +13,8 @@ import addVideo from '../../assets/img/addVideo.png';
 import addThumb from '../../assets/img/addThumb.png';
 import axios from 'axios';
 import { Videos } from '../../mocks/video';
-import { Link } from 'react-router-dom/dist';
+import { Link } from 'react-router-dom';
+
 function Video() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -30,14 +31,24 @@ function Video() {
   };
 
   const handleThumbnailChange = (e) => {
-    console.log(e.target);
     setThumbnail(e.target.files[0]);
   };
 
   const handleVideoChange = (e) => {
-    console.log(e.target);
     setVideo(e.target.files[0]);
   };
+
+  const videoPlayerDivRef = useRef();
+  const [dragConstraints, setDragConstraints] = useState({ left: 0, right: 0 });
+
+  useEffect(() => {
+    // Calcular os limites de arrasto após a montagem do componente
+    const videoPlayerDivWidth = videoPlayerDivRef.current.scrollWidth;
+    const visibleWidth = videoPlayerDivRef.current.clientWidth;
+
+    // Ajustar os limites com base na largura do contêiner e a largura visível
+    setDragConstraints({ left: -videoPlayerDivWidth + visibleWidth, right: 0 });
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -45,7 +56,7 @@ function Video() {
     data.append('title', title);
     data.append('thumbnail', thumbnail);
     data.append('video', video);
-    console.log(data);
+
     axios
       .post('http://localhost:3001/upload', data, {
         headers: {
@@ -58,19 +69,10 @@ function Video() {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        setError(errorMessage);
         alert('Error:' + errorCode + ' ' + errorMessage);
       });
 
     setOpen(false);
-  };
-
-  const slickSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
   };
 
   return (
@@ -95,9 +97,6 @@ function Video() {
               <h2 id='titleV'>{Videos[0].title}</h2>
               <h5 id='descriptionV'>{Videos[0].description}</h5>
               <div className='videoClassificationV'>
-                {/* <h4 className='category1V'>SCI-FI</h4>
-                <h4 className='category2V'>DRAMA</h4>
-                <h4 className='category3V'>AVENTURA</h4> */}
                 {Videos[0].genre.map((genre, index) => (
                   <h4 key={index} className={`category${index + 1}V`}>
                     {genre}
@@ -125,29 +124,25 @@ function Video() {
         </div>
         <div className='videoDiv'>
           <h2>Lista de Vídeos</h2>
-          <div className='videoPlayerDiv'>
-            {/* <Slider {...slickSettings}> */}
-            {Videos.map((video) => {
-              return (
-                <Link
-                  to={`/Video/${video.slug}`}
-                  className='viPlayer'
-                  style={{
-                    backgroundImage: `url(${video.thumbnail[0]})`,
-                  }}
-                  key={video.slug}
-                >
-                  <div className='videoDescriptionV'>
-                    <h2 id='videoTitle'>{video.title}</h2>
-                    <h4 id='videoInfo'>
-                      {video.year}, {video.genre.join(', ')}
-                    </h4>
-                  </div>
-                </Link>
-              );
-            })}
-            {/* </Slider> */}
-          </div>
+          <motion.div ref={videoPlayerDivRef} className='videoPlayerDiv' drag='x' dragConstraints={dragConstraints}>
+            {Videos.map((video) => (
+              <Link
+                to={`/Video/${video.slug}`}
+                className='viPlayer'
+                style={{
+                  backgroundImage: `url(${video.thumbnail[0]})`,
+                }}
+                key={video.slug}
+              >
+                <motion.div className='videoDescriptionV'>
+                  <h2 id='videoTitle'>{video.title}</h2>
+                  <h4 id='videoInfo'>
+                    {video.year}, {video.genre.join(', ')}
+                  </h4>
+                </motion.div>
+              </Link>
+            ))}
+          </motion.div>
         </div>
       </div>
       {open && (
@@ -155,22 +150,33 @@ function Video() {
           <div className='text-center w-56'>
             <div className='corpo'>
               <form onSubmit={handleSubmit}>
-                <h3 className='titleModel'>Adicione o seu video</h3>
+                <h3 className='titleModel'>Adicione o seu vídeo</h3>
                 <input
-                  placeholder='Titulo'
+                  placeholder='Título'
                   type='text'
                   className='Input'
                   id='i1'
                   value={title}
                   onChange={handleInputChange}
                 />
-
+                <input
+                  placeholder='Descricao'
+                  type='text'
+                  className='Input'
+                  id='i1'
+                  value={title}
+                  onChange={handleInputChange}
+                />
                 <input
                   type='file'
                   id='thumb-select'
                   accept='image/*'
                   onChange={handleThumbnailChange}
                 />
+                <button className='Input' id='i2' onClick={() => document.getElementById('thumb-select').click()}>
+                    <img src={addThumb} alt="search" className="addVideo_Thumb" />
+                    Carregar a thumbnail
+                </button>
                 <label htmlFor='thumb-select'>Carregar o thumbnail</label>
 
                 <input
@@ -179,21 +185,11 @@ function Video() {
                   accept='video/*'
                   onChange={handleVideoChange}
                 />
+                <button className='Input' id='i2' onClick={() => document.getElementById('video-select').click()}>
+                    <img src={addVideo} alt="search" className="addVideo_Thumb" />
+                    Carregar o vídeo
+                </button>
                 <label htmlFor='video-select'>Carregar o vídeo</label>
-                {/*                    ----------- TO BE CHANGED AND ADAPTED BY LUÍS --------------------
-                               
-                               <button className='Input' id='i2'>             
-                                    <img src={addThumb} alt="search" className="addVideo_Thumb" />
-                                    Carregar a thumbnail
-                                </button>
-                                <button className='Input' id='i2'>
-                                    <img src={addVideo} alt="search" className="addVideo_Thumb" />
-                                    Carregar o video
-                                    </button>
-                             
-                                                     ----------- TO BE CHANGED AND ADAPTED BY LUÍS --------------------
-                                
-                                */}
 
                 <div className='btnDiv'>
                   <button type='submit' className='btn-confirmar'>

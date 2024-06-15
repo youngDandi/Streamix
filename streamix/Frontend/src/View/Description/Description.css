@@ -1,11 +1,13 @@
 *{
     font-family: 'Inter', sans-serif;
+    
   }
   
   .todaPaginaD{
       background-color: #11181D;
       display: flex;
       flex-direction: row;
+      overflow-y: hidden; 
     }
   
     .videoPage-Items{
@@ -40,9 +42,12 @@
   
   .itemInfo #descriptionD{
     color: white;
-    font-size: 16px;
-    font-weight: lighter;
-  
+  font-size: 16px;
+  font-weight: lighter;
+  max-width: 100%;
+  word-wrap: break-word;
+  margin: 10px 0;
+  padding: 0 20px;
   }
   
   .videoClassification{
@@ -87,6 +92,7 @@
   }
 
   .buttonPlayer{
+   
     margin-top: 0.5%;
     margin-left: 37%;
     display: flex;

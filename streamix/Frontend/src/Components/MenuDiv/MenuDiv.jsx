@@ -8,65 +8,93 @@ import video from '../../assets/img/icons8-imac-50.png';
 import audio from '../../assets/img/icons8-music-library-50.png';
 import perfil from '../../assets/img/icons8-user-50.png';
 import user from '../../assets/img/perfil.jpeg';
+import { motion } from 'framer-motion';
 import { Link } from "react-router-dom";
+import { useEffect, useState } from 'react';
+
 function MenuDiv() {
+  const [scrollY, setScrollY] = useState(0);
+  const windowHeight = window.innerHeight;
+
+  const handleScroll = () => {
+    setScrollY(window.scrollY);
+  };
+
+  const handleResize = () => {
+    setWindowHeight(window.innerHeight);
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
-    
-        <div className='BarraMenu'>
-            <div className="appName">
-                <img src={logo} id="logo" alt=""/>
-                <h2 id="logoName">Streamix</h2>
-            </div>
-            
-            <div className='Menu' >
-               <Link to={"/Home"} className='link'>
-                    <div className='MenuButton'>
-                        <img src={home} id="iconHome" alt=""/>
-                        <h4 id='homeMenu'>Home</h4>
-                    </div>
-                </Link>
-                
-                <div className='MenuButton'>
-                    <img src={favorito} id="iconFavorito" alt=""/>
-                    <h4 id='FavoritoMenu'>Favoritos</h4>
-                </div>
-
-                <div className='MenuButton'>
-                    <img src={notificacao} id="iconNotificacao" alt=""/>
-                    <h4 id='NotificacaoMenu'>Notificações</h4>
-                </div>
-                <Link to={"/Video"} className='link'>
-                    <div className='MenuButton'>
-                        <img src={video} id="iconVideo" alt=""/>
-                        <h4 id='VideoMenu'>Vídeos</h4>
-                    </div>
-                </Link>
-                <Link to={"/Radio"} className='link'>
-                    <div className='MenuButton'>
-                        <img src={radio} id="iconRadio" alt=""/>
-                        <h4 id='radioMenu'>Rádio</h4>
-                    </div>
-                </Link>
-                <Link to={"/Audio"} className='link'>
-                    <div className='MenuButton'>
-                        <img src={audio} id="iconAudio" alt=""/>
-                        <h4 id='AudioMenu'>Áudios</h4>
-                    </div>
-                </Link>
-                <div className='MenuButton'>
-                    <img src={perfil} id="iconUser" alt=""/>
-                    <h4 id='UserMenu'>Perfil</h4>
-                </div>
-            
-            </div>
-
-            <div className='Perfil'>
-            <img src={user} id="FotoPerfil" alt=""/>
-            </div>
+    <motion.div
+      className='BarraMenu'
+      style={{ 
+        transform: `translateY(${scrollY}px)`,
+        maxHeight: windowHeight  // Aplicar altura máxima com base na altura da janela
+      }}
+    >
+      <div className="appName">
+        <img src={logo} id="logo" alt=""/>
+        <h2 id="logoName">Streamix</h2>
+      </div>
+      
+      <div className='Menu'>
+        <Link to={"/Home"} className='link'>
+          <div className='MenuButton'>
+            <img src={home} id="iconHome" alt=""/>
+            <h4 id='homeMenu'>Home</h4>
+          </div>
+        </Link>
+        
+        <div className='MenuButton'>
+          <img src={favorito} id="iconFavorito" alt=""/>
+          <h4 id='FavoritoMenu'>Favoritos</h4>
         </div>
 
-        
-       
+        <div className='MenuButton'>
+          <img src={notificacao} id="iconNotificacao" alt=""/>
+          <h4 id='NotificacaoMenu'>Notificações</h4>
+        </div>
+
+        <Link to={"/Video"} className='link'>
+          <div className='MenuButton'>
+            <img src={video} id="iconVideo" alt=""/>
+            <h4 id='VideoMenu'>Vídeos</h4>
+          </div>
+        </Link>
+
+        <Link to={"/Radio"} className='link'>
+          <div className='MenuButton'>
+            <img src={radio} id="iconRadio" alt=""/>
+            <h4 id='radioMenu'>Rádio</h4>
+          </div>
+        </Link>
+
+        <Link to={"/Audio"} className='link'>
+          <div className='MenuButton'>
+            <img src={audio} id="iconAudio" alt=""/>
+            <h4 id='AudioMenu'>Áudios</h4>
+          </div>
+        </Link>
+
+        <div className='MenuButton'>
+          <img src={perfil} id="iconUser" alt=""/>
+          <h4 id='UserMenu'>Perfil</h4>
+        </div>
+      </div>
+
+      <div className='Perfil'>
+        <img src={user} id="FotoPerfil" alt=""/>
+      </div>
+    </motion.div>
   );
 }
 

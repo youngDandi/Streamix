@@ -42,12 +42,14 @@ function Description() {
           </div>
         </div>
         <div className='buttonPlayer'>
-          <Link to={`/Play/${slug}`}>Assistir</Link>
+
+          <button><Link to={`/Play/${slug}`} >Assistir</Link></button>
 
           <div className='likeBtn' onClick={handleClick}>
             <img src={liked ? redHeart : heart} id='iconLike' alt='' />
           </div>
         </div>
+        
       </div>
     </div>
   );
