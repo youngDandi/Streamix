@@ -4,8 +4,9 @@ import logo from '../../assets/img/icons8-video-96.png';
 import { Link, Navigate } from "react-router-dom";
 import firebase from '../../../firebase.js';
 import axios from 'axios';
+import { useAuth } from '../../hooks/AuthContext.jsx';
 function Login() {
-
+  const  {login}  = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');

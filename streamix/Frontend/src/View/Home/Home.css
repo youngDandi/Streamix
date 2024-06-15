@@ -3,6 +3,7 @@
     background-color: #11181D;
     display: flex;
     flex-direction: row;
+    overflow-y: hidden; 
   }
 
 
@@ -210,15 +211,17 @@
   .musicDiv{
     display: flex;
     flex-direction: column;
-    margin-top: 15%;
+    margin-top: 9%;
     margin-left: 3%;
    
   }
 
   .musicPlayerDiv{
+    cursor: grabbing;
     display: flex;
     flex-direction: row;
     margin-top: 7%;
+    margin-bottom: 2%;
     margin-left: 3%;
     gap: 25px; 
   }

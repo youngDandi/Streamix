@@ -1,11 +1,13 @@
 *{
     font-family: 'Inter', sans-serif;
+    
   }
   
   .todaPaginaD{
       background-color: #11181D;
       display: flex;
       flex-direction: row;
+      overflow-y: hidden; 
     }
   
     .videoPage-Items{
@@ -14,16 +16,12 @@
     }
   
     .Items{
-      background-image: url("../../assets/img/interstellar.jpg");
       width: 100%;
-      height: 160vh;
-      
-  
-     
+      height: 100vh;
       position: relative;
       overflow: hidden;
-      background: linear-gradient(to bottom, transparent 0%, rgba(17, 24, 29, 0.8) 90%, rgba(17, 24, 29, 1) 100%), url("../../assets/img/interstellar.jpg");
-      background-size: cover;
+      background-size: contain;
+      background-repeat: no-repeat;
     }
   
    
@@ -44,9 +42,12 @@
   
   .itemInfo #descriptionD{
     color: white;
-    font-size: 16px;
-    font-weight: lighter;
-  
+  font-size: 16px;
+  font-weight: lighter;
+  max-width: 100%;
+  word-wrap: break-word;
+  margin: 10px 0;
+  padding: 0 20px;
   }
   
   .videoClassification{
@@ -91,6 +92,7 @@
   }
 
   .buttonPlayer{
+   
     margin-top: 0.5%;
     margin-left: 37%;
     display: flex;
