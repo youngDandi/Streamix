@@ -9,4 +9,4 @@ initializeApp({
 const db = getFirestore()
 const userAuth = getAuth();
 
-module.exports = {db,userAuth} 
+module.exports = {db,userAuth}  

@@ -164,6 +164,30 @@ app.get('/assets/:type/:id', async (req, res) => {
   }
 });
 
+app.get('/audios',async(req,res)=>{
+const audiosRef = db.collection('audio');
+const snapshot = audiosRef.get();
+var songs = [];
+(await snapshot).forEach(doc => {
+  const song = doc.data();
+  // console.log(doc.id,'=>',doc.data());
+  console.log(doc.id,'=>',song.metadata.common.genre)
+  songs.push({
+  "Artist": song.metadata.common.artist ? song.metadata.common.artist : null,
+    "Title": song.title ? song.title : null,
+    "Genre": Array.isArray(song.metadata.common.genre) && song.metadata.common.genre.length > 0 ? song.metadata.common.genre[0] : null,
+    "Duration":song.metadata.format.duration ? song.metadata.format.duration : null,
+    "thumbnail": song.image ? song.image : null,
+    "audio": song.audio ? song.image : null 
+  })
+})
+return res.status(200).send({
+  message:"Audios Returned",
+  songs: songs
+  
+});
+});
+
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
