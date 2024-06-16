@@ -21,10 +21,14 @@ function Video() {
   const [title, setTitle] = useState('');
   const [thumbnail, setThumbnail] = useState(null);
   const [video, setVideo] = useState(null);
+  const [description, setDescription] = useState();
 
   const handleAddBtnClick = () => {
     setOpen(true);
   };
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  }
 
   const handleInputChange = (e) => {
     setTitle(e.target.value);
@@ -56,6 +60,7 @@ function Video() {
     data.append('title', title);
     data.append('thumbnail', thumbnail);
     data.append('video', video);
+    data.append('description',description)
 
     axios
       .post('http://localhost:3001/upload', data, {
@@ -164,8 +169,8 @@ function Video() {
                   type='text'
                   className='Input'
                   id='i1'
-                  value={title}
-                  onChange={handleInputChange}
+                  value={description}
+                  onChange={handleDescriptionChange}
                 />
                 <input
                   type='file'
