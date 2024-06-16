@@ -37,7 +37,7 @@
 
 #nameR{
    color: white;
-   margin-left: 110px;
+   
    font-size: 80px;
 }
 
@@ -51,7 +51,7 @@
    margin-top: 30px;
    color: white;
    font-size: 50px;
-   margin-left: -60px;
+   
 }
 
 #leftStyle{
@@ -59,13 +59,14 @@
 }
 
 .RadioDiv{
+  
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-right: 44px;
+  margin-right: 90px;
   cursor: pointer;
-  
+  border-radius: 5px;
 }
 
 .searchAdd_radio{

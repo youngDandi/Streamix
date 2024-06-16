@@ -14,7 +14,7 @@ function Reproduction() {
       <MenuDiv />
       <div className='Video'
         style={{ backgroundImage: `linear-gradient(to bottom, transparent 0%, rgba(17, 24, 29, 0.8) 90%, rgba(17, 24, 29, 1) 100%), 
-  url(${video.thumbnail[1]})` }}
+  url(${video.thumbnail})` }}
       >
         <div className='videoInfo'>
           <h1 id='title'>{video.title}</h1>

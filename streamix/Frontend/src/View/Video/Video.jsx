@@ -22,6 +22,7 @@ function Video() {
   const [thumbnail, setThumbnail] = useState(null);
   const [video, setVideo] = useState(null);
   const [description, setDescription] = useState();
+  const genero = ['Sci-Fi', 'Drama', 'Aventura'];
 
   const handleAddBtnClick = () => {
     setOpen(true);
@@ -61,7 +62,10 @@ function Video() {
     data.append('thumbnail', thumbnail);
     data.append('video', video);
     data.append('description',description)
-
+    // Adiciona o array de gêneros ao FormData
+    genero.forEach((gen, index) => {
+      data.append(`genre[${index}]`, gen);
+    });
     axios
       .post('http://localhost:3001/upload', data, {
         headers: {
@@ -95,7 +99,7 @@ function Video() {
             to={`/Video/${Videos[0].slug}`}
             className='filmPlayerV'
             style={{
-              backgroundImage: `url(${Videos[0].thumbnail[1]})`,
+              backgroundImage: `url(${Videos[0].thumbnail})`,
             }}
           >
             <div className='viDescriptionV'>
@@ -111,21 +115,38 @@ function Video() {
             </div>
           </Link>
 
-          <Link to={`/Video/${Videos[1].slug}`} className='filmPlayerMiniDivV'>
-            <div className='filmPlayerMiniV' id='filmPlayer2V'>
-              <div className='videoDescriptionV_mini'>
-                <h2 id='title_miniV'>{Videos[1].title}</h2>
-                <h5 id='descriptionV_mini'>{Videos[1].description}</h5>
-                <div className='videoClassificationV_mini'>
-                  {Videos[1].genre.map((genre, index) => (
-                    <h4 key={index} className={`category${index + 1}V_mini`}>
-                      {genre}
-                    </h4>
-                  ))}
+          <div className="filmMiniExpo">
+                          <Link to={`/Video/${Videos[1].slug}`} className='filmPlayerMiniDivV'>
+                    <div className='filmPlayerMiniV' id='filmPlayer2V'>
+                      <div className='videoDescriptionV_mini'>
+                        <h2 id='title_miniV'>{Videos[1].title}</h2>
+                        <h5 id='descriptionV_mini'>{Videos[1].description}</h5>
+                        <div className='videoClassificationV_mini'>
+                          {Videos[1].genre.map((genre, index) => (
+                            <h4 key={index} className={`category${index + 1}V_mini`}>
+                              {genre}
+                            </h4>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                  <Link to={`/Video/${Videos[2].slug}`} className='filmPlayerMiniDivV'>
+                    <div className='filmPlayerMiniV' id='filmPlayer3V'>
+                      <div className='videoDescriptionV_mini'>
+                        <h2 id='title_miniV'>{Videos[2].title}</h2>
+                        <h5 id='descriptionV_mini'>{Videos[2].description}</h5>
+                        <div className='videoClassificationV_mini'>
+                          {Videos[2].genre.map((genre, index) => (
+                            <h4 key={index} className={`category${index + 1}V_mini`}>
+                              {genre}
+                            </h4>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
                 </div>
-              </div>
-            </div>
-          </Link>
         </div>
         <div className='videoDiv'>
           <h2>Lista de Vídeos</h2>
@@ -135,7 +156,7 @@ function Video() {
                 to={`/Video/${video.slug}`}
                 className='viPlayer'
                 style={{
-                  backgroundImage: `url(${video.thumbnail[0]})`,
+                  backgroundImage: `url(${video.thumbnail})`,
                 }}
                 key={video.slug}
               >

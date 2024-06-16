@@ -316,6 +316,7 @@ function Audio() {
                   className="Input"
                   id="i1"
                 />
+                {<br/>}
                 <input
                   placeholder="Artista"
                   onChange={handleArtistChange}

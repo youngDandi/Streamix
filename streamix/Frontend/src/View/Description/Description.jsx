@@ -27,7 +27,11 @@ function Description() {
         className='Items'
         style={{
           backgroundImage: `linear-gradient(to bottom, transparent 0%, rgba(17, 24, 29, 0.8) 90%, rgba(17, 24, 29, 1) 100%), 
-  url(${video.thumbnail[1]})`,
+  url(${video.thumbnail})`,
+          backgroundSize: 'cover', // Garantir que a imagem ocupe todo o espaço
+          backgroundRepeat: 'no-repeat', // Prevenir a repetição da imagem
+          backgroundPosition: 'center', // Centralizar a imagem
+          backgroundAttachment: 'fixed'
         }}
       >
         <div className='itemInfo'>

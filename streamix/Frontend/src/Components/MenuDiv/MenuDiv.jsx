@@ -91,9 +91,7 @@ function MenuDiv() {
         </div>
       </div>
 
-      <div className='Perfil'>
-        <img src={user} id="FotoPerfil" alt=""/>
-      </div>
+      
     </motion.div>
   );
 }

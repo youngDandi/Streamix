@@ -2,10 +2,7 @@ export const Videos = [
   {
     slug: 'interstellar',
     title: 'Interstellar',
-    thumbnail: [
-      'https://lastfm.freetls.fastly.net/i/u/ar0/cb2d917ce46ca0366cb8dfb4111c0efe',
-      'https://images.alphacoders.com/616/616438.jpg',
-    ],
+    thumbnail: 'https://images.alphacoders.com/616/616438.jpg',
     genre: ['Sci-fi', 'Drama', 'Aventura'],
     duration: '2:49',
     year: '2014',
@@ -17,10 +14,8 @@ export const Videos = [
   {
     slug: 'oppenheimer',
     title: 'Oppenheimer',
-    thumbnail: [
-      'https://images3.alphacoders.com/132/1323484.jpeg',
-      'https://cdn2.highdefdigest.com/uploads/2023/11/22/oppenheimer-nolan-4kuhd-review-highdef-digest-1.jpg',
-    ],
+    thumbnail: 'https://images3.alphacoders.com/132/1323484.jpeg',
+  
     genre: ['Sci-fi', 'Drama', 'Aventura'],
     duration: '2:49',
     year: '2023',
@@ -32,10 +27,8 @@ export const Videos = [
   {
     slug: 'dark',
     title: 'Dark',
-    thumbnail: [
-      'https://m.media-amazon.com/images/I/81oWDX24u+L._UF1000,1000_QL80_.jpg',
-      'https://wallpapercave.com/wp/wp4056401.png',
-    ],
+    thumbnail: 'https://gtwallpaper.org/sites/default/files/wallpaper/164870/dark-netflix-wallpapers-164870-106465-7972844.png',
+
     genre: ['Sci-fi', 'Drama', 'Aventura'],
     duration: '2:49',
     year: '2017',
@@ -47,10 +40,8 @@ export const Videos = [
   {
     slug: 'peaky-blinders',
     title: 'Peaky Blinders',
-    thumbnail: [
-      'https://wallpapercave.com/wp/wp1890623.jpg',
-      'https://images.alphacoders.com/125/1254595.jpg',
-    ],
+    thumbnail: 'https://images.alphacoders.com/125/1254595.jpg',
+  
     genre: ['Sci-fi', 'Drama', 'Aventura'],
     duration: '2:49',
     year: '2013',
