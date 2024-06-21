@@ -1,41 +1,45 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import './SignUp.css';
 import logo from '../../assets/img/icons8-video-96.png';
-import firebase from '../../../firebase.js';
 import axios from 'axios';
 
 function SignUp() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
-  const [tipo, setTipo] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSignUp = () => {
-    axios.post('http://localhost:3001/register',{
+    // Verifica se o email termina com "@isptec.co.ao"
+    if (!email.endsWith('@isptec.co.ao')) {
+      setError('Por favor, use um email com o domínio @isptec.co.ao.');
+      return;
+    }
+
+    // Limpa a mensagem de erro antes de tentar registrar
+    setError('');
+
+    axios.post('http://localhost:3001/register', {
       nome: nome,
       email: email,
-      tipo: tipo,
-      password: password 
-    }).then((response)=>
-    {
-      // Redirect to another page or update UI
+      tipo: 'Editor',
+      password: password
+    }).then((response) => {
+      // Redireciona para outra página ou atualiza a UI
       alert("User data saved successfully!");
-    
-    }).catch((error) =>{
+    }).catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       setError(errorMessage);
       alert("Error:" + errorCode + " " + errorMessage);
-    })
-    
+    });
   };
 
   return (
     <div className='todaPaginaS'>
       <div className='SectionS'>
         <div className="logotipoS">
-          <img src={logo} id="logo1S" alt="Logo do Streamix"/>
+          <img src={logo} id="logo1S" alt="Logo do Streamix" />
           <h2 id="logoName1S">Streamix</h2>
         </div>
         <div className="inputSectionS">
@@ -57,18 +61,6 @@ function SignUp() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </div>
-        <div className="inputSectionS">
-          <select
-            className='inputS'
-            value={tipo}
-            onChange={(e) => setTipo(e.target.value)}
-            required
-          >
-            <option value="" disabled>Selecione o Tipo</option>
-            <option value="Gestor">Gestor</option>
-            <option value="Artista">Artista</option>
-          </select>
         </div>
         <div className="inputSectionS">
           <input

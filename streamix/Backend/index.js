@@ -12,10 +12,15 @@ const fs = require("fs");
 const mime = require("mime-types");
 const app = express();
 const port = 3001;
+const videoRoutes = require('./routes/videoRoutes'); // Importa suas rotas de vídeo
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+// Configuração das rotas
+app.use('/api', videoRoutes); // Define um prefixo '/api' para todas as rotas do videoRoutes
+app.use('/api/video', videoRoutes);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -70,15 +75,34 @@ app.post("/register", async (req, res) => {
 
 app.post("/upload", upload.any(), async (req, res) => {
   try {
+    // Log dos arquivos recebidos
+    console.log("Arquivos recebidos:", req.files);
+
+    // Verifique se os arquivos estão presentes
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).send({ message: "Nenhum arquivo foi enviado." });
+    }
+
+    // Processa os detalhes dos arquivos
     const fileDetails = req.files.map((file) => ({
       path: path.join(file.destination, file.filename),
       mimetype: file.mimetype,
       originalname: file.originalname,
       size: file.size,
     }));
-    console.log(req.files);
-    let docData = { title: req.body.title };
 
+    // Log dos detalhes dos arquivos
+    console.log("Detalhes dos arquivos:", fileDetails);
+
+    // Inicializa o objeto de dados do documento
+    let docData = { 
+      title: req.body.title,
+      description: req.body.description || "",  // Inclui a descrição se estiver disponível
+      genre: req.body.genre ? JSON.parse(req.body.genre) : [],  // Adiciona o gênero se presente
+      visibility: req.body.visibility || "public"  // Adiciona a visibilidade, padrão para público se não especificado
+    };
+
+    // Adiciona as informações de caminho de arquivos ao docData
     fileDetails.forEach((file) => {
       if (file.mimetype.startsWith("image/")) {
         docData.image = file.path;
@@ -89,31 +113,45 @@ app.post("/upload", upload.any(), async (req, res) => {
       }
     });
 
+    // Log do docData antes de enviar ao Firebase
+    console.log("Dados do documento a serem enviados ao Firebase:", docData);
+
+    // Condicional para salvar como vídeo ou áudio
     if (docData.video && docData.image) {
       const docRef = db.collection("video").doc();
-      docData.description = req.body.description;
+
+      // Tenta salvar no Firebase e loga o sucesso
       await docRef.set(docData);
-      return res
-        .status(200)
-        .send({ message: "Success in upload", Sent: "Video" });
-    } else {
+      console.log("Documento de vídeo salvo com sucesso no Firebase");
+      return res.status(200).send({ message: "Success in upload", Sent: "Video" });
+    } else if (docData.audio) {
       const docRef = db.collection("audio").doc();
+
+      // Obtém metadados do áudio
       const metadata = await mm.parseFile(docData.audio);
       docData.metadata = metadata;
       docData.artist = req.body.artist;
 
+      // Tenta salvar no Firebase e loga o sucesso
       await docRef.set(docData);
-      return res
-        .status(200)
-        .send({ message: "Success in upload", Sent: "Audio" });
+      console.log("Documento de áudio salvo com sucesso no Firebase");
+      return res.status(200).send({ message: "Success in upload", Sent: "Audio" });
+    } else {
+      return res.status(400).send({ message: "Os dados enviados não são válidos para áudio ou vídeo." });
     }
   } catch (error) {
+    // Log detalhado do erro
     console.error("Erro ao fazer o upload de dados:", error);
-    return res.status(400).send({
-      message: "Server Error",
+
+    // Envia uma resposta de erro ao cliente com detalhes adicionais
+    return res.status(500).send({
+      message: "Erro interno no servidor",
+      error: error.message,
+      stack: error.stack,
     });
   }
 });
+
 
 app.get("/assets/:type/:id", async (req, res) => {
   
@@ -158,9 +196,48 @@ app.get("/assets/:type/:id", async (req, res) => {
     });
   }
 });
+
+
+
+// Rota para obter vídeos
 app.get("/videos", async (req, res) => {
+  try {
+    const videosRef = db.collection("video");
+    
+    // Verifica se a coleção de vídeos existe
+    if (!videosRef) {
+      return res.status(400).send({
+        message: "Falha ao obter a coleção de vídeos do banco de dados."
+      });
+    }
+    
+    const snapshot = await videosRef.get();
+    const videos = [];
 
+    snapshot.forEach((doc) => {
+      const video = doc.data();
+      videos.push({
+        id: doc.id, // ID do documento Firestore
+        title: video.title ? video.title : null,
+        description: video.description ? video.description : null,
+        genre: video.genre ? video.genre : [],
+        thumbnail: video.image ? `http://localhost:3001/${video.image.replace(/\\/g, "/")}` : null,
+        videoUrl: video.video ? `http://localhost:3001/${video.video.replace(/\\/g, "/")}` : null,
+        visibility: video.visibility ? video.visibility : "public", // Adicionando a visibilidade do vídeo
+      });
+    });
 
+    return res.status(200).send({
+      message: "Vídeos retornados com sucesso.",
+      videos: videos,
+    });
+  } catch (error) {
+    console.error("Erro ao buscar vídeos:", error);
+    return res.status(500).send({
+      message: "Erro interno no servidor ao buscar vídeos.",
+      error: error.message,
+    });
+  }
 });
 
 app.get("/audios", async (req, res) => {
