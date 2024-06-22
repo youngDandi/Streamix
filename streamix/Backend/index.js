@@ -413,7 +413,6 @@ app.get("/audios", async (req, res) => {
 
 
 // Rota para deletar um áudio da coleção 'audio'
-// Rota para deletar um áudio da coleção 'audio'
 app.delete('/delete/audio/:id', async (req, res) => {
   const audioId = req.params.id;
 
@@ -490,6 +489,83 @@ app.delete('/delete/audio/:id', async (req, res) => {
   }
 });
 
+
+// Endpoint para deletar um vídeo da coleção 'video'
+app.delete('/delete/video/:id', async (req, res) => {
+  const videoId = req.params.id;
+
+  try {
+    console.log("Tentando deletar o vídeo com ID:", videoId);
+
+    // Referência ao documento do vídeo no Firestore
+    const docRef = db.collection('video').doc(videoId);
+    const doc = await docRef.get();
+
+    if (!doc.exists) {
+      console.log("Vídeo não encontrado no Firestore para o ID:", videoId);
+      return res.status(404).send({
+        message: "Vídeo não encontrado"
+      });
+    }
+
+    // Obtém os dados do documento antes de deletar
+    const videoData = doc.data();
+    console.log("Dados do vídeo a ser deletado:", videoData);
+
+    // Inicializa os caminhos dos arquivos
+    const videoFilePath = videoData.video ? path.join(__dirname, videoData.video) : null;
+    const imageFilePath = videoData.image ? path.join(__dirname, videoData.image) : null;
+
+    // Função auxiliar para deletar arquivo
+    const deleteFile = (filePath) => {
+      if (fs.existsSync(filePath)) {
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error("Erro ao deletar o arquivo:", err);
+          } else {
+            console.log("Arquivo deletado com sucesso:", filePath);
+          }
+        });
+      } else {
+        console.log("Arquivo não encontrado no sistema de arquivos:", filePath);
+      }
+    };
+
+    // Verifica e deleta os arquivos com base nos caminhos fornecidos
+    if (videoFilePath && imageFilePath) {
+      // Deleta ambos os arquivos, vídeo e imagem
+      console.log("Deletando vídeo: " + videoFilePath + " e imagem: " + imageFilePath);
+      deleteFile(videoFilePath);
+      deleteFile(imageFilePath);
+    } else if (videoFilePath) {
+      // Deleta apenas o arquivo de vídeo
+      console.log("Deletando vídeo: " + videoFilePath);
+      deleteFile(videoFilePath);
+    } else if (imageFilePath) {
+      // Deleta apenas o arquivo de imagem
+      console.log("Deletando apenas a imagem: " + imageFilePath);
+      deleteFile(imageFilePath);
+    } else {
+      console.log("Nenhum arquivo de vídeo ou imagem encontrado para deletar.");
+    }
+
+    // Deleta o documento da coleção 'video' no Firestore
+    await docRef.delete();
+    console.log("Documento de vídeo deletado do Firestore para o ID:", videoId);
+
+    // Responde ao cliente com sucesso
+    return res.status(200).send({
+      message: "Vídeo deletado com sucesso"
+    });
+
+  } catch (error) {
+    console.error("Erro ao deletar o vídeo:", error);
+    return res.status(500).send({
+      message: "Erro interno no servidor",
+      error: error.message
+    });
+  }
+});
 
 
 // Adiciona a rota para enviar dados para a coleção radio

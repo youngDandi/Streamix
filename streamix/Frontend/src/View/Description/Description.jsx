@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import './Description.css';
 import MenuDiv from "../../Components/MenuDiv/MenuDiv";
 import heart from '../../assets/img/icons8-gostar-50.png';
+import trash from '../../assets/img/trash.png'
 import redHeart from '../../assets/img/icons8-gostar-50_1.png';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/AuthContext.jsx';
-
+import axios from 'axios';
 function Description() {
 // Usando o hook useAuth para obter os dados do usuário logado
 const { user } = useAuth();
@@ -36,6 +37,39 @@ useEffect(() => {
 
     fetchVideo(); // Chama a função para buscar o vídeo ao montar o componente
   }, [id]); // Dependência id para garantir que a busca seja refeita quando o ID mudar
+
+
+  // Função para deletar vídeo
+  const handleDeleteVideo = async () => {
+    if (!video || !video.id) {
+      alert("Erro ao deletar vídeo: ID do vídeo não encontrado.");
+      return;
+    }
+
+    const confirmation = window.confirm("Tem certeza que deseja deletar este vídeo?");
+    if (!confirmation) return;
+
+    try {
+      const videoId = video.id; // Use o ID do vídeo para deletar
+      console.log("ID do vídeo a ser eliminado:", videoId);
+
+      const response = await axios.delete(`http://localhost:3001/delete/video/${videoId}`);
+
+      console.log(response.data.message);
+
+      // Após a eliminação, redirecionar o usuário ou atualizar a interface
+      alert("Vídeo deletado com sucesso.");
+      
+      // Aqui, você pode redirecionar o usuário para outra página
+      // ou atualizar o estado para remover o vídeo atual da visualização.
+      // Exemplo de redirecionamento para a página principal:
+      // window.location.href = '/';
+    } catch (error) {
+      console.error("Erro ao eliminar vídeo:", error);
+      alert("Erro ao eliminar vídeo. Verifique o console para mais detalhes.");
+    }
+  };
+
 
   const handleClick = () => {
     setLiked(!liked);
@@ -74,7 +108,10 @@ useEffect(() => {
         <div className='buttonPlayer'>
           <button><Link to={`/Play/${id}`} >Assistir</Link></button>
           <div className='likeBtn' onClick={handleClick}>
-            <img src={liked ? redHeart : heart} id='iconLike' alt='' />
+            <img src={liked ? redHeart : heart} id='icon' alt='' />
+          </div>
+          <div className='likeBtn' onClick={handleDeleteVideo}>
+            <img src={trash} id='icon' alt='' />
           </div>
         </div>
       </div>
