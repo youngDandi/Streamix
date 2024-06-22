@@ -100,13 +100,14 @@ useEffect(() => {
     data.append('genre', JSON.stringify(genero));
     data.append('visibility', visibility);
 
-    axios.post('http://localhost:3001/upload', data, {
+    axios.post('http://localhost:3001/upload/videos', data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     })
     .then((response) => {
       console.log('Resposta do servidor:', response);
+      alert("Success Uploading the "+title+" video.");
       // Lidar com a resposta positiva, como redirecionar ou mostrar uma mensagem de sucesso
       setOpen(false);
       fetchVideos(); // Atualizar a lista de vídeos após o envio bem-sucedido
@@ -219,18 +220,17 @@ useEffect(() => {
                 />
                 
                 {/* Seletor de visibilidade */}
-                <div className='inputSectionS'>
-                  <label htmlFor='visibilitySelect'>Visibilidade do vídeo:</label>
+                
+                <label htmlFor='visibilitySelect'>Visibilidade do vídeo:</label>
                   <select
-                    id='visibilitySelect'
-                    className='Input'
+                    id='i1'
+                    
                     value={visibility}
                     onChange={(e) => setVisibility(e.target.value)}
                   >
                     <option value='public'>Público</option>
                     <option value='private'>Privado</option>
                   </select>
-                </div>
                 
                 <input
                   type='file'
@@ -238,10 +238,7 @@ useEffect(() => {
                   accept='image/*'
                   onChange={handleThumbnailChange}
                 />
-                <button type='button' className='Input' id='i2' onClick={() => document.getElementById('thumbSelect').click()}>
-                  <img src={addThumb} alt="Adicionar Thumbnail" className="addVideo_Thumb" />
-                  Carregar a Thumbnail
-                </button>
+                
                 
 
                 <input
@@ -250,10 +247,7 @@ useEffect(() => {
                   accept='video/*'
                   onChange={handleVideoChange}
                 />
-                <button type='button' className='Input' id='i2' onClick={() => document.getElementById('videoSelect').click()}>
-                  <img src={addVideo} alt="Adicionar Vídeo" className="addVideo_Thumb" />
-                  Carregar o Vídeo
-                </button>
+                
                 
                 <div className='btnDiv'>
                   <button type='submit' className='btn-confirmar'>

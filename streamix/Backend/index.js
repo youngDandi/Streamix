@@ -118,7 +118,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/upload", upload.any(), async (req, res) => {
+app.post("/upload/videos", upload.any(), async (req, res) => {
   try {
     // Log dos arquivos recebidos
     console.log("Arquivos recebidos:", req.files);

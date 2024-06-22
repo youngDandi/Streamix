@@ -41,6 +41,7 @@ useEffect(() => {
   const [selectedGenre, setSelectedGenre] = useState("");
   const [artist, setArtist] = useState("");
   const [audios, setAudios] = useState([]);
+  const [visibility, setVisibility] = useState('public');
 
   const selectSong = (music, newIndex) => {
     const audioElement = audioRef.current;
@@ -174,12 +175,19 @@ useEffect(() => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Verificação de campos obrigatórios
+    if (!title || !thumbnail || !audio || !selectedGenre || !artist || !visibility) {
+      alert('Por favor, preencha todos os campos obrigatórios.');
+      return;
+    }
     const data = new FormData();
     data.append("title", title);
     data.append("thumbnail", thumbnail);
     data.append("audio", audio);
     data.append("genre", selectedGenre);
     data.append("artist", artist);
+    data.append('visibility', visibility);
 
     axios
       .post("http://localhost:3001/upload/audio", data, {
@@ -189,6 +197,7 @@ useEffect(() => {
       })
       .then((response) => {
         console.log(response);
+        alert("Success Uploading the "+title+" audio.");
         setOpen(false);
       })
       .catch((error) => {
@@ -357,6 +366,19 @@ useEffect(() => {
                     </option>
                   ))}
                 </select>
+                {/* Seletor de visibilidade */}
+                
+                  <label htmlFor='visibilitySelect'>Visibilidade do vídeo:</label>
+                  <select
+                    id='i1'
+                    
+                    value={visibility}
+                    onChange={(e) => setVisibility(e.target.value)}
+                  >
+                    <option value='public'>Público</option>
+                    <option value='private'>Privado</option>
+                  </select>
+                
                 <input
                   type="file"
                   id="thumb-select"
@@ -364,16 +386,7 @@ useEffect(() => {
                   onChange={handleThumbnailChange}
                   
                 />
-                <button
-                  type="button"
-                  className="Input"
-                  id="i2"
-                  onClick={() => document.getElementById("thumb-select").click()}
-                  style={{ display: "none" }}
-                >
-                  <img src={addThumb} alt="upload thumbnail" className="addVideo_Thumb" />
-                  Carregar a capa
-                </button>
+                
                 <input
                   type="file"
                   id="audio-select"
@@ -381,16 +394,7 @@ useEffect(() => {
                   onChange={handleAudioChange}
                  
                 />
-                <button
-                  type="button"
-                  className="Input"
-                  id="i2"
-                  onClick={() => document.getElementById("audio-select").click()}
-                  style={{ display: "none" }}
-                >
-                  <img src={addVideo} alt="upload audio" className="addVideo_Thumb" />
-                  Carregar o áudio
-                </button>
+                
                 <div className="btnDiv">
                   <button type="submit" className="btn-confirmar">
                     Confirmar
