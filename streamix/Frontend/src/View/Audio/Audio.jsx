@@ -87,6 +87,7 @@ useEffect(() => {
       try {
         const response = await axios.get("http://localhost:3001/audios");
         setAudios(response.data.songs);
+        
       } catch (error) {
         console.error("Error fetching audios:", error);
       }
@@ -206,6 +207,26 @@ useEffect(() => {
       });
   };
 
+  const handleDeleteAudio = async (audio, indexToDelete) => {
+    try {
+      const audioId = audio.id; // Use o ID do áudio para deletar
+      console.log("ID do áudio a ser eliminado:", audioId);
+      
+      const response = await axios.delete(`http://localhost:3001/delete/audio/${audioId}`);
+      
+      console.log(response.data.message);
+  
+      // Atualizar a lista de áudios após a eliminação
+      const updatedAudios = audios.filter((_, idx) => idx !== indexToDelete);
+      setAudios(updatedAudios);
+    } catch (error) {
+      console.error("Erro ao eliminar áudio:", error);
+      alert("Erro ao eliminar áudio. Verifique o console para mais detalhes.");
+    }
+  };
+  
+  
+
   return (
     <div className="todaPaginaA">
       <MenuDiv />
@@ -236,17 +257,20 @@ useEffect(() => {
             <div className="borda_audio"></div>
             {audios.map((audio, idx) => (
               <div
-                onClick={() => selectSong(audio, idx)}
+                
                 className="songDiv"
                 key={idx}
               >
                 <h3 id="position">0{idx + 1}</h3>
-                <div className="tituloNome">
+                <div className="tituloNome" onClick={() => selectSong(audio, idx)}>
                   <h3 id="ttleSong">{audio.title}</h3>
                   <h5 id="artistN">{audio.artist}</h5>
                 </div>
                 <h5 id="genreDuration">{audio.genre}</h5>
                 <h5 id="genreDuration">{formatTime(audio.duration)}</h5>
+                <button id="btnDelete" onClick={() => handleDeleteAudio(audio, idx)}>
+                  Eliminar
+                </button>
               </div>
             ))}
           </div>

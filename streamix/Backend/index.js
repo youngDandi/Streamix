@@ -24,6 +24,7 @@ app.use('/api', videoRoutes); // Define um prefixo '/api' para todas as rotas do
 app.use('/api/video', videoRoutes);
 
 
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     let uploadPath = "assets/";
@@ -382,6 +383,7 @@ app.get("/audios", async (req, res) => {
       const artist = song.artist || (song.metadata && song.metadata.common && song.metadata.common.artist) || null;
 
       songs.push({
+        id: doc.id, // ID do documento Firestore
         artist: artist, // Nome do artista vindo do Firebase
         title: song.title || null,
         genre: song.genre || null, // Ajusta para utilizar diretamente song.genre
@@ -405,6 +407,85 @@ app.get("/audios", async (req, res) => {
       message: "Erro interno no servidor",
       error: error.message,
       stack: error.stack,
+    });
+  }
+});
+
+
+// Rota para deletar um áudio da coleção 'audio'
+// Rota para deletar um áudio da coleção 'audio'
+app.delete('/delete/audio/:id', async (req, res) => {
+  const audioId = req.params.id;
+
+  try {
+    console.log("Tentando deletar o áudio com ID:", audioId);
+
+    // Referência ao documento do áudio no Firestore
+    const docRef = db.collection('audio').doc(audioId);
+    const doc = await docRef.get();
+
+    if (!doc.exists) {
+      console.log("Áudio não encontrado no Firestore para o ID:", audioId);
+      return res.status(404).send({
+        message: "Áudio não encontrado"
+      });
+    }
+
+    // Obtém os dados do documento antes de deletar
+    const audioData = doc.data();
+    console.log("Dados do áudio a ser deletado:", audioData);
+
+    // Inicializa os caminhos dos arquivos
+    const audioFilePath = audioData.audio ? path.join(__dirname, audioData.audio) : null;
+    const imageFilePath = audioData.image ? path.join(__dirname, audioData.image) : null;
+
+    // Função auxiliar para deletar arquivo
+    const deleteFile = (filePath) => {
+      if (fs.existsSync(filePath)) {
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error("Erro ao deletar o arquivo:", err);
+          } else {
+            console.log("Arquivo deletado com sucesso:", filePath);
+          }
+        });
+      } else {
+        console.log("Arquivo não encontrado no sistema de arquivos:", filePath);
+      }
+    };
+
+    // Verifica e deleta os arquivos com base nos caminhos fornecidos
+    if (audioFilePath && imageFilePath) {
+      // Deleta ambos os arquivos, áudio e imagem
+      console.log("Deletando áudio: "+audioFilePath+" e imagem: "+imageFilePath);
+      deleteFile(audioFilePath);
+      deleteFile(imageFilePath);
+    } else if (audioFilePath) {
+      // Deleta apenas o arquivo de áudio
+      console.log("Deletando áudio: "+audioFilePath);
+      deleteFile(audioFilePath);
+    } else if (imageFilePath) {
+      // Deleta apenas o arquivo de imagem
+      console.log("Deletando apenas a imagem: "+imageFilePath);
+      deleteFile(imageFilePath);
+    } else {
+      console.log("Nenhum arquivo de áudio ou imagem encontrado para deletar.");
+    }
+
+    // Deleta o documento da coleção 'audio' no Firestore
+    await docRef.delete();
+    console.log("Documento de áudio deletado do Firestore para o ID:", audioId);
+
+    // Responde ao cliente com sucesso
+    return res.status(200).send({
+      message: "Áudio deletado com sucesso"
+    });
+
+  } catch (error) {
+    console.error("Erro ao deletar o áudio:", error);
+    return res.status(500).send({
+      message: "Erro interno no servidor",
+      error: error.message
     });
   }
 });

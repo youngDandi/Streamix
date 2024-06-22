@@ -14,6 +14,11 @@
    margin-top: 2%;
   }
 
+  #btnDelete{
+    background-color: rgb(134, 16, 16);
+    width: 70px;
+    height: 5vh;
+  }
   .controls{
     display: flex;
     flex-direction: row;
@@ -97,9 +102,11 @@
  
 
   .songDiv{
+    justify-content: center;
+    align-items: center;
    display: flex;
    flex-direction: row;
-   gap: 120px;
+   gap: 95px;
    margin-bottom: -2%;
    cursor: pointer;
    border-radius: 5px;
