@@ -5,8 +5,17 @@ import heart from '../../assets/img/icons8-gostar-50.png';
 import redHeart from '../../assets/img/icons8-gostar-50_1.png';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/AuthContext.jsx';
 
 function Description() {
+// Usando o hook useAuth para obter os dados do usuário logado
+const { user } = useAuth();
+
+// Exibindo todos os dados do usuário logado no console
+useEffect(() => {
+  console.log("Dados do usuário logado:", user);
+}, [user]);
+
   const [liked, setLiked] = useState(false);
   const [video, setVideo] = useState(null);
   const { id } = useParams(); // Obtém o ID da rota usando useParams

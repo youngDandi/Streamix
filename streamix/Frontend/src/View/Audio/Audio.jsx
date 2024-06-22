@@ -13,8 +13,20 @@ import play from "../../assets/img/play.png";
 import Modal1 from "../../Components/Modal1/Modal1";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { useAuth } from '../../hooks/AuthContext.jsx';
+
+
+
 
 function Audio() {
+// Usando o hook useAuth para obter os dados do usuário logado
+const { user } = useAuth();
+
+// Exibindo todos os dados do usuário logado no console
+useEffect(() => {
+  console.log("Dados do usuário logado:", user);
+}, [user]);
+
   const audioRef = useRef(null);
   const progressRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -38,7 +50,10 @@ function Audio() {
     audioElement.load();
     document.getElementById("artistP").src = music.thumbnail;
     document.getElementById("artisTitle").innerHTML = `${music.artist} - ${music.title}`;
-    audioElement.play().then(() => setIsPlaying(true));
+    audioElement.play().then(() => setIsPlaying(true)).catch((error) => {
+      console.error("Erro ao reproduzir áudio:", error);
+      alert("Erro ao reproduzir áudio. Verifique o caminho do arquivo e o formato.");
+    });
     setIndex(newIndex);
   };
 
@@ -107,7 +122,10 @@ function Audio() {
     if (!audioElement) return;
 
     if (audioElement.paused) {
-      audioElement.play();
+      audioElement.play().catch((error) => {
+        console.error("Erro ao reproduzir áudio:", error);
+        alert("Erro ao reproduzir áudio. Verifique o caminho do arquivo e o formato.");
+      });
       setIsPlaying(true);
     } else {
       audioElement.pause();
@@ -164,7 +182,7 @@ function Audio() {
     data.append("artist", artist);
 
     axios
-      .post("http://localhost:3001/upload", data, {
+      .post("http://localhost:3001/upload/audio", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -344,13 +362,14 @@ function Audio() {
                   id="thumb-select"
                   accept="image/*"
                   onChange={handleThumbnailChange}
-                  style={{ display: "none" }}
+                  
                 />
                 <button
                   type="button"
                   className="Input"
                   id="i2"
                   onClick={() => document.getElementById("thumb-select").click()}
+                  style={{ display: "none" }}
                 >
                   <img src={addThumb} alt="upload thumbnail" className="addVideo_Thumb" />
                   Carregar a capa
@@ -360,13 +379,14 @@ function Audio() {
                   id="audio-select"
                   accept="audio/*"
                   onChange={handleAudioChange}
-                  style={{ display: "none" }}
+                 
                 />
                 <button
                   type="button"
                   className="Input"
                   id="i2"
                   onClick={() => document.getElementById("audio-select").click()}
+                  style={{ display: "none" }}
                 >
                   <img src={addVideo} alt="upload audio" className="addVideo_Thumb" />
                   Carregar o áudio

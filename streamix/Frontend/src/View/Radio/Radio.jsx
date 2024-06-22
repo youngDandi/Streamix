@@ -1,5 +1,5 @@
 import './Radio.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MenuDiv from "../../Components/MenuDiv/MenuDiv";
 import plusIcon from '../../assets/img/icons8-soma-30_1.png';
 import ReactHowler from 'react-howler';
@@ -7,8 +7,17 @@ import SearchBar from "../../Components/SearchBar/SearchBar";
 import Modal1 from '../../Components/Modal1/Modal1';
 import { Radios } from '../../mocks/radio';
 import axios from 'axios';
+import { useAuth } from '../../hooks/AuthContext.jsx';
 
 function Radio() {
+// Usando o hook useAuth para obter os dados do usuário logado
+const { user } = useAuth();
+
+// Exibindo todos os dados do usuário logado no console
+useEffect(() => {
+  console.log("Dados do usuário logado:", user);
+}, [user]);
+
   const [playingRadioId, setPlayingRadioId] = useState(null);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
@@ -18,6 +27,7 @@ function Radio() {
   const [nomeInput, setNomeInput] = useState('');
   const [linkInput, setLinkInput] = useState('');
   const [frequenciaInput, setFrequenciaInput] = useState('');
+  const [visibility, setVisibility] = useState('public');
 
   const handleTogglePlay = (radio) => {
     if (playingRadioId === radio.id) {
@@ -34,31 +44,26 @@ function Radio() {
   };
 
   // Função de submissão dos dados da modal
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = new FormData();
-    data.append('nome', nomeInput);
-    data.append('link', linkInput);
-    data.append('frequencia', frequenciaInput);
-
-    axios
-      .post('http://localhost:3001/upload', data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        // Aqui você pode adicionar lógica para lidar com o sucesso do envio
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert('Error:' + errorCode + ' ' + errorMessage);
+    try {
+      const response = await axios.post('http://localhost:3001/api/radio', {
+        nome: nomeInput,
+        link: linkInput,
+        frequencia: frequenciaInput,
+        visibility,
       });
 
-    setOpen(false); // Fecha a modal após a submissão
+      console.log(response.data);
+      // Adicione lógica para atualizar a lista de rádios se necessário
+      setOpen(false);
+    } catch (error) {
+      console.error('Erro ao adicionar rádio:', error);
+      alert('Erro ao adicionar rádio. Por favor, tente novamente.');
+    }
   };
+
+  
 
   return (
     <div className='todaPaginaR'>
@@ -141,6 +146,19 @@ function Radio() {
                   value={frequenciaInput}
                   onChange={(e) => setFrequenciaInput(e.target.value)}
                 />
+                {/* Seletor de visibilidade */}
+                <div className='inputSectionS'>
+                  <label htmlFor='visibilitySelect'>Visibilidade do vídeo:</label>
+                  <select
+                    id='visibilitySelect'
+                    className='Input'
+                    value={visibility}
+                    onChange={(e) => setVisibility(e.target.value)}
+                  >
+                    <option value='public'>Público</option>
+                    <option value='private'>Privado</option>
+                  </select>
+                </div>
                 <div className="btnDiv">
                   <button type="submit" className="btn-confirmar">Confirmar</button>
                   <button type="button" className="btn-cancelar" onClick={() => setOpen(false)}>Cancelar</button>

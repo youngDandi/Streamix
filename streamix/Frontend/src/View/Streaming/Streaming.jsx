@@ -1,9 +1,16 @@
 import './Streaming.css';
+import React, { useEffect } from 'react';
 import MenuDiv from "../../Components/MenuDiv/MenuDiv";
-
+import { useAuth } from '../../hooks/AuthContext.jsx';
 import VideoJS from '../../Components/VideoJs/videoJs';
 function Streaming() {
+// Usando o hook useAuth para obter os dados do usuário logado
+const { user } = useAuth();
 
+// Exibindo todos os dados do usuário logado no console
+useEffect(() => {
+  console.log("Dados do usuário logado:", user);
+}, [user]);
   
   return (
     <div className="todaPaginaS">

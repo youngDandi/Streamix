@@ -12,8 +12,17 @@ import addVideo from '../../assets/img/addVideo.png';
 import addThumb from '../../assets/img/addThumb.png';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/AuthContext.jsx';
 
 function Video() {
+// Usando o hook useAuth para obter os dados do usuário logado
+const { user } = useAuth();
+
+// Exibindo todos os dados do usuário logado no console
+useEffect(() => {
+  console.log("Dados do usuário logado:", user);
+}, [user]);
+
   const [open, setOpen] = useState(false);
   const [videos, setVideos] = useState([]); // Estado para armazenar os vídeos recebidos do backend
   const [title, setTitle] = useState('');

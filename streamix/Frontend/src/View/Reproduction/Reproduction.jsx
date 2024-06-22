@@ -2,8 +2,17 @@ import React, { useState, useEffect } from 'react';
 import './Reproduction.css';
 import MenuDiv from '../../Components/MenuDiv/MenuDiv';
 import { useParams } from 'react-router-dom';
+import { useAuth } from '../../hooks/AuthContext.jsx';
 
 function Reproduction() {
+// Usando o hook useAuth para obter os dados do usuário logado
+const { user } = useAuth();
+
+// Exibindo todos os dados do usuário logado no console
+useEffect(() => {
+  console.log("Dados do usuário logado:", user);
+}, [user]);
+
   const { id } = useParams();
   const [video, setVideo] = useState(null);
 
