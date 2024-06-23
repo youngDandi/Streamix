@@ -45,7 +45,7 @@ const navigate = useNavigate(); // Hook useNavigate para navegação
 
   const handleLogout = () => {
  
-  alert("Até já Sr(a) "+user.nome);
+  alert("Até já Sr(a). "+user.nome);
   navigate('/Login'); // Redireciona para a tela de login após o logout
 };
 

@@ -374,33 +374,30 @@ app.get("/api/groups/:id", async (req, res) => {
 
   try {
     // Log do userId recebido
-    console.log(`Buscando grupo para o userId: ${userId}`);
+    console.log(`Buscando grupos para o userId: ${userId}`);
 
     // Consulta a coleção 'group' no Firestore para pegar todos os grupos
-    const snapshot = await db.collection('group').get();
+    const snapshot = await db.collection('group').where('owner.id', '==', userId).get();
 
-    // Variável para armazenar o grupo encontrado
-    let grupoEncontrado = null;
+    // Array para armazenar todos os grupos encontrados
+    let gruposEncontrados = [];
 
     // Itera sobre os documentos retornados
     snapshot.forEach(doc => {
       const groupData = doc.data();
-
-      // Verifica se o owner.id do grupo corresponde ao userId fornecido
-      if (groupData.owner.id === userId) {
-        grupoEncontrado = {
-          id: doc.id, // ID do documento
-          owner: groupData.owner,
-          membros: groupData.membros,
-          createdAt: groupData.createdAt.toDate(), // Converte Timestamp para Date
-        };
-      }
+      const grupo = {
+        id: doc.id, // ID do documento
+        owner: groupData.owner,
+        membros: groupData.membros,
+        createdAt: groupData.createdAt.toDate(), // Converte Timestamp para Date
+      };
+      gruposEncontrados.push(grupo);
     });
 
-    // Log para verificar o grupo encontrado
-    if (grupoEncontrado) {
-      console.log("Grupo encontrado:", JSON.stringify(grupoEncontrado, null, 2));
-      res.status(200).send(grupoEncontrado); // Retorna o grupo encontrado
+    // Log para verificar os grupos encontrados
+    if (gruposEncontrados.length > 0) {
+      console.log("Grupos encontrados:", gruposEncontrados);
+      res.status(200).send(gruposEncontrados); // Retorna os grupos encontrados
     } else {
       console.log("Nenhum grupo encontrado para o userId especificado.");
       res.status(404).send({ message: "Nenhum grupo encontrado para o userId especificado." });
@@ -416,6 +413,8 @@ app.get("/api/groups/:id", async (req, res) => {
     });
   }
 });
+
+
 
 
 

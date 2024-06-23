@@ -83,26 +83,20 @@ useEffect(() => {
         console.log(`Iniciando fetch para userId: ${user.id}`);
         // Faz a solicitação ao endpoint usando o userId
         const response = await axios.get(`http://localhost:3001/api/groups/${user.id}`);
-        const grupoUsuario = response.data;
+        const gruposUsuario = response.data;
         
-        // Log detalhado do grupo retornado
-        console.log("Grupo retornado pelo backend:", JSON.stringify(grupoUsuario, null, 2));
-
-        // Verifica se há um grupo retornado
-        if (!grupoUsuario || Object.keys(grupoUsuario).length === 0) {
-          console.log("O usuário ainda não é owner de grupo.");
-
+        // Log detalhado dos grupos retornados
+        console.log("Grupos retornados pelo backend:", JSON.stringify(gruposUsuario, null, 2));
+  
+        // Verifica se há grupos retornados
+        if (!gruposUsuario || gruposUsuario.length === 0) {
+          console.log("O usuário ainda não é owner de grupos.");
           return;
         }
-        
-          // Tornar o botão invisível após enviar os dados com sucesso
-         const botaoAdicionar = document.getElementById('btnGrupoAdicionar');
-         if (botaoAdicionar) {
-          botaoAdicionar.style.display = 'none'; // Torna o botão invisível
-        }
-        // Define o grupo do usuário logado
-        setGrupoRetornado(grupoUsuario);
-        console.log("Grupo do usuário logado:", JSON.stringify(grupoUsuario, null, 2));
+  
+        // Define os grupos retornados no estado
+        setGrupoRetornado(gruposUsuario);
+        console.log("Grupos do usuário logado:", JSON.stringify(gruposUsuario, null, 2));
   
       } catch (error) {
         // Log de erro detalhado
@@ -114,8 +108,10 @@ useEffect(() => {
       }
     };
   
-    fetchGroups();
-  }, [user.id]);
+    fetchGroups(); // Chama a função fetchGroups ao montar o componente ou quando o usuário mudar
+  
+  }, [user.id]); // Adiciona user.id como dependência para o useEffect
+  
   
 
 
@@ -302,12 +298,7 @@ const handleCreateGroup = async () => {
     console.log("Resposta do backend:", response.data);
     alert("Grupo criado com sucesso!");
 
-    // Tornar o botão invisível após enviar os dados com sucesso
-    const botaoAdicionar = document.getElementById('btnGrupoAdicionar');
-    document.getElementById('btnGrupoEliminar').style.display = 'block';
-    if (botaoAdicionar) {
-      botaoAdicionar.style.display = 'none'; // Torna o botão invisível
-    }
+    
   } catch (error) {
     console.error("Erro ao criar o grupo:", error);
     alert("Erro ao criar o grupo. Tente novamente.");
@@ -316,31 +307,30 @@ const handleCreateGroup = async () => {
 
 
 //Funcao para apagar o Grupo do usuario logado
-const handleDeleteGroup = async () => {
+const handleDeleteGroup = async (groupId) => {
   try {
-    if (!grupoRetornado || !grupoRetornado.id) {
-      alert("Nenhum grupo para eliminar.");
+    // Verifica se o groupId é válido
+    if (!groupId) {
+      alert("ID do grupo inválido.");
       return;
     }
 
-    // Envia o grupoRetornado para o backend para ser eliminado
-    const response = await axios.delete(`http://localhost:3001/api/group/${grupoRetornado.id}`);
+    // Envia a solicitação DELETE para o backend para eliminar o grupo
+    const response = await axios.delete(`http://localhost:3001/api/group/${groupId}`);
     console.log("Resposta do backend ao eliminar o grupo:", response.data);
     alert("Grupo eliminado com sucesso!");
 
-    // Limpa os estados do grupo
-    setGrupo([user]); // Reinicializa com o usuário logado
+    // Limpa os estados do grupo após a eliminação bem-sucedida
     setGrupoRetornado(null);
 
-    // Mostra o botão de adicionar e esconde o botão de eliminar
-    document.getElementById('btnGrupoAdicionar').style.display = 'block';
-    document.getElementById('btnGrupoEliminar').style.display = 'none';
-
+    // Atualiza a lista de grupos após a eliminação (opcional, se necessário)
+    // Pode chamar novamente a função fetchGroups() para atualizar a lista de grupos
   } catch (error) {
     console.error("Erro ao eliminar o grupo:", error);
     alert("Erro ao eliminar o grupo. Tente novamente.");
   }
 };
+
 
 
 
@@ -422,52 +412,51 @@ const handleDeleteGroup = async () => {
               </div>
               <div className="btnGrupoDiv">
                 <button id="btnGrupoAdicionar" onClick={handleGrupoBotaoClick}>Adicionar</button>
-                <button id="btnGrupoEliminar" onClick={handleDeleteGroup}>Eliminar</button>
+                
 
               </div>
               
             </div>
               
-            <div className="borda_perfil"></div>
-              {
-                  grupoRetornado ? (
-                    <div className="grupoDetalhes">
-                      {/* Exibição do Owner */}
-                      <div className="artistInfo">
-                        <img src={artistPhoto} id="artistPhoto" alt="Foto do owner" />
-                        <div className="tituloNome">
-                          <h3 id="OwnerName">{grupoRetornado.owner.nome}</h3>
-                          <h5 id="groupEmail">{grupoRetornado.owner.email}</h5>
+            
+            {grupoRetornado && grupoRetornado.length > 0 ? (
+                grupoRetornado.map((grupo) => (
+                  <div key={grupo.id}>
+                    {/* Exibição do Owner */}
+                     <div className="borda_perfil"></div>
+                    <div className="artistInfo">
+                      <img src={artistPhoto} id="artistPhoto" alt="Foto do owner" />
+                      <div className="tituloNome">
+                        <h3 id="OwnerName">{grupo.owner.nome}</h3>
+                        <h5 id="groupEmail">{grupo.owner.email}</h5>
+                      </div>
+                      <button id="btnGrupoEliminar" onClick={() => handleDeleteGroup(grupo.id)}>Eliminar</button>
+                    </div>
+
+                    {/* Exibição dos Membros */}
+                    {grupo.membros.length > 0 ? (
+                      grupo.membros.map((membro) => (
+                        <div key={membro.id} className="artistInfo">
+                          <img
+                            src={artistPhoto || "defaultPhoto.png"}
+                            id="artistPhoto"
+                            alt={`Foto de ${membro.nome}`}
+                          />
+                          <div className="tituloNome">
+                            <h3 id="ttleSong">{membro.nome}</h3>
+                            <h5 id="groupEmail">{membro.email}</h5>
+                          </div>
                         </div>
-                      </div>
-
-                      {/* Exibição dos Membros */}
-                      
-                        
-                        {grupoRetornado.membros.length > 0 ? (
-                          grupoRetornado.membros.map((membro) => (
-                            <div key={membro.id} className="artistInfo">
-                              <img
-                                src={artistPhoto || "defaultPhoto.png"}
-                                id="artistPhoto"
-                                alt={`Foto de ${membro.nome}`}
-                              />
-                              <div className="tituloNome">
-                                <h3 id="ttleSong">{membro.nome}</h3>
-                                <h5 id="groupEmail">{membro.email}</h5>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <p>Nenhum membro no grupo.</p>
-                        )}
-                      </div>
-                    
-                  ) : (
-                    <p>O usuário ainda não é owner de grupo.</p>
-                  )
-                }
-
+                      ))
+                    ) : (
+                      <p>Nenhum membro no grupo.</p>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p>O usuário ainda não é owner de grupos.</p>
+              )}
+              
 
             
             
