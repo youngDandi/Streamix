@@ -119,6 +119,30 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// Novo endpoint para retornar todos os usuários
+app.get("/users", async (req, res) => {
+  try {
+    // Consulta todos os documentos da coleção "users"
+    const usersSnapshot = await db.collection("users").get();
+
+    // Mapeia os documentos para incluir o ID do documento, nome e email
+    const users = usersSnapshot.docs.map(doc => ({
+      id: doc.id,           // ID do documento
+      nome: doc.data().nome, // Nome do usuário
+      email: doc.data().email // Email do usuário
+    }));
+
+    // Retorna a lista de usuários com os campos específicos
+    return res.status(200).send(users);
+  } catch (error) {
+    console.error("Erro ao buscar usuários:", error);
+    return res.status(500).send({
+      message: "Erro ao buscar usuários",
+    });
+  }
+});
+
+
 app.post("/upload/videos", upload.any(), async (req, res) => {
   try {
     // Log dos arquivos recebidos

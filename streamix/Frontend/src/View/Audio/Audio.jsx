@@ -33,6 +33,7 @@ useEffect(() => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [open, setOpen] = useState(false);
+  const [openGroupModal, setOpenGroupModal] = useState(false);
   const [title, setTitle] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
   const [audio, setAudio] = useState(null);
@@ -42,7 +43,8 @@ useEffect(() => {
   const [artist, setArtist] = useState("");
   const [audios, setAudios] = useState([]);
   const [visibility, setVisibility] = useState('public');
-
+  const [users, setUsers] = useState([]); // Estado para armazenar os dados dos usuários
+  
   const selectSong = (music, newIndex) => {
     const audioElement = audioRef.current;
     if (!audioElement) return;
@@ -150,8 +152,22 @@ useEffect(() => {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
+  const fetchUsers = async () => {
+    try {
+      // Fazendo a requisição ao endpoint /users para buscar os dados dos usuários
+      const response = await axios.get("http://localhost:3001/users");
+      setUsers(response.data); // Salvando os dados dos usuários no estado
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
   const handleAddBtnClick = () => {
     setOpen(true);
+  };
+
+  const handleGrupoBotaoClick = () => {
+    setOpenGroupModal(true);
   };
 
   const handleInputChange = (e) => {
@@ -275,8 +291,15 @@ useEffect(() => {
             ))}
           </div>
           <div className="topMusicos">
-            <h2>Top Músicos</h2>
-            <h5 id="daSemana">Da semana</h5>
+
+            <div className="grupoEbotao">
+              <div className="grupo">
+                <h2>Grupo</h2>
+              <h5 id="daSemana">membros</h5>
+              </div>
+              <button id="btnGrupo" onClick={handleGrupoBotaoClick}>Adicionar</button>
+            </div>
+              
             <div className="borda_perfil"></div>
             <div className="artistInfo">
               <img src={artistPhoto} id="artistPhoto" alt="" />
@@ -436,6 +459,65 @@ useEffect(() => {
           </div>
         </Modal1>
       )}
+
+      {openGroupModal && (
+        <Modal1 open={openGroupModal} onClose={() => setOpenGroupModal(false)}>
+          <div className="text-center w-56">
+            <div className="corpo">
+              <h3 className="titleModel">Adicione usuários ao grupo</h3>
+                <div className="userInfo">
+                  <img src={artistPhoto} id="artistPhoto" alt="" />
+                  <div className="usertituloNome">
+                    <h3 id="userName">Drake</h3>
+                    <h5 id="artistN">user@email.com</h5>
+                    
+                  </div>
+                    <button id="btnGrupo">Convidar</button>
+                </div>
+                <div className="userInfo">
+                  <img src={artistPhoto} id="artistPhoto" alt="" />
+                  <div className="usertituloNome">
+                    <h3 id="userName">Drake</h3>
+                    <h5 id="artistN">user@email.com</h5>
+                    
+                  </div>
+                    <button id="btnGrupo">Convidar</button>
+                </div>
+                <div className="userInfo">
+                  <img src={artistPhoto} id="artistPhoto" alt="" />
+                  <div className="usertituloNome">
+                    <h3 id="userName">Drake</h3>
+                    <h5 id="artistN">user@email.com</h5>
+                    
+                  </div>
+                    <button id="btnGrupo">Convidar</button>
+                </div>
+                <div className="userInfo">
+                  <img src={artistPhoto} id="artistPhoto" alt="" />
+                  <div className="usertituloNome">
+                    <h3 id="userName">Drake</h3>
+                    <h5 id="artistN">user@email.com</h5>
+                    
+                  </div>
+                  <button id="btnGrupo">Convidar</button>
+                </div>
+                <div className="btnDiv">
+                  <button  className="btn-confirmar">
+                    Confirmar
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-cancelar"
+                    onClick={() => setOpen(false)}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+            </div>
+          </div>
+        </Modal1>
+      )}
+
     </div>
   );
 }

@@ -99,8 +99,18 @@
    width: 320px;
  }
 
- 
+ .grupoEbotao{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 50%;
+ }
 
+ #btnGrupo{
+  width: 83px;
+  height: 5vh;
+  background-color: rgb(10, 78, 10);
+ }
   .songDiv{
     justify-content: center;
     align-items: center;
@@ -159,6 +169,16 @@
    border-radius: 5px;
   }
 
+  .userInfo{
+    height: 10vh;
+    display: flex;
+   flex-direction: row;
+   align-items: center;
+   gap: 30px;
+   margin-bottom: -5%;
+   cursor: pointer;
+   border-radius: 5px;
+  }
   
 .addContent{
   cursor: pointer;
@@ -191,6 +211,9 @@
     background-color: rgba(116, 109, 109, 0.7); /* altere a opacidade quando passar o mouse */
 }
   
+.userInfo:hover {
+  background-color: rgba(116, 109, 109, 0.7); /* altere a opacidade quando passar o mouse */
+}
   #artistPhoto{
    width: 50px;
    height: 50px;
