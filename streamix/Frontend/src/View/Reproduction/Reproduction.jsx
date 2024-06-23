@@ -63,8 +63,7 @@ useEffect(() => {
             controls
             poster={video.thumbnail}
             data-setup='{"playbackRates": [0.5, 1, 1.5, 2, 3.5, 4]}'
-            width={600}
-            height={400}
+            style={{ width: '80%', height: 'auto', maxWidth: '1000px' }} // Ajuste aqui
           >
             <source src={video.videoUrl} type="video/mp4" />
             Seu navegador não suporta o formato de vídeo.

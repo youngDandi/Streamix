@@ -22,6 +22,7 @@ function Audio() {
 // Usando o hook useAuth para obter os dados do usuário logado
 const { user } = useAuth();
 
+
 // Exibindo todos os dados do usuário logado no console
 useEffect(() => {
   console.log("Dados do usuário logado:", user);
@@ -44,7 +45,10 @@ useEffect(() => {
   const [audios, setAudios] = useState([]);
   const [visibility, setVisibility] = useState('public');
   const [users, setUsers] = useState([]); // Estado para armazenar os dados dos usuários
-  
+  const [grupo, setGrupo] = useState([user]);
+  const [grupoRetornado, setGrupoRetornado] = useState(null); // Estado para armazenar o grupo do usuário logado
+
+
   const selectSong = (music, newIndex) => {
     const audioElement = audioRef.current;
     if (!audioElement) return;
@@ -72,6 +76,50 @@ useEffect(() => {
     }
   };
 
+  //useEffect dos grupos que vem do backend para o caso o usuario logado ja ser o owner de um grupo
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        console.log(`Iniciando fetch para userId: ${user.id}`);
+        // Faz a solicitação ao endpoint usando o userId
+        const response = await axios.get(`http://localhost:3001/api/groups/${user.id}`);
+        const grupoUsuario = response.data;
+        
+        // Log detalhado do grupo retornado
+        console.log("Grupo retornado pelo backend:", JSON.stringify(grupoUsuario, null, 2));
+
+        // Verifica se há um grupo retornado
+        if (!grupoUsuario || Object.keys(grupoUsuario).length === 0) {
+          console.log("O usuário ainda não é owner de grupo.");
+          return;
+        }
+        
+          // Tornar o botão invisível após enviar os dados com sucesso
+        // const botaoAdicionar = document.getElementById('btnGrupoAdicionar');
+        // if (botaoAdicionar) {
+        //  botaoAdicionar.style.display = 'none'; // Torna o botão invisível
+        //}
+        // Define o grupo do usuário logado
+        setGrupoRetornado(grupoUsuario);
+        console.log("Grupo do usuário logado:", JSON.stringify(grupoUsuario, null, 2));
+  
+      } catch (error) {
+        // Log de erro detalhado
+        if (error.response && error.response.status === 404) {
+          console.error("Nenhum grupo encontrado para o usuário:", error.response.data.message);
+        } else {
+          console.error("Erro ao buscar grupos:", error.message);
+        }
+      }
+    };
+  
+    fetchGroups();
+  }, [user.id]);
+  
+
+
+
+
   useEffect(() => {
     const audioElement = audioRef.current;
 
@@ -95,8 +143,19 @@ useEffect(() => {
       }
     };
 
+    const fetchUsers = async () => {
+      try {
+        // Fazendo a requisição ao endpoint /users para buscar os dados dos usuários
+        const response = await axios.get("http://localhost:3001/users");
+        setUsers(response.data.users); // Salvando os dados dos usuários no estado
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
     fetchGenres();
     fetchAudios();
+    fetchUsers();
 
     const updateProgress = () => {
       if (!audioElement) return;
@@ -152,15 +211,7 @@ useEffect(() => {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
-  const fetchUsers = async () => {
-    try {
-      // Fazendo a requisição ao endpoint /users para buscar os dados dos usuários
-      const response = await axios.get("http://localhost:3001/users");
-      setUsers(response.data); // Salvando os dados dos usuários no estado
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  };
+  
 
   const handleAddBtnClick = () => {
     setOpen(true);
@@ -222,6 +273,46 @@ useEffect(() => {
         alert("Error uploading audio: " + error.message);
       });
   };
+
+  //Funcao para criar o grupo
+  const handleInvite = (usuario) => {
+    // Verifica se o usuário já está no grupo para evitar duplicações
+  if (grupo.some(member => member.id === usuario.id)) {
+    alert(`O usuário: ${usuario.nome} já foi convidado para o grupo.`);
+    return;
+  }
+
+  // Atualiza o estado do grupo com o novo usuário convidado
+  setGrupo((prevGrupo) => {
+    const novoGrupo = [...prevGrupo, usuario];
+    console.log("Membros do grupo:", novoGrupo);
+    return novoGrupo;
+  });
+
+  // Exibe um alerta confirmando a adição do usuário ao grupo
+  alert(`O usuário: ${usuario.nome} foi convidado para o grupo do ${user.nome}`);
+};
+  
+
+const handleCreateGroup = async () => {
+  try {
+    // Envia o array `grupo` para o backend
+    const response = await axios.post("http://localhost:3001/api/group", grupo);
+    console.log("Resposta do backend:", response.data);
+    alert("Grupo criado com sucesso!");
+
+    // Tornar o botão invisível após enviar os dados com sucesso
+    const botaoAdicionar = document.getElementById('btnGrupoAdicionar');
+    if (botaoAdicionar) {
+      botaoAdicionar.style.display = 'none'; // Torna o botão invisível
+    }
+  } catch (error) {
+    console.error("Erro ao criar o grupo:", error);
+    alert("Erro ao criar o grupo. Tente novamente.");
+  }
+};
+
+
 
   const handleDeleteAudio = async (audio, indexToDelete) => {
     try {
@@ -297,31 +388,52 @@ useEffect(() => {
                 <h2>Grupo</h2>
               <h5 id="daSemana">membros</h5>
               </div>
-              <button id="btnGrupo" onClick={handleGrupoBotaoClick}>Adicionar</button>
+              <button id="btnGrupoAdicionar" onClick={handleGrupoBotaoClick}>Adicionar</button>
             </div>
               
             <div className="borda_perfil"></div>
-            <div className="artistInfo">
-              <img src={artistPhoto} id="artistPhoto" alt="" />
-              <div className="tituloNome">
-                <h3 id="ttleSong">Drake</h3>
-                <h5 id="artistN">53.000.000 seguidores</h5>
-              </div>
-            </div>
-            <div className="artistInfo">
-              <img src={artistPhoto} id="artistPhoto" alt="" />
-              <div className="tituloNome">
-                <h3 id="ttleSong">Drake</h3>
-                <h5 id="artistN">53.000.000 seguidores</h5>
-              </div>
-            </div>
-            <div className="artistInfo">
-              <img src={artistPhoto} id="artistPhoto" alt="" />
-              <div className="tituloNome">
-                <h3 id="ttleSong">Drake</h3>
-                <h5 id="artistN">53.000.000 seguidores</h5>
-              </div>
-            </div>
+              {
+                  grupoRetornado ? (
+                    <div className="grupoDetalhes">
+                      {/* Exibição do Owner */}
+                      <div className="artistInfo">
+                        <img src={artistPhoto} id="artistPhoto" alt="Foto do owner" />
+                        <div className="tituloNome">
+                          <h3 id="OwnerName">{grupoRetornado.owner.nome}</h3>
+                          <h5 id="groupEmail">{grupoRetornado.owner.email}</h5>
+                        </div>
+                      </div>
+
+                      {/* Exibição dos Membros */}
+                      
+                        
+                        {grupoRetornado.membros.length > 0 ? (
+                          grupoRetornado.membros.map((membro) => (
+                            <div key={membro.id} className="artistInfo">
+                              <img
+                                src={artistPhoto || "defaultPhoto.png"}
+                                id="artistPhoto"
+                                alt={`Foto de ${membro.nome}`}
+                              />
+                              <div className="tituloNome">
+                                <h3 id="ttleSong">{membro.nome}</h3>
+                                <h5 id="groupEmail">{membro.email}</h5>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <p>Nenhum membro no grupo.</p>
+                        )}
+                      </div>
+                    
+                  ) : (
+                    <p>O usuário ainda não é owner de grupo.</p>
+                  )
+                }
+
+
+            
+            
           </div>
         </div>
 
@@ -443,9 +555,11 @@ useEffect(() => {
                 />
                 
                 <div className="btnDiv">
-                  <button type="submit" className="btn-confirmar">
-                    Confirmar
-                  </button>
+                  
+                <button className="btn-confirmar" type="submit">
+                  Confirmar
+                </button>
+
                   <button
                     type="button"
                     className="btn-cancelar"
@@ -465,44 +579,20 @@ useEffect(() => {
           <div className="text-center w-56">
             <div className="corpo">
               <h3 className="titleModel">Adicione usuários ao grupo</h3>
-                <div className="userInfo">
-                  <img src={artistPhoto} id="artistPhoto" alt="" />
-                  <div className="usertituloNome">
-                    <h3 id="userName">Drake</h3>
-                    <h5 id="artistN">user@email.com</h5>
-                    
-                  </div>
-                    <button id="btnGrupo">Convidar</button>
-                </div>
-                <div className="userInfo">
-                  <img src={artistPhoto} id="artistPhoto" alt="" />
-                  <div className="usertituloNome">
-                    <h3 id="userName">Drake</h3>
-                    <h5 id="artistN">user@email.com</h5>
-                    
-                  </div>
-                    <button id="btnGrupo">Convidar</button>
-                </div>
-                <div className="userInfo">
-                  <img src={artistPhoto} id="artistPhoto" alt="" />
-                  <div className="usertituloNome">
-                    <h3 id="userName">Drake</h3>
-                    <h5 id="artistN">user@email.com</h5>
-                    
-                  </div>
-                    <button id="btnGrupo">Convidar</button>
-                </div>
-                <div className="userInfo">
-                  <img src={artistPhoto} id="artistPhoto" alt="" />
-                  <div className="usertituloNome">
-                    <h3 id="userName">Drake</h3>
-                    <h5 id="artistN">user@email.com</h5>
-                    
-                  </div>
-                  <button id="btnGrupo">Convidar</button>
-                </div>
+                  {users
+                      .filter((usuario) => usuario.id !== user.id) // Excluir o usuário logado da lista
+                      .map((usuario) => (
+                        <div key={usuario.id} className="userInfo">
+                          <img src={artistPhoto} id="artistPhoto" alt="Artist" />
+                          <div className="usertituloNome">
+                            <h3 id="userName">{usuario.nome}</h3>
+                            <h5 id="artistN">{usuario.email}</h5>
+                          </div>
+                          <button id="btnGrupoConvidar" onClick={() => handleInvite(usuario)}>Convidar</button>
+                        </div>
+                  ))}
                 <div className="btnDiv">
-                  <button  className="btn-confirmar">
+                  <button  className="btn-confirmar" onClick={handleCreateGroup}>
                     Confirmar
                   </button>
                   <button

@@ -119,28 +119,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// Novo endpoint para retornar todos os usuários
-app.get("/users", async (req, res) => {
-  try {
-    // Consulta todos os documentos da coleção "users"
-    const usersSnapshot = await db.collection("users").get();
 
-    // Mapeia os documentos para incluir o ID do documento, nome e email
-    const users = usersSnapshot.docs.map(doc => ({
-      id: doc.id,           // ID do documento
-      nome: doc.data().nome, // Nome do usuário
-      email: doc.data().email // Email do usuário
-    }));
-
-    // Retorna a lista de usuários com os campos específicos
-    return res.status(200).send(users);
-  } catch (error) {
-    console.error("Erro ao buscar usuários:", error);
-    return res.status(500).send({
-      message: "Erro ao buscar usuários",
-    });
-  }
-});
 
 
 app.post("/upload/videos", upload.any(), async (req, res) => {
@@ -301,6 +280,49 @@ app.post("/upload/audio", upload.any(), async (req, res) => {
   }
 });
 
+app.post("/api/group", async (req, res) => {
+  try {
+    // Extrai o array `grupo` recebido do corpo da requisição
+    const grupo = req.body;
+
+    // Verifica se o array `grupo` está presente e possui pelo menos uma posição
+    if (!grupo || grupo.length === 0) {
+      return res.status(400).send({ message: "O array 'grupo' é obrigatório e não pode estar vazio." });
+    }
+
+    // Divide o array `grupo` em `owner` e `membros`
+    const owner = grupo[0];
+    const membros = grupo.slice(1);
+
+    // Cria um objeto para salvar no Firestore
+    const groupData = {
+      owner: owner,
+      membros: membros,
+      createdAt: new Date(), // Adiciona a data atual como exemplo
+    };
+
+    // Adiciona os dados à coleção 'group' no Firestore
+    const docRef = await db.collection('group').add(groupData);
+
+    // Retorna uma resposta de sucesso com o ID do documento criado
+    res.status(200).send({
+      message: "Grupo criado com sucesso",
+      groupId: docRef.id,
+    });
+
+  } catch (error) {
+    // Captura e loga erros no console
+    console.error("Erro ao criar grupo:", error);
+    // Retorna uma resposta de erro com detalhes do erro
+    res.status(500).send({
+      message: "Erro interno ao criar grupo",
+      error: error.message,
+    });
+  }
+});
+
+
+
 app.get("/assets/:type/:id", async (req, res) => {
   
   const fileType = req.params.type;
@@ -346,6 +368,58 @@ app.get("/assets/:type/:id", async (req, res) => {
 });
 
 
+// Endpoint para retornar grupos com paginação
+app.get("/api/groups/:id", async (req, res) => {
+  const userId = req.params.id; // Obtém o userId dos parâmetros da URL
+
+  try {
+    // Log do userId recebido
+    console.log(`Buscando grupo para o userId: ${userId}`);
+
+    // Consulta a coleção 'group' no Firestore para pegar todos os grupos
+    const snapshot = await db.collection('group').get();
+
+    // Variável para armazenar o grupo encontrado
+    let grupoEncontrado = null;
+
+    // Itera sobre os documentos retornados
+    snapshot.forEach(doc => {
+      const groupData = doc.data();
+
+      // Verifica se o owner.id do grupo corresponde ao userId fornecido
+      if (groupData.owner.id === userId) {
+        grupoEncontrado = {
+          id: doc.id, // ID do documento
+          owner: groupData.owner,
+          membros: groupData.membros,
+          createdAt: groupData.createdAt.toDate(), // Converte Timestamp para Date
+        };
+      }
+    });
+
+    // Log para verificar o grupo encontrado
+    if (grupoEncontrado) {
+      console.log("Grupo encontrado:", JSON.stringify(grupoEncontrado, null, 2));
+      res.status(200).send(grupoEncontrado); // Retorna o grupo encontrado
+    } else {
+      console.log("Nenhum grupo encontrado para o userId especificado.");
+      res.status(404).send({ message: "Nenhum grupo encontrado para o userId especificado." });
+    }
+
+  } catch (error) {
+    // Captura e loga erros no console
+    console.error("Erro ao obter grupos:", error);
+    // Retorna uma resposta de erro com detalhes do erro
+    res.status(500).send({
+      message: "Erro interno ao obter grupos",
+      error: error.message,
+    });
+  }
+});
+
+
+
+
 
 // Rota para obter vídeos
 app.get("/videos", async (req, res) => {
@@ -387,6 +461,53 @@ app.get("/videos", async (req, res) => {
     });
   }
 });
+
+// Novo endpoint para retornar todos os usuários
+app.get("/users", async (req, res) => {
+  try {
+    const usersRef = db.collection("users");
+    
+    // Verifica se a referência da coleção "users" é válida
+    if (!usersRef) {
+      return res.status(400).send({
+        message: "Falha ao coletar a coleção do banco de dados"
+      });
+    }
+
+    // Obtém os documentos da coleção "users"
+    const snapshot = await usersRef.get();
+    let users = [];
+
+    // Itera sobre cada documento na coleção "users"
+    snapshot.forEach((doc) => {
+      const user = doc.data();
+
+      // Adiciona o usuário à lista de usuários, com verificação de campos
+      users.push({
+        id: doc.id, // ID do documento Firestore
+        nome: user.nome || null, // Nome do usuário
+        email: user.email || null // Email do usuário
+      });
+    });
+
+    // Console.log das informações dos usuários
+    console.log("Usuários retornados:", users);
+
+    return res.status(200).send({
+      message: "Usuários retornados",
+      users: users,
+    });
+  } catch (error) {
+    // Log do erro e envio de resposta com o erro detalhado
+    console.error("Erro ao buscar usuários:", error);
+    return res.status(500).send({
+      message: "Erro interno no servidor",
+      error: error.message,
+      stack: error.stack,
+    });
+  }
+});
+
 
 app.get("/audios", async (req, res) => {
   try {

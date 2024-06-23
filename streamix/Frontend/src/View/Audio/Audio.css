@@ -106,7 +106,13 @@
   gap: 50%;
  }
 
- #btnGrupo{
+ #btnGrupoAdicionar{
+  width: 83px;
+  height: 5vh;
+  background-color: rgb(10, 78, 10);
+ }
+
+ #btnGrupoConvidar{
   width: 83px;
   height: 5vh;
   background-color: rgb(10, 78, 10);
@@ -151,8 +157,17 @@
    color: white;
   }
 
+  #OwnerName{
+    color: rgb(206, 161, 14);
+   }
+
   #artistN{
    color: #8A8484;
+   margin-top: -15px;
+  }
+
+  #groupEmail{
+    color: #8A8484;
    margin-top: -15px;
   }
 
@@ -174,7 +189,7 @@
     display: flex;
    flex-direction: row;
    align-items: center;
-   gap: 30px;
+   gap: 20px;
    margin-bottom: -5%;
    cursor: pointer;
    border-radius: 5px;
