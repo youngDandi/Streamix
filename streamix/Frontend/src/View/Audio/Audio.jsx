@@ -91,14 +91,15 @@ useEffect(() => {
         // Verifica se há um grupo retornado
         if (!grupoUsuario || Object.keys(grupoUsuario).length === 0) {
           console.log("O usuário ainda não é owner de grupo.");
+
           return;
         }
         
           // Tornar o botão invisível após enviar os dados com sucesso
-        // const botaoAdicionar = document.getElementById('btnGrupoAdicionar');
-        // if (botaoAdicionar) {
-        //  botaoAdicionar.style.display = 'none'; // Torna o botão invisível
-        //}
+         const botaoAdicionar = document.getElementById('btnGrupoAdicionar');
+         if (botaoAdicionar) {
+          botaoAdicionar.style.display = 'none'; // Torna o botão invisível
+        }
         // Define o grupo do usuário logado
         setGrupoRetornado(grupoUsuario);
         console.log("Grupo do usuário logado:", JSON.stringify(grupoUsuario, null, 2));
@@ -303,6 +304,7 @@ const handleCreateGroup = async () => {
 
     // Tornar o botão invisível após enviar os dados com sucesso
     const botaoAdicionar = document.getElementById('btnGrupoAdicionar');
+    document.getElementById('btnGrupoEliminar').style.display = 'block';
     if (botaoAdicionar) {
       botaoAdicionar.style.display = 'none'; // Torna o botão invisível
     }
@@ -313,7 +315,37 @@ const handleCreateGroup = async () => {
 };
 
 
+//Funcao para apagar o Grupo do usuario logado
+const handleDeleteGroup = async () => {
+  try {
+    if (!grupoRetornado || !grupoRetornado.id) {
+      alert("Nenhum grupo para eliminar.");
+      return;
+    }
 
+    // Envia o grupoRetornado para o backend para ser eliminado
+    const response = await axios.delete(`http://localhost:3001/api/group/${grupoRetornado.id}`);
+    console.log("Resposta do backend ao eliminar o grupo:", response.data);
+    alert("Grupo eliminado com sucesso!");
+
+    // Limpa os estados do grupo
+    setGrupo([user]); // Reinicializa com o usuário logado
+    setGrupoRetornado(null);
+
+    // Mostra o botão de adicionar e esconde o botão de eliminar
+    document.getElementById('btnGrupoAdicionar').style.display = 'block';
+    document.getElementById('btnGrupoEliminar').style.display = 'none';
+
+  } catch (error) {
+    console.error("Erro ao eliminar o grupo:", error);
+    alert("Erro ao eliminar o grupo. Tente novamente.");
+  }
+};
+
+
+
+
+  //Funcao para apagar Audios
   const handleDeleteAudio = async (audio, indexToDelete) => {
     try {
       const audioId = audio.id; // Use o ID do áudio para deletar
@@ -388,7 +420,12 @@ const handleCreateGroup = async () => {
                 <h2>Grupo</h2>
               <h5 id="daSemana">membros</h5>
               </div>
-              <button id="btnGrupoAdicionar" onClick={handleGrupoBotaoClick}>Adicionar</button>
+              <div className="btnGrupoDiv">
+                <button id="btnGrupoAdicionar" onClick={handleGrupoBotaoClick}>Adicionar</button>
+                <button id="btnGrupoEliminar" onClick={handleDeleteGroup}>Eliminar</button>
+
+              </div>
+              
             </div>
               
             <div className="borda_perfil"></div>

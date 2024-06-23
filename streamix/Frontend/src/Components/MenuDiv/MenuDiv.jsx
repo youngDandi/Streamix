@@ -7,22 +7,24 @@ import notificacao from '../../assets/img/icons8-notification-50.png';
 import video from '../../assets/img/icons8-imac-50.png';
 import audio from '../../assets/img/icons8-music-library-50.png';
 import perfil from '../../assets/img/icons8-user-50.png';
-import user from '../../assets/img/perfil.jpeg';
+
 import sair from "../../assets/img/sair.png";
 import { useAuth } from '../../hooks/AuthContext.jsx';
 import { motion } from 'framer-motion';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
 
 function MenuDiv() {
   // Usando o hook useAuth para obter os dados do usuário logado
-const { user } = useAuth();
-
+const { user, logout } = useAuth();
+const navigate = useNavigate(); // Hook useNavigate para navegação
 
 
   const [scrollY, setScrollY] = useState(0);
   const windowHeight = window.innerHeight;
+  const [redirectToLogin, setRedirectToLogin] = useState(false);
 
+  
   const handleScroll = () => {
     setScrollY(window.scrollY);
   };
@@ -39,6 +41,15 @@ const { user } = useAuth();
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+
+  const handleLogout = () => {
+ 
+  alert("Até já Sr(a) "+user.nome);
+  navigate('/Login'); // Redireciona para a tela de login após o logout
+};
+
+
 
   return (
     <motion.div
@@ -97,7 +108,7 @@ const { user } = useAuth();
           <h4 id='UserMenu'>Perfil</h4>
         </div>
 
-        <div className='MenuButton' >
+        <div className='MenuButton' onClick={handleLogout}>
           <img src={sair} id="iconSair" alt=""/>
           <h4 id='UserMenu'>Sair</h4>
         </div>

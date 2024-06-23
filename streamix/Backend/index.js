@@ -556,6 +556,47 @@ app.get("/audios", async (req, res) => {
   }
 });
 
+// Endpoint para deletar um grupo da coleção 'group'
+app.delete('/api/group/:id', async (req, res) => {
+  const groupId = req.params.id;
+
+  try {
+    console.log("Tentando deletar o grupo com ID:", groupId);
+
+    // Referência ao documento do grupo no Firestore
+    const docRef = db.collection('group').doc(groupId);
+    const doc = await docRef.get();
+
+    if (!doc.exists) {
+      console.log("Grupo não encontrado no Firestore para o ID:", groupId);
+      return res.status(404).send({
+        message: "Grupo não encontrado"
+      });
+    }
+
+    // Obtém os dados do documento antes de deletar
+    const groupData = doc.data();
+    console.log("Dados do grupo a ser deletado:", groupData);
+
+    // Deleta o documento da coleção 'group' no Firestore
+    await docRef.delete();
+    console.log("Documento de grupo deletado do Firestore para o ID:", groupId);
+
+    // Responde ao cliente com sucesso
+    return res.status(200).send({
+      message: "Grupo deletado com sucesso"
+    });
+
+  } catch (error) {
+    console.error("Erro ao deletar o grupo:", error);
+    return res.status(500).send({
+      message: "Erro interno no servidor",
+      error: error.message
+    });
+  }
+});
+
+
 
 // Rota para deletar um áudio da coleção 'audio'
 app.delete('/delete/audio/:id', async (req, res) => {
