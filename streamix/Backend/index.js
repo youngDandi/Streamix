@@ -280,28 +280,33 @@ app.post("/upload/audio", upload.any(), async (req, res) => {
   }
 });
 
-app.post("/api/group", async (req, res) => {
+//Endpoint para criar grupos
+app.post("/owner/group", async (req, res) => {
   try {
-    // Extrai o array `grupo` recebido do corpo da requisição
     const grupo = req.body;
 
-    // Verifica se o array `grupo` está presente e possui pelo menos uma posição
-    if (!grupo || grupo.length === 0) {
-      return res.status(400).send({ message: "O array 'grupo' é obrigatório e não pode estar vazio." });
+    // Verifica se o array grupo está presente e possui pelo menos duas posições (owner e membros/nome)
+    if (!grupo || grupo.length < 2) {
+      return res.status(400).send({ message: "O array 'grupo' deve ter pelo menos o owner e membros/nome do grupo." });
     }
 
-    // Divide o array `grupo` em `owner` e `membros`
+    // Extrai o owner e membros do array
     const owner = grupo[0];
     const membros = grupo.slice(1);
 
-    // Cria um objeto para salvar no Firestore
+    // Obtém a quantidade atual de documentos na coleção 'group'
+    const querySnapshot = await db.collection('group').get();
+    const quantidadeGrupos = querySnapshot.size; // Tamanho da coleção
+
+    // Cria um objeto para salvar no Firestore com groupName baseado na quantidade de grupos
     const groupData = {
       owner: owner,
       membros: membros,
-      createdAt: new Date(), // Adiciona a data atual como exemplo
+      createdAt: new Date(),
+      groupName: `Grupo ${quantidadeGrupos + 1}`, // Cria um nome de grupo único
     };
 
-    // Adiciona os dados à coleção 'group' no Firestore
+    // Adiciona os dados à coleção 'groups' no Firestore
     const docRef = await db.collection('group').add(groupData);
 
     // Retorna uma resposta de sucesso com o ID do documento criado
@@ -311,15 +316,18 @@ app.post("/api/group", async (req, res) => {
     });
 
   } catch (error) {
-    // Captura e loga erros no console
     console.error("Erro ao criar grupo:", error);
-    // Retorna uma resposta de erro com detalhes do erro
     res.status(500).send({
       message: "Erro interno ao criar grupo",
       error: error.message,
     });
   }
 });
+
+
+
+
+
 
 
 
@@ -376,7 +384,7 @@ app.get("/api/groups/:id", async (req, res) => {
     // Log do userId recebido
     console.log(`Buscando grupos para o userId: ${userId}`);
 
-    // Consulta a coleção 'group' no Firestore para pegar todos os grupos
+    // Consulta a coleção 'group' no Firestore para pegar todos os grupos onde o 'owner.id' é igual ao 'userId'
     const snapshot = await db.collection('group').where('owner.id', '==', userId).get();
 
     // Array para armazenar todos os grupos encontrados
@@ -390,6 +398,8 @@ app.get("/api/groups/:id", async (req, res) => {
         owner: groupData.owner,
         membros: groupData.membros,
         createdAt: groupData.createdAt.toDate(), // Converte Timestamp para Date
+        // Removendo a propriedade groupName do retorno
+        // groupName: groupData.groupName, // Esta linha é removida pois não queremos retornar o nome do grupo
       };
       gruposEncontrados.push(grupo);
     });
@@ -413,6 +423,8 @@ app.get("/api/groups/:id", async (req, res) => {
     });
   }
 });
+
+
 
 
 

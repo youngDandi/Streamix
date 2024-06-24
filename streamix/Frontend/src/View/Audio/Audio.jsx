@@ -36,6 +36,7 @@ useEffect(() => {
   const [open, setOpen] = useState(false);
   const [openGroupModal, setOpenGroupModal] = useState(false);
   const [title, setTitle] = useState("");
+  const [groupName, setGroupName] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
   const [audio, setAudio] = useState(null);
   const [index, setIndex] = useState(0);
@@ -222,6 +223,10 @@ useEffect(() => {
     setTitle(e.target.value);
   };
 
+  const handleGroupNameChange = (e) => {
+    setGroupName(e.target.value);
+  };
+
   const handleArtistChange = (e) => {
     setArtist(e.target.value);
   };
@@ -252,7 +257,11 @@ useEffect(() => {
     data.append("audio", audio);
     data.append("genre", selectedGenre);
     data.append("artist", artist);
-    data.append('visibility', visibility);
+    if (visibility === 'private') {
+      data.append('visibility', user.email);
+    } else {
+      data.append('visibility', visibility);
+    }
 
     axios
       .post("http://localhost:3001/upload/audio", data, {
@@ -292,9 +301,12 @@ useEffect(() => {
   
 
 const handleCreateGroup = async () => {
+  
+  
+  
   try {
     // Envia o array `grupo` para o backend
-    const response = await axios.post("http://localhost:3001/api/group", grupo);
+    const response = await axios.post("http://localhost:3001/owner/group", grupo);
     console.log("Resposta do backend:", response.data);
     alert("Grupo criado com sucesso!");
 
@@ -303,7 +315,12 @@ const handleCreateGroup = async () => {
     console.error("Erro ao criar o grupo:", error);
     alert("Erro ao criar o grupo. Tente novamente.");
   }
+
+  
 };
+
+
+
 
 
 //Funcao para apagar o Grupo do usuario logado
@@ -320,8 +337,7 @@ const handleDeleteGroup = async (groupId) => {
     console.log("Resposta do backend ao eliminar o grupo:", response.data);
     alert("Grupo eliminado com sucesso!");
 
-    // Limpa os estados do grupo após a eliminação bem-sucedida
-    setGrupoRetornado(null);
+    
 
     // Atualiza a lista de grupos após a eliminação (opcional, se necessário)
     // Pode chamar novamente a função fetchGroups() para atualizar a lista de grupos
@@ -407,7 +423,7 @@ const handleDeleteGroup = async (groupId) => {
 
             <div className="grupoEbotao">
               <div className="grupo">
-                <h2>Grupo</h2>
+                <h2>Grupos</h2>
               <h5 id="daSemana">membros</h5>
               </div>
               <div className="btnGrupoDiv">
@@ -605,6 +621,7 @@ const handleDeleteGroup = async (groupId) => {
           <div className="text-center w-56">
             <div className="corpo">
               <h3 className="titleModel">Adicione usuários ao grupo</h3>
+                
                   {users
                       .filter((usuario) => usuario.id !== user.id) // Excluir o usuário logado da lista
                       .map((usuario) => (
