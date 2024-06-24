@@ -58,7 +58,7 @@ useEffect(() => {
       console.log(response.data.message);
 
       // Após a eliminação, redirecionar o usuário ou atualizar a interface
-      alert("Vídeo deletado com sucesso.");
+      alert("Vídeo Eliminado com sucesso!!");
       
       // Aqui, você pode redirecionar o usuário para outra página
       // ou atualizar o estado para remover o vídeo atual da visualização.

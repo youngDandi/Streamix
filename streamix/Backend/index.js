@@ -376,8 +376,8 @@ app.get("/assets/:type/:id", async (req, res) => {
 });
 
 
-// Endpoint para retornar grupos com paginação
-app.get("/api/groups/:id", async (req, res) => {
+// Endpoint para retornar grupos em que o usuario logado e o owner
+app.get("/owner/groups/:id", async (req, res) => {
   const userId = req.params.id; // Obtém o userId dos parâmetros da URL
 
   try {
@@ -397,6 +397,7 @@ app.get("/api/groups/:id", async (req, res) => {
         id: doc.id, // ID do documento
         owner: groupData.owner,
         membros: groupData.membros,
+        groupName: groupData.groupName,
         createdAt: groupData.createdAt.toDate(), // Converte Timestamp para Date
         // Removendo a propriedade groupName do retorno
         // groupName: groupData.groupName, // Esta linha é removida pois não queremos retornar o nome do grupo
@@ -424,6 +425,57 @@ app.get("/api/groups/:id", async (req, res) => {
   }
 });
 
+
+//Endpoint que retorna todos os grupos em que user logado e membro
+app.get("/member/groups/:id", async (req, res) => {
+  const memberId = req.params.id; // Obtém o memberId dos parâmetros da URL
+
+  try {
+    // Log do memberId recebido
+    console.log(`Buscando grupos para o memberId: ${memberId}`);
+
+    // Consulta a coleção 'group' no Firestore para pegar todos os grupos
+    const snapshot = await db.collection('group').get();
+
+    // Array para armazenar todos os grupos encontrados
+    let gruposEncontrados = [];
+
+    // Itera sobre os documentos retornados
+    snapshot.forEach(doc => {
+      const groupData = doc.data();
+      // Verifica se o memberId está em algum dos membros
+      const isMember = groupData.membros.some(membro => membro.id === memberId);
+      if (isMember) {
+        const grupo = {
+          id: doc.id, // ID do documento
+          owner: groupData.owner,
+          membros: groupData.membros,
+          groupName: groupData.groupName,
+          createdAt: groupData.createdAt.toDate(), // Converte Timestamp para Date
+        };
+        gruposEncontrados.push(grupo);
+      }
+    });
+
+    // Log para verificar os grupos encontrados
+    if (gruposEncontrados.length > 0) {
+      console.log("Grupos encontrados para o memberId:", gruposEncontrados);
+      res.status(200).send(gruposEncontrados); // Retorna os grupos encontrados
+    } else {
+      console.log("Nenhum grupo encontrado para o memberId especificado.");
+      res.status(404).send({ message: "Nenhum grupo encontrado para o memberId especificado." });
+    }
+
+  } catch (error) {
+    // Captura e loga erros no console
+    console.error("Erro ao obter grupos por memberId:", error);
+    // Retorna uma resposta de erro com detalhes do erro
+    res.status(500).send({
+      message: "Erro interno ao obter grupos por memberId",
+      error: error.message,
+    });
+  }
+});
 
 
 

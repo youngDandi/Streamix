@@ -48,7 +48,7 @@ useEffect(() => {
   const [users, setUsers] = useState([]); // Estado para armazenar os dados dos usuários
   const [grupo, setGrupo] = useState([user]);
   const [grupoRetornado, setGrupoRetornado] = useState(null); // Estado para armazenar o grupo do usuário logado
-
+  const [grupoUserMembro, setGrupoUserMembro] = useState(null);
 
   const selectSong = (music, newIndex) => {
     const audioElement = audioRef.current;
@@ -83,7 +83,7 @@ useEffect(() => {
       try {
         console.log(`Iniciando fetch para userId: ${user.id}`);
         // Faz a solicitação ao endpoint usando o userId
-        const response = await axios.get(`http://localhost:3001/api/groups/${user.id}`);
+        const response = await axios.get(`http://localhost:3001/owner/groups/${user.id}`);
         const gruposUsuario = response.data;
         
         // Log detalhado dos grupos retornados
@@ -114,8 +114,42 @@ useEffect(() => {
   }, [user.id]); // Adiciona user.id como dependência para o useEffect
   
   
-
-
+//useEffect que retorna todos os grupos em que o usuario logado e membro
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        console.log(`Iniciando fetch para userId: ${user.id}`);
+        // Faz a solicitação ao endpoint usando o userId para buscar grupos onde o usuário é membro
+        const response = await axios.get(`http://localhost:3001/member/groups/${user.id}`);
+        const gruposUsuario = response.data;
+        
+        // Log detalhado dos grupos retornados
+        console.log("Grupos retornados pelo backend:", JSON.stringify(gruposUsuario, null, 2));
+  
+        // Verifica se há grupos retornados
+        if (!gruposUsuario || gruposUsuario.length === 0) {
+          console.log("O usuário não é membro de nenhum grupo.");
+          return;
+        }
+  
+        // Define os grupos retornados no estado
+        setGrupoUserMembro(gruposUsuario);
+        console.log("Grupos do usuário logado:", JSON.stringify(gruposUsuario, null, 2));
+  
+      } catch (error) {
+        // Log de erro detalhado
+        if (error.response && error.response.status === 404) {
+          console.error("Nenhum grupo encontrado para o usuário:", error.response.data.message);
+        } else {
+          console.error("Erro ao buscar grupos do usuário:", error.message);
+        }
+      }
+    };
+  
+    
+    fetchGroups(); // Chama a função fetchGroups ao montar o componente ou quando o usuário mudar
+  
+  }, [user.id]); // Adiciona user como dependência para o useEffect
 
 
   useEffect(() => {
@@ -223,9 +257,7 @@ useEffect(() => {
     setTitle(e.target.value);
   };
 
-  const handleGroupNameChange = (e) => {
-    setGroupName(e.target.value);
-  };
+  
 
   const handleArtistChange = (e) => {
     setArtist(e.target.value);
@@ -245,24 +277,28 @@ useEffect(() => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Verificação de campos obrigatórios
+  
     if (!title || !thumbnail || !audio || !selectedGenre || !artist || !visibility) {
       alert('Por favor, preencha todos os campos obrigatórios.');
       return;
     }
+  
     const data = new FormData();
     data.append("title", title);
     data.append("thumbnail", thumbnail);
     data.append("audio", audio);
     data.append("genre", selectedGenre);
     data.append("artist", artist);
+  
     if (visibility === 'private') {
       data.append('visibility', user.email);
-    } else {
+    } else if (grupoRetornado.some(grupo => grupo.groupName === visibility) ||
+               grupoUserMembro.some(grupo => grupo.groupName === visibility)) {
       data.append('visibility', visibility);
+    } else {
+      data.append('visibility', 'public');
     }
-
+  
     axios
       .post("http://localhost:3001/upload/audio", data, {
         headers: {
@@ -271,7 +307,7 @@ useEffect(() => {
       })
       .then((response) => {
         console.log(response);
-        alert("Success Uploading the "+title+" audio.");
+        alert("Success Uploading the " + title + " audio.");
         setOpen(false);
       })
       .catch((error) => {
@@ -279,6 +315,7 @@ useEffect(() => {
         alert("Error uploading audio: " + error.message);
       });
   };
+  
 
   //Funcao para criar o grupo
   const handleInvite = (usuario) => {
@@ -360,7 +397,7 @@ const handleDeleteGroup = async (groupId) => {
       const response = await axios.delete(`http://localhost:3001/delete/audio/${audioId}`);
       
       console.log(response.data.message);
-  
+      alert("Áudio Eliminado com sucesso!!");
       // Atualizar a lista de áudios após a eliminação
       const updatedAudios = audios.filter((_, idx) => idx !== indexToDelete);
       setAudios(updatedAudios);
@@ -473,7 +510,43 @@ const handleDeleteGroup = async (groupId) => {
                 <p>O usuário ainda não é owner de grupos.</p>
               )}
               
+              {grupoUserMembro && grupoUserMembro.length > 0 ? (
+                grupoUserMembro.map((grupo) => (
+                  <div key={grupo.id}>
+                    {/* Exibição do Owner */}
+                     <div className="borda_perfil"></div>
+                    <div className="artistInfo">
+                      <img src={artistPhoto} id="artistPhoto" alt="Foto do owner" />
+                      <div className="tituloNome">
+                        <h3 id="OwnerName">{grupo.owner.nome}</h3>
+                        <h5 id="groupEmail">{grupo.owner.email}</h5>
+                      </div>
+                      
+                    </div>
 
+                    {/* Exibição dos Membros */}
+                    {grupo.membros.length > 0 ? (
+                      grupo.membros.map((membro) => (
+                        <div key={membro.id} className="artistInfo">
+                          <img
+                            src={artistPhoto || "defaultPhoto.png"}
+                            id="artistPhoto"
+                            alt={`Foto de ${membro.nome}`}
+                          />
+                          <div className="tituloNome">
+                            <h3 id="ttleSong">{membro.nome}</h3>
+                            <h5 id="groupEmail">{membro.email}</h5>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p>Nenhum membro no grupo.</p>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p>O usuário ainda não é membro de nenhum grupo.</p>
+              )}
             
             
           </div>
@@ -569,16 +642,26 @@ const handleDeleteGroup = async (groupId) => {
                 </select>
                 {/* Seletor de visibilidade */}
                 
-                  <label htmlFor='visibilitySelect'>Visibilidade do vídeo:</label>
-                  <select
-                    id='i1'
-                    
-                    value={visibility}
-                    onChange={(e) => setVisibility(e.target.value)}
-                  >
-                    <option value='public'>Público</option>
-                    <option value='private'>Privado</option>
-                  </select>
+                <select
+                  name="visibility"
+                  id="i1"
+                  onChange={(e) => setVisibility(e.target.value)}
+                  value={visibility}
+                >
+                  <option value="public">Public</option>
+                  <option value="private">Private</option>
+                  {grupoRetornado && grupoRetornado.length > 0 &&
+                    grupoRetornado.map((grupo) => (
+                      <option key={grupo.id} value={grupo.groupName}>{grupo.groupName}</option>
+                    ))
+                  }
+                  {grupoUserMembro && grupoUserMembro.length > 0 &&
+                    grupoUserMembro.map((grupo) => (
+                      <option key={grupo.id} value={grupo.groupName}>{grupo.groupName}</option>
+                    ))
+                  }
+                </select>
+
                 
                 <input
                   type="file"
