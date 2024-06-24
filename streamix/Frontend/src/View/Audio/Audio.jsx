@@ -50,7 +50,7 @@ useEffect(() => {
   const [grupoRetornado, setGrupoRetornado] = useState(null); // Estado para armazenar o grupo do usuário logado
   const [grupoUserMembro, setGrupoUserMembro] = useState(null);
   const [openEditModal, setOpenEditModal] = useState(false);
-const [editAudio, setEditAudio] = useState({ id: "", title: "", artist: "", genre: "", visibility:"", audioFile: null, imageFile: null});
+  const [editAudio, setEditAudio] = useState({ id: "", title: "", artist: "", genre: "", visibility:"", audioFile: null, imageFile: null});
 
 
 

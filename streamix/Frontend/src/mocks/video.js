@@ -50,5 +50,20 @@ export const Videos = [
       'A história de uma família de gângsteres que tenta expandir seus negócios em Birmingham, Inglaterra.',
     url: 'https://dl157.filemate22.shop/?file=M3R4SUNiN3JsOHJ6WWRMaXN2NlJvOWlxVlZIOCtyZ1VuZFF4M2xzQkRhSkNvb2c5eEsvckVNeE9QYWdCaHR2cFd1cEc5RGZVZE1LMFoxM1pwdFlyVWlmSDhkOHh2QURmOHBvb0JJd2pjQS8zanZLMmxEUXoyeUg0Ym95SVI1NVZLQ1ZkckhaNTVTS0Y2OWozN2lESDVDLzl0d09PZkhCTXRUNEVZTS94dDVwUXhXRFphdVB0M3BWWS9ISE91c2tRaktIUDdFZmt4clFCdTlSd1hVOHBJdFpPejhmeDNhZz0%3D',
   },
-  
+  {
+    slug: 'vikings-valhalla',
+    title: 'Vikings Valhalla',
+    duration: '2:49',
+    year: '2013',
+    description:
+      'A nova paixão de Harald não é o que parece. Uma batalha vital chega ao fim, mas a guerra pelo trono da Noruega está apenas começando.', 
+  },
+  {
+    slug: 'mandalorian',
+    title: 'Mandalorian',
+    duration: '2:49',
+    year: '2013',
+    description:
+      'O Mandaloriano escolhe proteger Grogu, ou “A Criança”, como também é conhecido. Em sua busca para entender as origens de Grogu, os dois são perseguidos por Moff', 
+  },
 ];

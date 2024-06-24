@@ -303,7 +303,7 @@ app.post("/owner/group", async (req, res) => {
       owner: owner,
       membros: membros,
       createdAt: new Date(),
-      groupName: `Grupo ${quantidadeGrupos + 1}`, // Cria um nome de grupo único
+      groupName: `Grupo ${quantidadeGrupos + 1}${owner.nome}`, // Cria um nome de grupo único
     };
 
     // Adiciona os dados à coleção 'groups' no Firestore
@@ -890,6 +890,84 @@ app.put("/update/audio/:id", upload.any(), async (req, res) => {
   }
 });
 
+
+// Novo endpoint para atualização de VIDEO
+app.put("/update/video/:id", upload.any(), async (req, res) => {
+  const videoId = req.params.id;
+  console.log("Início da requisição PUT para atualizar vídeo:", videoId);
+  
+  const { title, visibility, description } = req.body;
+  console.log("Dados recebidos no body:", req.body);
+
+  try {
+    // Verifica se os campos obrigatórios estão presentes
+    if (!title   || !visibility || !description) {
+      console.log("Campos obrigatórios ausentes:", req.body);
+      return res.status(400).send({
+        message: "Por favor, forneça todos os campos obrigatórios: title, artist, genre, visibility, description."
+      });
+    }
+
+    // Obtém referência ao documento no Firestore
+    const videoRef = db.collection("video").doc(videoId);
+    console.log("Referência do documento:", videoRef.id);
+
+    // Verifica se o vídeo existe
+    const doc = await videoRef.get();
+    console.log("Resultado da verificação de existência do vídeo:", doc.exists);
+    if (!doc.exists) {
+      console.log("Vídeo não encontrado:", videoId);
+      return res.status(404).send({ message: "Vídeo não encontrado." });
+    }
+
+    // Processa os detalhes dos arquivos
+    const fileDetails = req.files.map((file) => ({
+      path: path.join(file.destination, file.filename),
+      mimetype: file.mimetype,
+      originalname: file.originalname,
+      size: file.size,
+    }));
+    console.log("Detalhes dos arquivos recebidos:", fileDetails);
+
+    // Inicializa o objeto de dados do documento
+    let docData = {
+      title: title,
+      visibility: visibility,
+      description: description,
+      updatedAt: new Date(),  // Adiciona a data de atualização
+    };
+    console.log("Dados do documento a serem atualizados antes de adicionar caminhos de arquivos:", docData);
+
+    // Adiciona as informações de caminho de arquivos ao docData
+    fileDetails.forEach((file) => {
+      if (file.mimetype.startsWith("image/")) {
+        docData.image = file.path;
+        console.log("Imagem adicionada ao docData:", file.path);
+      } else if (file.mimetype.startsWith("video/")) {
+        docData.video = file.path;
+        console.log("Vídeo adicionado ao docData:", file.path);
+      } else if (file.mimetype.startsWith("audio/")) {
+        docData.audio = file.path;
+        console.log("Áudio adicionado ao docData:", file.path);
+      }
+    });
+    console.log("Dados do documento após adicionar caminhos de arquivos:", docData);
+
+    // Atualiza os campos do vídeo no Firestore
+    await videoRef.update(docData);
+    console.log("Vídeo atualizado com sucesso no Firestore.");
+
+    return res.status(200).send({
+      message: "Vídeo atualizado com sucesso.",
+    });
+  } catch (error) {
+    console.error("Erro ao atualizar vídeo:", error);
+    return res.status(500).send({
+      message: "Erro interno no servidor ao atualizar vídeo.",
+      error: error.message,
+    });
+  }
+});
 
 
 
