@@ -31,7 +31,9 @@ useEffect(() => {
   const [description, setDescription] = useState('');
   const [visibility, setVisibility] = useState('public');
   const genero = ['Sci-Fi', 'Drama', 'Aventura'];
-
+  const [grupoRetornado, setGrupoRetornado] = useState(null); // Estado para armazenar o grupo do usuário logado
+  const [grupoUserMembro, setGrupoUserMembro] = useState(null);
+  
   const handleAddBtnClick = () => {
     setOpen(true);
   };
@@ -54,6 +56,82 @@ useEffect(() => {
 
   const videoPlayerDivRef = useRef();
   const [dragConstraints, setDragConstraints] = useState({ left: 0, right: 0 });
+
+
+   //useEffect dos grupos que vem do backend para o caso o usuario logado ja ser o owner de um grupo
+   useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        console.log(`Iniciando fetch para userId: ${user.id}`);
+        // Faz a solicitação ao endpoint usando o userId
+        const response = await axios.get(`http://localhost:3001/owner/groups/${user.id}`);
+        const gruposUsuario = response.data;
+        
+        // Log detalhado dos grupos retornados
+        console.log("Grupos retornados pelo backend:", JSON.stringify(gruposUsuario, null, 2));
+  
+        // Verifica se há grupos retornados
+        if (!gruposUsuario || gruposUsuario.length === 0) {
+          console.log("O usuário ainda não é owner de grupos.");
+          return;
+        }
+  
+        // Define os grupos retornados no estado
+        setGrupoRetornado(gruposUsuario);
+        console.log("Grupos do usuário logado:", JSON.stringify(gruposUsuario, null, 2));
+  
+      } catch (error) {
+        // Log de erro detalhado
+        if (error.response && error.response.status === 404) {
+          console.error("Nenhum grupo encontrado para o usuário:", error.response.data.message);
+        } else {
+          console.error("Erro ao buscar grupos:", error.message);
+        }
+      }
+    };
+  
+    fetchGroups(); // Chama a função fetchGroups ao montar o componente ou quando o usuário mudar
+  
+  }, [user.id]); // Adiciona user.id como dependência para o useEffect
+  
+  
+//useEffect que retorna todos os grupos em que o usuario logado e membro
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        console.log(`Iniciando fetch para userId: ${user.id}`);
+        // Faz a solicitação ao endpoint usando o userId para buscar grupos onde o usuário é membro
+        const response = await axios.get(`http://localhost:3001/member/groups/${user.id}`);
+        const gruposUsuario = response.data;
+        
+        // Log detalhado dos grupos retornados
+        console.log("Grupos retornados pelo backend:", JSON.stringify(gruposUsuario, null, 2));
+  
+        // Verifica se há grupos retornados
+        if (!gruposUsuario || gruposUsuario.length === 0) {
+          console.log("O usuário não é membro de nenhum grupo.");
+          return;
+        }
+  
+        // Define os grupos retornados no estado
+        setGrupoUserMembro(gruposUsuario);
+        console.log("Grupos do usuário logado:", JSON.stringify(gruposUsuario, null, 2));
+  
+      } catch (error) {
+        // Log de erro detalhado
+        if (error.response && error.response.status === 404) {
+          console.error("Nenhum grupo encontrado para o usuário:", error.response.data.message);
+        } else {
+          console.error("Erro ao buscar grupos do usuário:", error.message);
+        }
+      }
+    };
+  
+    
+    fetchGroups(); // Chama a função fetchGroups ao montar o componente ou quando o usuário mudar
+  
+  }, [user.id]); // Adiciona user como dependência para o useEffect
+
 
   useEffect(() => {
     // Calcular os limites de arrasto após a montagem do componente
@@ -98,7 +176,14 @@ useEffect(() => {
     data.append('video', videoFile);
     data.append('description', description);
     data.append('genre', JSON.stringify(genero));
-    data.append('visibility', visibility);
+    if (visibility === 'private') {
+      data.append('visibility', user.email);
+    } else if (grupoRetornado.some(grupo => grupo.groupName === visibility) ||
+               grupoUserMembro.some(grupo => grupo.groupName === visibility)) {
+      data.append('visibility', visibility);
+    } else {
+      data.append('visibility', 'public');
+    }
 
     axios.post('http://localhost:3001/upload/videos', data, {
       headers: {
@@ -221,16 +306,25 @@ useEffect(() => {
                 
                 {/* Seletor de visibilidade */}
                 
-                <label htmlFor='visibilitySelect'>Visibilidade do vídeo:</label>
-                  <select
-                    id='i1'
-                    
-                    value={visibility}
-                    onChange={(e) => setVisibility(e.target.value)}
-                  >
-                    <option value='public'>Público</option>
-                    <option value='private'>Privado</option>
-                  </select>
+                <select
+                  name="visibility"
+                  id="i1"
+                  onChange={(e) => setVisibility(e.target.value)}
+                  value={visibility}
+                >
+                  <option value="public">Public</option>
+                  <option value="private">Private</option>
+                  {grupoRetornado && grupoRetornado.length > 0 &&
+                    grupoRetornado.map((grupo) => (
+                      <option key={grupo.id} value={grupo.groupName}>{grupo.groupName}</option>
+                    ))
+                  }
+                  {grupoUserMembro && grupoUserMembro.length > 0 &&
+                    grupoUserMembro.map((grupo) => (
+                      <option key={grupo.id} value={grupo.groupName}>{grupo.groupName}</option>
+                    ))
+                  }
+                </select>
                 
                 <input
                   type='file'

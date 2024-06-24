@@ -817,6 +817,82 @@ app.delete('/delete/video/:id', async (req, res) => {
 });
 
 
+
+// Novo endpoint para atualização de áudio
+app.put("/update/audio/:id", upload.any(), async (req, res) => {
+  const audioId = req.params.id;
+  const { title, artist, genre, visibility } = req.body;
+
+  try {
+    // Verifica se os campos obrigatórios estão presentes
+    if (!title || !artist || !genre || !visibility) {
+      console.log("Campos obrigatórios ausentes:", req.body);
+      return res.status(400).send({
+        message: "Por favor, forneça todos os campos obrigatórios: title, artist, genre, visibility."
+      });
+    }
+
+    // Obtém referência ao documento no Firestore
+    const audioRef = db.collection("audio").doc(audioId);
+    console.log("Referência do documento:", audioRef.id);
+
+    // Verifica se o áudio existe
+    const doc = await audioRef.get();
+    if (!doc.exists) {
+      console.log("Áudio não encontrado:", audioId);
+      return res.status(404).send({ message: "Áudio não encontrado." });
+    }
+
+    // Processa os detalhes dos arquivos
+    const fileDetails = req.files.map((file) => ({
+      path: path.join(file.destination, file.filename),
+      mimetype: file.mimetype,
+      originalname: file.originalname,
+      size: file.size,
+    }));
+    console.log("Detalhes do arquivo:", fileDetails);
+
+    // Inicializa o objeto de dados do documento
+    let docData = { 
+      title: title,
+      artist: artist,
+      genre: genre,
+      visibility: visibility,
+      updatedAt: new Date(),  // Adiciona a data de atualização
+    };
+    console.log("Dados do documento a serem atualizados:", docData);
+
+    // Adiciona as informações de caminho de arquivos ao docData
+    fileDetails.forEach((file) => {
+      if (file.mimetype.startsWith("image/")) {
+        docData.image = file.path;
+      } else if (file.mimetype.startsWith("video/")) {
+        docData.video = file.path;
+      } else if (file.mimetype.startsWith("audio/")) {
+        docData.audio = file.path;
+      }
+    });
+    console.log("Dados do documento após adicionar caminhos de arquivos:", docData);
+
+    // Atualiza os campos do áudio no Firestore
+    await audioRef.update(docData);
+    console.log("Áudio atualizado com sucesso.");
+
+    return res.status(200).send({
+      message: "Áudio atualizado com sucesso.",
+    });
+  } catch (error) {
+    console.error("Erro ao atualizar áudio:", error);
+    return res.status(500).send({
+      message: "Erro interno no servidor ao atualizar áudio.",
+      error: error.message,
+    });
+  }
+});
+
+
+
+
 // Adiciona a rota para enviar dados para a coleção radio
 app.post('/api/radio', async (req, res) => {
   const { nome, link, frequencia, visibility } = req.body;

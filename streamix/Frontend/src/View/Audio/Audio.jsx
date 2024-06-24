@@ -49,6 +49,10 @@ useEffect(() => {
   const [grupo, setGrupo] = useState([user]);
   const [grupoRetornado, setGrupoRetornado] = useState(null); // Estado para armazenar o grupo do usuário logado
   const [grupoUserMembro, setGrupoUserMembro] = useState(null);
+  const [openEditModal, setOpenEditModal] = useState(false);
+const [editAudio, setEditAudio] = useState({ id: "", title: "", artist: "", genre: "", visibility:"", audioFile: null, imageFile: null});
+
+
 
   const selectSong = (music, newIndex) => {
     const audioElement = audioRef.current;
@@ -408,6 +412,57 @@ const handleDeleteGroup = async (groupId) => {
   };
   
   
+  const handleUpdateAudio = (audio) => {
+    setEditAudio({
+      id: audio.id,
+      title: audio.title,
+      artist: audio.artist,
+      genre: audio.genre,
+      visibility: audio.visibility,
+      
+    });
+    setOpenEditModal(true);
+  };
+  
+  
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const formData = new FormData();
+  
+      // Adiciona os dados do áudio ao FormData
+      formData.append("title", editAudio.title);
+      formData.append("artist", editAudio.artist);
+      formData.append("genre", editAudio.genre);
+      formData.append("visibility", editAudio.visibility);
+      formData.append("audioFile", editAudio.audioFile);
+      formData.append("imageFile", editAudio.imageFile);
+      // Faz a requisição PUT usando axios
+      const response = await axios.put(`http://localhost:3001/update/audio/${editAudio.id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+  
+      console.log("Resposta da requisição:", response.data);
+      alert("Áudio atualizado com sucesso!");
+      setOpenEditModal(false);
+      // Atualiza a lista de áudios, se necessário
+      // Exemplo: fetchAudios();
+    } catch (error) {
+      console.error("Erro ao atualizar áudio:", error);
+      alert("Erro ao atualizar áudio. Verifique o console para mais detalhes.");
+    }
+  };
+  
+  
+  
+  
+  
+  
+  
 
   return (
     <div className="todaPaginaA">
@@ -450,9 +505,13 @@ const handleDeleteGroup = async (groupId) => {
                 </div>
                 <h5 id="genreDuration">{audio.genre}</h5>
                 <h5 id="genreDuration">{formatTime(audio.duration)}</h5>
+                <button id="btnAlterar" onClick={() => handleUpdateAudio(audio)}>
+                  Alterar
+                </button>
                 <button id="btnDelete" onClick={() => handleDeleteAudio(audio, idx)}>
                   Eliminar
                 </button>
+                
               </div>
             ))}
           </div>
@@ -733,6 +792,75 @@ const handleDeleteGroup = async (groupId) => {
           </div>
         </Modal1>
       )}
+
+{openEditModal && (
+  <Modal1 open={openEditModal} onClose={() => setOpenEditModal(false)}>
+    <div className="text-center w-56">
+      <div className="corpo">
+        <h3 className="titleModel">Edite o Áudio</h3>
+        <form onSubmit={handleEditSubmit}>
+        <input
+    placeholder="Título"
+    id="i1"
+    value={editAudio.title}
+    onChange={(e) => setEditAudio({ ...editAudio, title: e.target.value })}
+  />
+  <input
+    placeholder="Artista"
+    id="i1"
+    value={editAudio.artist}
+    onChange={(e) => setEditAudio({ ...editAudio, artist: e.target.value })}
+  />
+  <select
+  id="i1"
+    name="genre"
+    value={editAudio.genre}
+    onChange={(e) => setEditAudio({ ...editAudio, genre: e.target.value })}
+  >
+    <option value="" disabled>Gênero</option>
+    {genres.map((genre, index) => (
+      <option key={index} value={genre}>{genre}</option>
+    ))}
+  </select>
+  <select
+    id="i1"
+    name="visibility"
+    value={editAudio.visibility}
+    onChange={(e) => setEditAudio({ ...editAudio, visibility: e.target.value })}
+  >
+    <option value="public">Público</option>
+    <option value="private">Privado</option>
+    {grupoRetornado && grupoRetornado.length > 0 &&
+      grupoRetornado.map((grupo) => (
+        <option key={grupo.id} value={grupo.groupName}>{grupo.groupName}</option>
+      ))
+    }
+  </select>
+  <input
+    type="file"
+    id="audio-select"
+    accept="audio/*"
+    onChange={(e) => setEditAudio({ ...editAudio, audioFile: e.target.files[0] })}
+  />
+  <input
+    type="file"
+    id="image-select"
+    accept="image/*"
+    onChange={(e) => setEditAudio({ ...editAudio, imageFile: e.target.files[0] })}
+  />        
+          
+          
+          <div className="btnDiv">
+            <button type="submit" className="btn-confirmar" >Salvar </button>
+            <button type="button" className="btn-cancelar" onClick={() => setOpenEditModal(false)}> Cancelar </button>
+          </div>
+          
+        </form>
+      </div>
+    </div>
+  </Modal1>
+)}
+
 
     </div>
   );
