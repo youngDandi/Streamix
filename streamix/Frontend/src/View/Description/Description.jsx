@@ -305,9 +305,14 @@ useEffect(() => {
     <option value="private">Privado</option>
     {grupoRetornado && grupoRetornado.length > 0 &&
       grupoRetornado.map((grupo) => (
-        <option key={grupo.id} value={grupo.groupName}>{grupo.groupName}</option>
+        <option key={grupo.id} value={grupo.id}>{grupo.groupName}</option>
       ))
     }
+    {grupoUserMembro && grupoUserMembro.length > 0 &&
+        grupoUserMembro.map((grupo) => (
+          <option key={grupo.id} value={grupo.id}>{grupo.groupName}</option>
+         ))
+      }
   </select>
   <input
     type="file"

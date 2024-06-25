@@ -296,12 +296,47 @@ useEffect(() => {
   
     if (visibility === 'private') {
       data.append('visibility', user.email);
-    } else if (grupoRetornado.some(grupo => grupo.groupName === visibility) ||
-               grupoUserMembro.some(grupo => grupo.groupName === visibility)) {
-      data.append('visibility', visibility);
     } else {
-      data.append('visibility', 'public');
+      // Verifica se grupoRetornado ou grupoUserMembro são null ou undefined
+      if (grupoRetornado == null && grupoUserMembro == null) {
+        // Ambos são null ou undefined
+        data.append('visibility', 'public');
+      } else if (grupoRetornado != null && grupoUserMembro == null) {
+
+
+        // Apenas grupoUserMembro é null ou undefined
+        if (grupoRetornado.some(grupo => grupo.id === visibility)) {
+          data.append('visibility', visibility);
+        } else {
+          data.append('visibility', 'public');
+        }
+
+
+      } else if (grupoRetornado == null && grupoUserMembro != null) {
+
+
+        // Apenas grupoRetornado é null ou undefined
+        if (grupoUserMembro.some(grupo => grupo.id === visibility)) {
+          data.append('visibility', visibility);
+        } else {
+          data.append('visibility', 'public');
+        }
+
+
+      } else {
+
+
+        // Ambos não são null ou undefined
+        if (grupoRetornado.some(grupo => grupo.id === visibility) || grupoUserMembro.some(grupo => grupo.id === visibility)) {
+          data.append('visibility', visibility);
+        } else {
+          data.append('visibility', 'public');
+        }
+
+
+      }
     }
+    
   
     axios
       .post("http://localhost:3001/upload/audio", data, {
@@ -711,12 +746,12 @@ const handleDeleteGroup = async (groupId) => {
                   <option value="private">Private</option>
                   {grupoRetornado && grupoRetornado.length > 0 &&
                     grupoRetornado.map((grupo) => (
-                      <option key={grupo.id} value={grupo.groupName}>{grupo.groupName}</option>
+                      <option key={grupo.id} value={grupo.id}>{grupo.groupName}</option>
                     ))
                   }
                   {grupoUserMembro && grupoUserMembro.length > 0 &&
                     grupoUserMembro.map((grupo) => (
-                      <option key={grupo.id} value={grupo.groupName}>{grupo.groupName}</option>
+                      <option key={grupo.id} value={grupo.id}>{grupo.groupName}</option>
                     ))
                   }
                 </select>
@@ -832,9 +867,14 @@ const handleDeleteGroup = async (groupId) => {
     <option value="private">Privado</option>
     {grupoRetornado && grupoRetornado.length > 0 &&
       grupoRetornado.map((grupo) => (
-        <option key={grupo.id} value={grupo.groupName}>{grupo.groupName}</option>
+        <option key={grupo.id} value={grupo.id}>{grupo.groupName}</option>
       ))
     }
+    {grupoUserMembro && grupoUserMembro.length > 0 &&
+          grupoUserMembro.map((grupo) => (
+            <option key={grupo.id} value={grupo.id}>{grupo.groupName}</option>
+          ))
+     }
   </select>
   <input
     type="file"

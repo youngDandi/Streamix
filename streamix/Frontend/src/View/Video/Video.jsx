@@ -31,7 +31,7 @@ useEffect(() => {
   const [description, setDescription] = useState('');
   const [visibility, setVisibility] = useState('public');
   const genero = ['Sci-Fi', 'Drama', 'Aventura'];
-  const [grupoRetornado, setGrupoRetornado] = useState(null); // Estado para armazenar o grupo do usuário logado
+  const [grupoRetornado, setGrupoRetornado] = useState(); // Estado para armazenar o grupo do usuário logado
   const [grupoUserMembro, setGrupoUserMembro] = useState(null);
   
   const handleAddBtnClick = () => {
@@ -176,14 +176,48 @@ useEffect(() => {
     data.append('video', videoFile);
     data.append('description', description);
     data.append('genre', JSON.stringify(genero));
+
     if (visibility === 'private') {
       data.append('visibility', user.email);
-    } else if (grupoRetornado.some(grupo => grupo.groupName === visibility) ||
-               grupoUserMembro.some(grupo => grupo.groupName === visibility)) {
-      data.append('visibility', visibility);
     } else {
-      data.append('visibility', 'public');
+      // Verifica se grupoRetornado ou grupoUserMembro são null ou undefined
+      if (grupoRetornado == null && grupoUserMembro == null) {
+        // Ambos são null ou undefined
+        data.append('visibility', 'public');
+      } else if (grupoRetornado != null && grupoUserMembro == null) {
+
+
+        // Apenas grupoUserMembro é null ou undefined
+        if (grupoRetornado.some(grupo => grupo.id === visibility)) {
+          data.append('visibility', visibility);
+        } else {
+          data.append('visibility', 'public');
+        }
+
+
+      } else if (grupoRetornado == null && grupoUserMembro != null) {
+
+
+        // Apenas grupoRetornado é null ou undefined
+        if (grupoUserMembro.some(grupo => grupo.id === visibility)) {
+          data.append('visibility', visibility);
+        } else {
+          data.append('visibility', 'public');
+        }
+
+
+      } else {
+
+        // Ambos não são null ou undefined
+        if (grupoRetornado.some(grupo => grupo.id === visibility) || grupoUserMembro.some(grupo => grupo.id === visibility)) {
+          data.append('visibility', visibility);
+        } else {
+          data.append('visibility', 'public');
+        }
+
+      }
     }
+    
 
     axios.post('http://localhost:3001/upload/videos', data, {
       headers: {
@@ -316,12 +350,12 @@ useEffect(() => {
                   <option value="private">Private</option>
                   {grupoRetornado && grupoRetornado.length > 0 &&
                     grupoRetornado.map((grupo) => (
-                      <option key={grupo.id} value={grupo.groupName}>{grupo.groupName}</option>
+                      <option key={grupo.id} value={grupo.id}>{grupo.groupName}</option>
                     ))
                   }
                   {grupoUserMembro && grupoUserMembro.length > 0 &&
                     grupoUserMembro.map((grupo) => (
-                      <option key={grupo.id} value={grupo.groupName}>{grupo.groupName}</option>
+                      <option key={grupo.id} value={grupo.id}>{grupo.groupName}</option>
                     ))
                   }
                 </select>
