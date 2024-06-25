@@ -5,13 +5,17 @@ const bodyParser = require("body-parser");
 const path = require("path");
 let multer = require("multer");
 const { db, userAuth } = require("./Database/firebase.js");
-const {alterPath} = require("./functions/alterPath.js")
 const mm = require("music-metadata");
 const { Stream } = require("stream");
 const fs = require("fs");
 const mime = require("mime-types");
 const app = express();
 const port = 3001;
+const Int64BE = require("int64-buffer").Int64BE; 
+Buffer.prototype.readInt64BE || (Buffer.prototype.readInt64BE = function(offset) {
+	var buffer = this.slice(offset);
+	return new Int64BE(buffer);
+});
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -53,7 +57,7 @@ app.post("/register", async (req, res) => {
     await db.collection("users").doc(user.uid).set({
       nome: user.displayName,
       email: user.email,
-      tipo: tipo,
+      tipo: tipo, //Todos usuários podem ser gestores, no need
     });
 
     return res.status(200).send({
@@ -98,6 +102,7 @@ app.post("/upload", upload.any(), async (req, res) => {
         .send({ message: "Success in upload", Sent: "Video" });
     } else {
       const docRef = db.collection("audio").doc();
+      console.log(docData.audio);
       const metadata = await mm.parseFile(docData.audio);
       docData.metadata = metadata;
       docData.artist = req.body.artist;
@@ -116,7 +121,6 @@ app.post("/upload", upload.any(), async (req, res) => {
 });
 
 app.get("/assets/:type/:id", async (req, res) => {
-  
   const fileType = req.params.type;
   const fileId = req.params.id;
   const filePath = path.join(__dirname, "assets", fileType, fileId);

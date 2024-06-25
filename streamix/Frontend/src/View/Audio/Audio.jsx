@@ -162,6 +162,7 @@ function Audio() {
     data.append("audio", audio);
     data.append("genre", selectedGenre);
     data.append("artist", artist);
+    console.log(data);
 
     axios
       .post("http://localhost:3001/upload", data, {
