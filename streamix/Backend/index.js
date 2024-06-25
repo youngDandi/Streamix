@@ -227,7 +227,8 @@ app.post("/upload/audio", upload.any(), async (req, res) => {
       title: req.body.title,
       artist: req.body.artist,
       genre: req.body.genre || "",  // Adiciona o gênero se presente
-      visibility: req.body.visibility || "public"  // Adiciona a visibilidade, padrão para público se não especificado
+      visibility: req.body.visibility || "public",  // Adiciona a visibilidade, padrão para público se não especificado
+      
     };
 
     // Adiciona as informações de caminho de arquivos ao docData
@@ -571,7 +572,7 @@ app.get("/users", async (req, res) => {
   }
 });
 
-
+//Endpoint que tira todas as musicas do firebase e manda para o Frontend
 app.get("/audios", async (req, res) => {
   try {
     const audiosRef = db.collection("audio");
@@ -618,6 +619,228 @@ app.get("/audios", async (req, res) => {
     });
   }
 });
+
+
+
+//Endpoint que filtra as musicas com base no usuario logado e envia para o Frontend
+app.get("/audio/:user", async (req, res) => {
+  const userEmail = req.params.user;
+  console.log("User email:", userEmail); // Adiciona um log para o userEmail
+  
+  try {
+    // Passo 1: Obter todos os áudios da coleção 'audio'
+    const audioSnapshot = await db.collection("audio").get();
+    const audios = audioSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    console.log("Número de áudios encontrados:", audios.length); // Log para verificar quantos áudios foram encontrados
+
+    // Passo 1: Obter todos os grupos da coleção 'group'
+    const groupSnapshot = await db.collection("group").get();
+    const groups = groupSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    console.log("Número de grupos encontrados:", groups.length); // Log para verificar quantos grupos foram encontrados
+
+    // Cria um vetor para armazenar as músicas filtradas
+    const musicas = [];
+
+    // Passo 2: Filtra áudios com visibilidade pública ou correspondendo ao userEmail
+    audios.forEach(audio => {
+
+
+  if (audio.visibility === "public" || audio.visibility === userEmail) {
+    // Caso 1: Se a visibilidade do áudio for "public" ou igual ao userEmail
+    const artist = audio.artist || "Desconhecido";
+    const song = {
+      id: audio.id,
+      artist: artist,
+      title: audio.title || null,
+      genre: audio.genre || null,
+      duration: audio.duration || (audio.metadata && audio.metadata.format && audio.metadata.format.duration) || null,
+      thumbnail: audio.image ? `http://localhost:3001/${audio.image.replace(/\\/g, "/")}` : null,
+      audioUrl: audio.audio ? `http://localhost:3001/${audio.audio.replace(/\\/g, "/")}` : null,
+      visibility: audio.visibility,
+    };
+    musicas.push(song);
+  } else if (groups.length > 0) {
+    // Caso 2: Se houver grupos, encontrar o grupo ao qual o áudio pertence
+    const grupoPertencente = groups.find(group => group.id === audio.visibility);
+
+    if (grupoPertencente && grupoPertencente.membros) {
+      // Verifica se há membros no grupo e se o userEmail é membro ou owner
+      const isOwner =  grupoPertencente.owner.id == userEmail;
+
+      console.log(isOwner);
+      if (isOwner) {
+        const artist = audio.artist || "Desconhecido";
+        const song = {
+          id: audio.id,
+          artist: artist,
+          title: audio.title || null,
+          genre: audio.genre || null,
+          duration: audio.duration || (audio.metadata && audio.metadata.format && audio.metadata.format.duration) || null,
+          thumbnail: audio.image ? `http://localhost:3001/${audio.image.replace(/\\/g, "/")}` : null,
+          audioUrl: audio.audio ? `http://localhost:3001/${audio.audio.replace(/\\/g, "/")}` : null,
+          visibility: audio.visibility,
+        };
+        musicas.push(song);
+
+      }
+      else{
+        const isMembro = grupoPertencente.membros.some(membro => membro.id === userEmail);
+        console.log(isMembro);
+        if(isMembro){
+            const artist = audio.artist || "Desconhecido";
+          const song = {
+            id: audio.id,
+            artist: artist,
+            title: audio.title || null,
+            genre: audio.genre || null,
+            duration: audio.duration || (audio.metadata && audio.metadata.format && audio.metadata.format.duration) || null,
+            thumbnail: audio.image ? `http://localhost:3001/${audio.image.replace(/\\/g, "/")}` : null,
+            audioUrl: audio.audio ? `http://localhost:3001/${audio.audio.replace(/\\/g, "/")}` : null,
+            visibility: audio.visibility,
+          };
+          musicas.push(song);
+        }
+        console.log("Nao encontrou membros");
+      }
+    }
+    else{
+      console.log("Nao encontrou grupo");
+    }
+  }
+});
+
+
+    console.log("Número de músicas encontradas após filtro:", musicas.length); // Log para verificar quantas músicas foram filtradas
+
+    // Passo 3: Verifica se encontrou músicas
+    if (musicas.length === 0) {
+      console.log("Nenhuma música encontrada para o usuário:", userEmail);
+      res.status(404).send("Nao existem musicas associadas a este usuario.");
+    } else {
+      
+      
+
+      console.log("Músicas formatadas:", musicas); // Log para verificar como as músicas estão sendo formatadas
+      res.status(200).send({
+        message: "Áudios retornados",
+        musicas: musicas,
+      });
+    }
+  } catch (error) {
+    console.error("Erro ao obter áudios: ", error);
+    res.status(500).send("Erro ao processar a solicitação.");
+  }
+});
+
+
+//Endpoint para filtrar videos
+app.get("/videos/:user", async (req, res) => {
+  const userEmail = req.params.user;
+  console.log("User email:", userEmail); // Adiciona um log para o userEmail
+  
+  try {
+    // Passo 1: Obter todos os vídeos da coleção 'video'
+    const videoSnapshot = await db.collection("video").get();
+    const videos = videoSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    console.log("Número de vídeos encontrados:", videos.length); // Log para verificar quantos vídeos foram encontrados
+
+    // Passo 2: Obter todos os grupos da coleção 'group'
+    const groupSnapshot = await db.collection("group").get();
+    const groups = groupSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    console.log("Número de grupos encontrados:", groups.length); // Log para verificar quantos grupos foram encontrados
+
+    // Cria um vetor para armazenar os vídeos filtrados
+    const videosFiltrados = [];
+
+    // Passo 3: Filtra vídeos com visibilidade pública ou correspondendo ao userEmail
+    videos.forEach(video => {
+      if (video.visibility === "public" || video.visibility === userEmail) {
+        
+
+        const formattedVideo = {
+                id: video.id,
+                title: video.title || null,
+                description: video.description || null,
+                genre: video.genre ? video.genre : [],
+                thumbnail: video.image ? `http://localhost:3001/${video.image.replace(/\\/g, "/")}` : null,
+                videoUrl: video.video ? `http://localhost:3001/${video.video.replace(/\\/g, "/")}` : null,
+                visibility: video.visibility,
+        };
+
+        videosFiltrados.push(formattedVideo);
+      } else {
+        // Caso 2: Verifica se há grupos e se o usuário é membro ou owner
+        const grupoPertencente = groups.find(group => group.id === video.visibility);
+
+        if (grupoPertencente && grupoPertencente.membros) {
+          const isOwner = grupoPertencente.owner.id === userEmail;
+
+          if (isOwner) {
+            
+
+            const formattedVideo = {
+                id: video.id,
+                title: video.title || null,
+                description: video.description || null,
+                genre: video.genre ? video.genre : [],
+                thumbnail: video.image ? `http://localhost:3001/${video.image.replace(/\\/g, "/")}` : null,
+                videoUrl: video.video ? `http://localhost:3001/${video.video.replace(/\\/g, "/")}` : null,
+                visibility: video.visibility,
+            };
+
+            videosFiltrados.push(formattedVideo);
+          } else {
+            const isMembro = grupoPertencente.membros.some(membro => membro.id === userEmail);
+
+            if (isMembro) {
+              
+              
+
+              const formattedVideo = {
+                id: video.id,
+                title: video.title || null,
+                description: video.description || null,
+                genre: video.genre ? video.genre : [],
+                thumbnail: video.image ? `http://localhost:3001/${video.image.replace(/\\/g, "/")}` : null,
+                videoUrl: video.video ? `http://localhost:3001/${video.video.replace(/\\/g, "/")}` : null,
+                visibility: video.visibility,
+              };
+
+              videosFiltrados.push(formattedVideo);
+            }
+          }
+        }
+      }
+    });
+
+    console.log("Número de vídeos encontrados após filtro:", videosFiltrados.length); // Log para verificar quantos vídeos foram filtrados
+
+    // Passo 4: Verifica se encontrou vídeos
+    if (videosFiltrados.length === 0) {
+      console.log("Nenhum vídeo encontrado para o usuário:", userEmail);
+      res.status(404).send("Não existem vídeos associados a este usuário.");
+    } else {
+      console.log("Vídeos formatados:", videosFiltrados); // Log para verificar como os vídeos estão sendo formatados
+      res.status(200).send({
+        message: "Vídeos retornados",
+        videosFiltrados: videosFiltrados,
+      });
+    }
+  } catch (error) {
+    console.error("Erro ao obter vídeos: ", error);
+    res.status(500).send("Erro ao processar a solicitação.");
+  }
+});
+
+
+
+
+
+
 
 // Endpoint para deletar um grupo da coleção 'group'
 app.delete('/api/group/:id', async (req, res) => {
@@ -857,7 +1080,7 @@ app.put("/update/audio/:id", upload.any(), async (req, res) => {
       title: title,
       artist: artist,
       genre: genre,
-      visibility: visibility,
+      visibility: visibility || "public",  // Adiciona a visibilidade, padrão para público se não especificado
       updatedAt: new Date(),  // Adiciona a data de atualização
     };
     console.log("Dados do documento a serem atualizados:", docData);
@@ -932,7 +1155,7 @@ app.put("/update/video/:id", upload.any(), async (req, res) => {
     // Inicializa o objeto de dados do documento
     let docData = {
       title: title,
-      visibility: visibility,
+      visibility: visibility || "public",  // Adiciona a visibilidade, padrão para público se não especificado
       description: description,
       updatedAt: new Date(),  // Adiciona a data de atualização
     };

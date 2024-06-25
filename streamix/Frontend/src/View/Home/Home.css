@@ -25,21 +25,10 @@
     height: 75vh;
   }
 
-  #filmPlayer1{
-    background-image: url("../../assets/img/interstellar.jpg");
-    
-  }
-
-  #filmPlayer2{
-    background-image: url("../../assets/img/oppenheimer.jpg");
-  }
-
-  #filmPlayer3{
-    background-image: url("../../assets/img/dark.jpg");
-  }
+  
 
   .filmPlayer:before{  
-      content: '';
+    content: '';
     position: absolute; 
     top: 0; 
     left: 1; 

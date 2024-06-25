@@ -28,15 +28,12 @@ function Home() {
   }, [user]);
 
   const fetchVideos = () => {
-    axios.get('http://localhost:3001/videos')
+    axios.get(`http://localhost:3001/videos/${user.id}`)
       .then((response) => {
-        console.log('Vídeos recebidos do servidor:', response.data);
-        setVideos(response.data.videos);
+        console.log('Vídeos recebidos do servidor:', response.data.videosFiltrados);
+        setVideos(response.data.videosFiltrados);
 
-        // Exibir os IDs dos vídeos no console
-        response.data.videos.forEach((video) => {
-          console.log('ID do vídeo:', video.id);
-        });
+        
       })
       .catch((error) => {
         console.error('Erro ao buscar vídeos:', error);
@@ -48,16 +45,16 @@ function Home() {
       <MenuDiv />
       <div className="multimediaDiv">
         <div className="filmDiv">
-          <div className="filmPlayer" id='filmPlayer1'>
+          <div className="filmPlayer" >
           {videos.length > 0 && (
             <Link
               to={`/Video/${videos[0].id}`} // Usando id do documento no Firestore como slug
               className='filmPlayerV'
-              style={{
-                backgroundImage: `url(${videos[0].thumbnail})`,
-              }}
+              style={{backgroundImage: `url(${videos[0].thumbnail})`}}
+              
             >
               <div className='viDescriptionV'>
+                
                 <h2 id='titleV'>{videos[0].title}</h2>
                 <h5 id='descriptionV'>{videos[0].description}</h5>
                 <div className='videoClassificationV'>

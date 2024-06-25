@@ -146,15 +146,12 @@ useEffect(() => {
   }, []);
 
   const fetchVideos = () => {
-    axios.get('http://localhost:3001/videos')
+    axios.get(`http://localhost:3001/videos/${user.id}`)
       .then((response) => {
-        console.log('Vídeos recebidos do servidor:', response.data);
-        setVideos(response.data.videos);
+        console.log('Vídeos recebidos do servidor:', response.data.videosFiltrados);
+        setVideos(response.data.videosFiltrados);
 
-        // Exibir os IDs dos vídeos no console
-        response.data.videos.forEach((video) => {
-          console.log('ID do vídeo:', video.id);
-        });
+        
       })
       .catch((error) => {
         console.error('Erro ao buscar vídeos:', error);
@@ -178,7 +175,7 @@ useEffect(() => {
     data.append('genre', JSON.stringify(genero));
 
     if (visibility === 'private') {
-      data.append('visibility', user.email);
+      data.append('visibility', user.id);
     } else {
       // Verifica se grupoRetornado ou grupoUserMembro são null ou undefined
       if (grupoRetornado == null && grupoUserMembro == null) {

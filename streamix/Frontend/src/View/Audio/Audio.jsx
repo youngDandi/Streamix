@@ -171,8 +171,9 @@ useEffect(() => {
 
     const fetchAudios = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/audios");
-        setAudios(response.data.songs);
+        const response = await axios.get(`http://localhost:3001/audio/${user.id}`);
+        console.log("Musicas Retornadas do backend "+response.data.musicas);
+        setAudios(response.data.musicas);
         
       } catch (error) {
         console.error("Error fetching audios:", error);
@@ -295,12 +296,13 @@ useEffect(() => {
     data.append("artist", artist);
   
     if (visibility === 'private') {
-      data.append('visibility', user.email);
+      data.append('visibility', user.id);
     } else {
       // Verifica se grupoRetornado ou grupoUserMembro são null ou undefined
       if (grupoRetornado == null && grupoUserMembro == null) {
         // Ambos são null ou undefined
         data.append('visibility', 'public');
+        
       } else if (grupoRetornado != null && grupoUserMembro == null) {
 
 
