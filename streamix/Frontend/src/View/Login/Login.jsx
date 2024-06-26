@@ -12,30 +12,25 @@ function Login() {
     const [error, setError] = useState('');
     const [redirectToHome, setRedirectToHome] = useState(false);
 
-    const handleLogin = () => {
-      firebase.auth().signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          return firebase.firestore().collection('users').doc(user.uid).get();
-        })
-        .then((doc) => {
-          if (doc.exists) {
-            const userData = doc.data();
-            alert(`Seja Bem-Vindo Sr.(a) ${userData.nome}`);
-            setRedirectToHome(true);
-            
-          } else {
-            alert('Usuário não encontrado');
-          }
-        })
-        .catch((error) => {
-          if (error.code === 'auth/user-not-found') {
-            alert('Usuário não encontrado');
-          } else {
-            setError(error.message);
-          }
-          console.log("Error: ", error.code, error.message);
-        });
+    const handleLogin = async () => {
+      try {
+        const response = await axios.post('http://localhost:3001/login', { email, password });
+        const userData = response.data.user;
+        alert(`Seja Bem-Vindo Sr.(a) ${userData.nome}`);
+        
+        // Aqui você pode adicionar a lógica para armazenar o usuário no contexto ou no local storage
+        login(userData);  // Supondo que você tem uma função 'login' no contexto de autenticação para salvar o estado do usuário
+  
+        // Redireciona para a página Home após o login bem-sucedido
+        setRedirectToHome(true);
+      } catch (error) {
+        if (error.response && error.response.data) {
+          setError(error.response.data.message);
+        } else {
+          setError('Erro desconhecido');
+        }
+        console.log("Error: ", error);
+      }
     };
 
     if (redirectToHome) {

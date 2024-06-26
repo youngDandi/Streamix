@@ -14,6 +14,18 @@
    margin-top: 2%;
   }
 
+  #btnDelete{
+    background-color: rgb(134, 16, 16);
+    width: 70px;
+    height: 5vh;
+  }
+
+  #btnAlterar{
+    background-color: rgb(197, 123, 11);
+    width: 70px;
+    height: 5vh;
+  }
+
   .controls{
     display: flex;
     flex-direction: row;
@@ -94,12 +106,36 @@
    width: 320px;
  }
 
- 
+ .grupoEbotao{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 28%;
+ }
 
+ #btnGrupoAdicionar{
+  width: 83px;
+  height: 5vh;
+  background-color: rgb(10, 78, 10);
+ }
+
+ #btnGrupoEliminar{
+  width: 83px;
+  height: 5vh;
+  background-color: rgb(134, 16, 16);
+ }
+
+ #btnGrupoConvidar{
+  width: 83px;
+  height: 5vh;
+  background-color: rgb(10, 78, 10);
+ }
   .songDiv{
+    justify-content: center;
+    align-items: center;
    display: flex;
    flex-direction: row;
-   gap: 120px;
+   gap: 55px;
    margin-bottom: -2%;
    cursor: pointer;
    border-radius: 5px;
@@ -134,8 +170,23 @@
    color: white;
   }
 
+  .btnGrupoDiv{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }
+
+  #OwnerName{
+    color: rgb(206, 161, 14);
+   }
+
   #artistN{
    color: #8A8484;
+   margin-top: -15px;
+  }
+
+  #groupEmail{
+    color: #8A8484;
    margin-top: -15px;
   }
 
@@ -152,6 +203,16 @@
    border-radius: 5px;
   }
 
+  .userInfo{
+    height: 10vh;
+    display: flex;
+   flex-direction: row;
+   align-items: center;
+   gap: 20px;
+   margin-bottom: -5%;
+   cursor: pointer;
+   border-radius: 5px;
+  }
   
 .addContent{
   cursor: pointer;
@@ -184,6 +245,9 @@
     background-color: rgba(116, 109, 109, 0.7); /* altere a opacidade quando passar o mouse */
 }
   
+.userInfo:hover {
+  background-color: rgba(116, 109, 109, 0.7); /* altere a opacidade quando passar o mouse */
+}
   #artistPhoto{
    width: 50px;
    height: 50px;

@@ -1,13 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Reproduction.css';
 import MenuDiv from '../../Components/MenuDiv/MenuDiv';
 import { useParams } from 'react-router-dom';
-import { Videos } from '../../mocks/video';
+import { useAuth } from '../../hooks/AuthContext.jsx';
 
 function Reproduction() {
-  const { slug } = useParams();
+// Usando o hook useAuth para obter os dados do usuário logado
+const { user } = useAuth();
 
-  const video = Videos.find((video) => video.slug === slug);
+// Exibindo todos os dados do usuário logado no console
+useEffect(() => {
+  console.log("Dados do usuário logado:", user);
+}, [user]);
+
+  const { id } = useParams();
+  const [video, setVideo] = useState(null);
+
+  useEffect(() => {
+    const fetchVideo = async () => {
+      try {
+        const response = await fetch(`http://localhost:3001/api/video/${id}`);
+        if (!response.ok) {
+          throw new Error('Erro ao buscar informações do vídeo');
+        }
+        const data = await response.json();
+        setVideo(data); // Define os dados do vídeo no estado
+      } catch (error) {
+        console.error('Erro ao buscar informações do vídeo:', error);
+      }
+    };
+
+    fetchVideo();
+  }, [id]);
+
+  if (!video) {
+    return <div className='todaPaginaV'>Carregando...</div>;
+  }
 
   return (
     <div className='todaPaginaV'>
@@ -30,14 +58,12 @@ function Reproduction() {
         <div className='videoPlayer'>
           <video
             className='video-js'
-            id="my-player"
-            autoPlay={true}
+            autoPlay
             muted
             controls
-            poster={video.thumbnail[1]}
+            poster={video.thumbnail}
             data-setup='{"playbackRates": [0.5, 1, 1.5, 2, 3.5, 4]}'
-            width={600}
-            height={400}
+            style={{ width: '80%', height: 'auto', maxWidth: '1000px' }} // Ajuste aqui
           >
             <source src={video.videoUrl} type="video/mp4" />
             Seu navegador não suporta o formato de vídeo.
