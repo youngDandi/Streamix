@@ -323,13 +323,6 @@ app.post("/owner/group", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
 app.get("/assets/:type/:id", async (req, res) => {
   const fileType = req.params.type;
   const fileId = req.params.id;
@@ -374,7 +367,7 @@ app.get("/assets/:type/:id", async (req, res) => {
 });
 
 
-// Endpoint para retornar grupos em que o usuario logado e o owner
+// Endpoint para retornar grupos em que o usuario logado é o owner
 app.get("/owner/groups/:id", async (req, res) => {
   const userId = req.params.id; // Obtém o userId dos parâmetros da URL
 
@@ -474,13 +467,6 @@ app.get("/member/groups/:id", async (req, res) => {
     });
   }
 });
-
-
-
-
-
-
-
 
 // Rota para obter vídeos
 app.get("/videos", async (req, res) => {
@@ -657,8 +643,6 @@ app.delete('/api/group/:id', async (req, res) => {
   }
 });
 
-
-
 // Rota para deletar um áudio da coleção 'audio'
 app.delete('/delete/audio/:id', async (req, res) => {
   const audioId = req.params.id;
@@ -735,7 +719,6 @@ app.delete('/delete/audio/:id', async (req, res) => {
     });
   }
 });
-
 
 // Endpoint para deletar um vídeo da coleção 'video'
 app.delete('/delete/video/:id', async (req, res) => {
@@ -814,8 +797,6 @@ app.delete('/delete/video/:id', async (req, res) => {
   }
 });
 
-
-
 // Novo endpoint para atualização de áudio
 app.put("/update/audio/:id", upload.any(), async (req, res) => {
   const audioId = req.params.id;
@@ -887,7 +868,6 @@ app.put("/update/audio/:id", upload.any(), async (req, res) => {
     });
   }
 });
-
 
 // Novo endpoint para atualização de VIDEO
 app.put("/update/video/:id", upload.any(), async (req, res) => {
@@ -966,8 +946,6 @@ app.put("/update/video/:id", upload.any(), async (req, res) => {
     });
   }
 });
-
-
 
 // Adiciona a rota para enviar dados para a coleção radio
 app.post('/api/radio', async (req, res) => {
