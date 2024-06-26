@@ -29,18 +29,9 @@
     height: 75vh;
   }
 
-  #filmPlayer1V{
-   
-    
-  }
+  
 
-  #filmPlayer2V{
-    background-image: url("../../assets/img/oppenheimer.jpg");
-  }
 
-  #filmPlayer3V{
-    background-image: url("../../assets/img/dark.jpg");
-  }
 
   .filmPlayerV:before{  
       content: '';
