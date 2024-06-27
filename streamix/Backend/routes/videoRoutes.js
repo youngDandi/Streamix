@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { db } = require('../Database/firebase'); // Verifique o caminho correto para o seu arquivo Firebase
 
+
+
 // Rota para buscar um vídeo por ID
 router.get('/videos/:id', async (req, res) => {
   try {

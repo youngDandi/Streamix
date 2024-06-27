@@ -8,6 +8,8 @@ function Reproduction() {
 // Usando o hook useAuth para obter os dados do usuário logado
 const { user } = useAuth();
 
+
+
 // Exibindo todos os dados do usuário logado no console
 useEffect(() => {
   console.log("Dados do usuário logado:", user);

@@ -15,15 +15,24 @@ const port =  3001;
 const videoRoutes = require('./routes/videoRoutes'); // Importa suas rotas de vídeo
 
 
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors({
+  origin: '*', // ou especifique a URL do Ngrok
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type,Authorization'
+}));
+
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Configuração das rotas
 app.use('/api', videoRoutes); // Define um prefixo '/api' para todas as rotas do videoRoutes
 app.use('/api/video', videoRoutes);
 
-
+// Log de cada requisição para ajudar no diagnóstico
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} request for '${req.url}'`);
+  next();
+});
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -835,11 +844,6 @@ app.get("/videos/:user", async (req, res) => {
     res.status(500).send("Erro ao processar a solicitação.");
   }
 });
-
-
-
-
-
 
 
 // Endpoint para deletar um grupo da coleção 'group'

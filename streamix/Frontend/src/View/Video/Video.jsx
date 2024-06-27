@@ -139,7 +139,7 @@ useEffect(() => {
     const visibleWidth = videoPlayerDivRef.current.clientWidth;
 
     // Ajustar os limites com base na largura do contêiner e a largura visível
-    setDragConstraints({ left: -videoPlayerDivWidth + visibleWidth, right: 0 });
+    setDragConstraints({ right: 0 });
 
     // Buscar vídeos do backend ao montar o componente
     fetchVideos();
