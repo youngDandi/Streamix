@@ -5,9 +5,15 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../hooks/AuthContext.jsx';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import drake from "../../assets/img/drake.jpg";
+import black from "../../assets/img/6lack.jpg";
+import bigsean from "../../assets/img/bigsean.jpg";
+import travis from "../../assets/img/travis.jpg";
+
 
 function Home() {
 
+  
   const {user} = useAuth();
   const [videos, setVideos] = useState([]); // Estado para armazenar os vídeos recebidos do backend
   const musicPlayerDivRef = useRef();
@@ -45,19 +51,20 @@ function Home() {
       <MenuDiv />
       <div className="multimediaDiv">
         <div className="filmDiv">
-          <div className="filmPlayer" >
+          <div className="filmPlayerDiv"  >
+            
           {videos.length > 0 && (
             <Link
               to={`/Video/${videos[0].id}`} // Usando id do documento no Firestore como slug
-              className='filmPlayerV'
+              className='filmPlayer'
               style={{backgroundImage: `url(${videos[0].thumbnail})`}}
               
             >
-              <div className='viDescriptionV'>
+              <div className='viDescription'>
                 
-                <h2 id='titleV'>{videos[0].title}</h2>
-                <h5 id='descriptionV'>{videos[0].description}</h5>
-                <div className='videoClassificationV'>
+                <h2 id='titleH'>{videos[0].title}</h2>
+                <h5 id='descriptionH'>{videos[0].description}</h5>
+                <div className='videoClassificationH'>
                   {videos[0].genre.map((genre, index) => (
                     <h4 key={index} className={`category${index + 1}V`}>
                       {genre}
@@ -91,6 +98,7 @@ function Home() {
         <div className="musicDiv">
           <h2>Lista de Músicas</h2>
           <motion.div
+          
             className="musicPlayerDiv"
             whileTap={{ cursor: "grabbing" }}
             drag="x"
@@ -98,25 +106,25 @@ function Home() {
             ref={musicPlayerDivRef}
             style={{ display: 'flex' }}
           >
-            <motion.div className="musicPlayer" id='musicPlayer1'>
+            <motion.div className="musicPlayer" id='musicPlayer1' style={{backgroundImage: `url(${drake})`}}>
               <div className="musicDescriptionH">
                 <h2 id='musicTitle'>Take Care</h2>
                 <h4 id='artistName'>Drake</h4>
               </div>
             </motion.div>
-            <motion.div className="musicPlayer" id='musicPlayer2'>
+            <motion.div className="musicPlayer" id='musicPlayer2' style={{backgroundImage: `url(${black})`}}>
               <div className="musicDescriptionH">
                 <h2 id='musicTitle'>Freeblack</h2>
                 <h4 id='artistName'>6lack</h4>
               </div>
             </motion.div>
-            <motion.div className="musicPlayer" id='musicPlayer3'>
+            <motion.div className="musicPlayer" id='musicPlayer3' style={{backgroundImage: `url(${bigsean})`}}>
               <div className="musicDescriptionH">
                 <h2 id='musicTitle'>Dark Sky Paradise</h2>
                 <h4 id='artistName'>Big Sean</h4>
               </div>
             </motion.div>
-            <motion.div className="musicPlayer" id='musicPlayer4'>
+            <motion.div className="musicPlayer" id='musicPlayer4' style={{backgroundImage: `url(${travis})`}}>
               <div className="musicDescriptionH">
                 <h2 id='musicTitle'>Jackboys</h2>
                 <h4 id='artistName'>Travis Scott</h4>

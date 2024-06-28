@@ -25,6 +25,10 @@
     height: 75vh;
   }
 
+  .filmPlayerDiv{
+    display: flex;
+  }
+
   
 
   .filmPlayer:before{  
@@ -61,7 +65,7 @@
 
 }
 
-  .filmPlayer #title{
+  .filmPlayer #titleH{
     color: white;
     font-size: 62px;
     font-weight: bold;
@@ -75,11 +79,15 @@
     
   }
 
-  .filmPlayer #descriptionH{
+   #descriptionH{
     color: white;
     font-size: 14px;
     font-weight: lighter;
   
+  }
+
+  .viDescription{
+    margin-left: 7%;
   }
 
   .filmPlayerMini #descriptionH_mini{
@@ -225,28 +233,12 @@
     height: 25vh;
     background-size: cover;
     border-radius: 5px;
-  }
-
-  #musicPlayer1{
-    background-image: url("../../assets/img/drake.jpg");
-    box-shadow: 0 0 400px #9DBCD3;
     
   }
 
-  #musicPlayer2{
-    background-image: url("../../assets/img/6lack.jpg");
-    
-  }
+ 
 
-  #musicPlayer3{
-    background-image: url("../../assets/img/bigsean.jpg");
-    
-  }
-
-  #musicPlayer4{
-    background-image: url("../../assets/img/travis.jpg");
-    
-  }
+  
 
  .musicDescriptionH{
   margin-left: 5%;
