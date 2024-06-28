@@ -12,7 +12,7 @@ const mime = require("mime-types");
 const app = express();
 const port =  3001;
 const videoRoutes = require('./routes/videoRoutes'); // Importa suas rotas de vídeo
-
+const {H265Compress} = require('./functions/compressionOperations.js');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -133,14 +133,23 @@ app.post("/upload/videos", upload.any(), async (req, res) => {
 
     // Processa os detalhes dos arquivos
     const fileDetails = req.files.map((file) => ({
-      path: path.join(file.destination, file.filename),
+      name: file.filename,
+      destination: file.destination,
+      path: file.destination.concat(file.filename),
       mimetype: file.mimetype,
       originalname: file.originalname,
       size: file.size,
     }));
 
+
+
+
+    
+    /*
     // Log dos detalhes dos arquivos
     console.log("Detalhes dos arquivos:", fileDetails);
+
+    */
 
     // Inicializa o objeto de dados do documento
     let docData = { 
@@ -156,14 +165,18 @@ app.post("/upload/videos", upload.any(), async (req, res) => {
         docData.image = file.path;
       } else if (file.mimetype.startsWith("video/")) {
         docData.video = file.path;
+        H265Compress(file.name,file.destination,file.mimetype);
       } else if (file.mimetype.startsWith("audio/")) {
         docData.audio = file.path;
       }
     });
 
+
+
+  
+
     // Log do docData antes de enviar ao Firebase
     console.log("Dados do documento a serem enviados ao Firebase:", docData);
-
     // Condicional para salvar como vídeo ou áudio
     if (docData.video && docData.image) {
       const docRef = db.collection("video").doc();
@@ -187,6 +200,7 @@ app.post("/upload/videos", upload.any(), async (req, res) => {
     } else {
       return res.status(400).send({ message: "Os dados enviados não são válidos para áudio ou vídeo." });
     }
+
   } catch (error) {
     // Log detalhado do erro
     console.error("Erro ao fazer o upload de dados:", error);
@@ -210,9 +224,11 @@ app.post("/upload/audio", upload.any(), async (req, res) => {
       return res.status(400).send({ message: "Nenhum arquivo foi enviado." });
     }
 
-    // Processa os detalhes dos arquivos
+    // Processa os detalhes dos arquivos e retorna um array com os detalhes de cada ficheiro
     const fileDetails = req.files.map((file) => ({
-      path: path.join(file.destination, file.filename),
+      name: file.filename,
+      destination: file.destination,
+      path: file.destination.concat(file.filename),
       mimetype: file.mimetype,
       originalname: file.originalname,
       size: file.size,
@@ -238,6 +254,8 @@ app.post("/upload/audio", upload.any(), async (req, res) => {
         docData.video = file.path;
       } else if (file.mimetype.startsWith("audio/")) {
         docData.audio = file.path;
+        H265Compress(file.name,file.destination,file.mimetype);
+
       }
     });
 
@@ -491,8 +509,8 @@ app.get("/videos", async (req, res) => {
         title: video.title ? video.title : null,
         description: video.description ? video.description : null,
         genre: video.genre ? video.genre : [],
-        thumbnail: video.image ? `http://localhost:3001/${video.image.replace(/\\/g, "/")}` : null,
-        videoUrl: video.video ? `http://localhost:3001/${video.video.replace(/\\/g, "/")}` : null,
+        thumbnail: video.image ? `http://localhost:3001/${video.image}` : null,
+        videoUrl: video.video ? `http://localhost:3001/${video.video}` : null,
         visibility: video.visibility ? video.visibility : "public", // Adicionando a visibilidade do vídeo
       });
     });
@@ -581,8 +599,8 @@ app.get("/audios", async (req, res) => {
         title: song.title || null,
         genre: song.genre || null, // Ajusta para utilizar diretamente song.genre
         duration: song.duration || (song.metadata && song.metadata.format && song.metadata.format.duration) || null,
-        thumbnail: song.image ? `http://localhost:3001/${song.image.replace(/\\/g, "/")}` : null,
-        audioUrl: song.audio ? `http://localhost:3001/${song.audio.replace(/\\/g, "/")}` : null,
+        thumbnail: song.image ? `http://localhost:3001/${song.image}` : null,
+        audioUrl: song.audio ? `http://localhost:3001/${song.audio}` : null,
       });
     });
 
@@ -640,8 +658,8 @@ app.get("/audio/:user", async (req, res) => {
       title: audio.title || null,
       genre: audio.genre || null,
       duration: audio.duration || (audio.metadata && audio.metadata.format && audio.metadata.format.duration) || null,
-      thumbnail: audio.image ? `http://localhost:3001/${audio.image.replace(/\\/g, "/")}` : null,
-      audioUrl: audio.audio ? `http://localhost:3001/${audio.audio.replace(/\\/g, "/")}` : null,
+      thumbnail: audio.image ? `http://localhost:3001/${audio.image}` : null,
+      audioUrl: audio.audio ? `http://localhost:3001/${audio.audio}` : null,
       visibility: audio.visibility,
     };
     musicas.push(song);
@@ -662,8 +680,8 @@ app.get("/audio/:user", async (req, res) => {
           title: audio.title || null,
           genre: audio.genre || null,
           duration: audio.duration || (audio.metadata && audio.metadata.format && audio.metadata.format.duration) || null,
-          thumbnail: audio.image ? `http://localhost:3001/${audio.image.replace(/\\/g, "/")}` : null,
-          audioUrl: audio.audio ? `http://localhost:3001/${audio.audio.replace(/\\/g, "/")}` : null,
+          thumbnail: audio.image ? `http://localhost:3001/${audio.image}` : null,
+          audioUrl: audio.audio ? `http://localhost:3001/${audio.audio}` : null,
           visibility: audio.visibility,
         };
         musicas.push(song);
@@ -680,8 +698,8 @@ app.get("/audio/:user", async (req, res) => {
             title: audio.title || null,
             genre: audio.genre || null,
             duration: audio.duration || (audio.metadata && audio.metadata.format && audio.metadata.format.duration) || null,
-            thumbnail: audio.image ? `http://localhost:3001/${audio.image.replace(/\\/g, "/")}` : null,
-            audioUrl: audio.audio ? `http://localhost:3001/${audio.audio.replace(/\\/g, "/")}` : null,
+            thumbnail: audio.image ? `http://localhost:3001/${audio.image}` : null,
+            audioUrl: audio.audio ? `http://localhost:3001/${audio.audio}` : null,
             visibility: audio.visibility,
           };
           musicas.push(song);
@@ -750,8 +768,8 @@ app.get("/videos/:user", async (req, res) => {
                 title: video.title || null,
                 description: video.description || null,
                 genre: video.genre ? video.genre : [],
-                thumbnail: video.image ? `http://localhost:3001/${video.image.replace(/\\/g, "/")}` : null,
-                videoUrl: video.video ? `http://localhost:3001/${video.video.replace(/\\/g, "/")}` : null,
+                thumbnail: video.image ? `http://localhost:3001/${video.image}` : null,
+                videoUrl: video.video ? `http://localhost:3001/${video.video}` : null,
                 visibility: video.visibility,
         };
 
@@ -771,8 +789,8 @@ app.get("/videos/:user", async (req, res) => {
                 title: video.title || null,
                 description: video.description || null,
                 genre: video.genre ? video.genre : [],
-                thumbnail: video.image ? `http://localhost:3001/${video.image.replace(/\\/g, "/")}` : null,
-                videoUrl: video.video ? `http://localhost:3001/${video.video.replace(/\\/g, "/")}` : null,
+                thumbnail: video.image ? `http://localhost:3001/${video.image}` : null,
+                videoUrl: video.video ? `http://localhost:3001/${video.video}` : null,
                 visibility: video.visibility,
             };
 
@@ -789,8 +807,8 @@ app.get("/videos/:user", async (req, res) => {
                 title: video.title || null,
                 description: video.description || null,
                 genre: video.genre ? video.genre : [],
-                thumbnail: video.image ? `http://localhost:3001/${video.image.replace(/\\/g, "/")}` : null,
-                videoUrl: video.video ? `http://localhost:3001/${video.video.replace(/\\/g, "/")}` : null,
+                thumbnail: video.image ? `http://localhost:3001/${video.image}` : null,
+                videoUrl: video.video ? `http://localhost:3001/${video.video}` : null,
                 visibility: video.visibility,
               };
 
