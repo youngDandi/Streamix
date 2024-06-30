@@ -7,6 +7,8 @@ const path = require('path');
 ffmpeg.setFfmpegPath(ffmpegStatic);
 
 function H265Compress(filename,destination,type){
+
+/*
 if(type.startsWith("video/")){
 ffmpeg().
 input(destination.concat(filename)).
@@ -85,6 +87,33 @@ on('progress',(progress)=>{
     })    
 
 }
+    */
+
+return new Promise((resolve,reject)=>{
+const process = ffmpeg().input(path.join(destination,filename));
+
+if(type.startsWith("video/")){
+  process.videoCodec("libx265");
+} else {
+  process.audioCodec("libmp3lame");
+}
+
+process.saveToFile(`assets/temp/${filename}`).on('progress',(progress)=>{
+  if(progress.percent){
+    console.log(`Processando: ${Math.floor(progress.percent)}%`)}}).on('end', async()=>{
+      try {
+        const tempPath = path.join('assets','temp',filename);
+        const destPath = path.join(destination,filename);
+
+        await fs.promises.rm(destPath, {force:true});
+        await fs.promises.rename(tempPath,destPath);
+        resolve();
+      } catch(error){
+        reject(`Error during file operations: ${error.message}`)}}).on('error',(error)=>{
+          reject(`FFmpe error: ${error.message}`);
+        })
+});
+
 }
 
 module.exports= {H265Compress};

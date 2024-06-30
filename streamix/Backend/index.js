@@ -1,4 +1,5 @@
 const express = require("express");
+const util = require('util');
 require("dotenv").config();
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -13,7 +14,6 @@ const app = express();
 const port =  3001;
 const videoRoutes = require('./routes/videoRoutes'); // Importa suas rotas de vídeo
 const {H265Compress} = require('./functions/compressionOperations.js');
-
 app.use(cors({
   origin: '*', // ou especifique a URL do Ngrok
   methods: 'GET,POST,PUT,DELETE',
@@ -175,8 +175,6 @@ app.post("/upload/videos", upload.any(), async (req, res) => {
       } else if (file.mimetype.startsWith("video/")) {
         docData.video = file.path;
         H265Compress(file.name,file.destination,file.mimetype);
-      } else if (file.mimetype.startsWith("audio/")) {
-        docData.audio = file.path;
       }
     });
 
@@ -256,18 +254,24 @@ app.post("/upload/audio", upload.any(), async (req, res) => {
     };
 
     // Adiciona as informações de caminho de arquivos ao docData
-    fileDetails.forEach((file) => {
+    /* fileDetails.forEach((file) => {
       if (file.mimetype.startsWith("image/")) {
         docData.image = file.path;
-      } else if (file.mimetype.startsWith("video/")) {
-        docData.video = file.path;
       } else if (file.mimetype.startsWith("audio/")) {
         docData.audio = file.path;
-        H265Compress(file.name,file.destination,file.mimetype);
+       H265Compress(file.name,file.destination,file.mimetype);
 
       }
-    });
+    }); */
 
+    for (const file of fileDetails) {
+      if (file.mimetype.startsWith("image/")) {
+        docData.image = file.path;
+      } else if (file.mimetype.startsWith("audio/")) {
+        docData.audio = file.path;
+        await H265Compress(file.name, file.destination, file.mimetype);
+      }
+    }
     // Log do docData antes de enviar ao Firebase
     console.log("Dados do documento a serem enviados ao Firebase:", docData);
 
@@ -283,17 +287,29 @@ app.post("/upload/audio", upload.any(), async (req, res) => {
       const docRef = db.collection("audio").doc();
 
       // Obtém metadados do áudio
-      const metadata = await mm.parseFile(docData.audio);
-      docData.metadata = metadata;
+
+      const data = await fs.promises.readFile(docData.audio);
+    //  const metadata = await mm.parseFile(docData.audio);
+      
+        const metadata = await mm.parseBuffer(data);  
+        delete metadata.native;
+        delete metadata.quality;
+        delete metadata.common.picture;
+        //delete metadata.format;
+      
+    docData.metadata = metadata;
       docData.artist = req.body.artist;
 
       // Tenta salvar no Firebase e loga o sucesso
-      await docRef.set(docData);
+
+console.log(util.inspect(docData.metadata,{showHidden:false,depth:null,colors:true}));
+     await docRef.set(docData); 
       console.log("Documento de áudio salvo com sucesso no Firebase");
       return res.status(200).send({ message: "Success in upload", Sent: "Audio" });
     } else {
       return res.status(400).send({ message: "Os dados enviados não são válidos para áudio ou vídeo." });
     }
+
   } catch (error) {
     // Log detalhado do erro
     console.error("Erro ao fazer o upload de dados:", error);
@@ -376,6 +392,8 @@ app.get("/assets/:type/:id", async (req, res) => {
       };
       res.writeHead(206, head);
       file.pipe(res);
+      return;
+
     } else {
       const head = {
         "Content-Length": fileSize,
@@ -383,13 +401,18 @@ app.get("/assets/:type/:id", async (req, res) => {
       };
       res.writeHead(200, head);
       fs.createReadStream(filePath).pipe(res);
+      return;
     }
   } else {
+    res.removeHeader('Connection');
     res.sendFile(filePath, (err) => {
       if (err) {
         console.error("Failed to send file:", err);
         res.status(err.status || 500).send("File not found");
+        return; 
+
       }
+
     });
   }
 });
@@ -1261,6 +1284,8 @@ app.get("/radios", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+
+app.listen(port,'0.0.0.0',() => {
   console.log(`Listening on port ${port}`);
 });
+
