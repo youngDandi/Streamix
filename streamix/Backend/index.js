@@ -14,11 +14,15 @@ const app = express();
 const port =  3001;
 const videoRoutes = require('./routes/videoRoutes'); // Importa suas rotas de vídeo
 const {H265Compress} = require('./functions/compressionOperations.js');
-app.use(cors({
-  origin: '*', // ou especifique a URL do Ngrok
-  methods: 'GET,POST,PUT,DELETE',
-  allowedHeaders: 'Content-Type,Authorization'
-}));
+const axios= require("axios");
+
+// Configura a base URL para apontar para o backend
+const api = axios.create({
+  baseURL: 'http://192.168.1.9:3001' // Use o endereço IP local do seu servidor
+});
+
+app.use(cors());
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -154,11 +158,10 @@ app.post("/upload/videos", upload.any(), async (req, res) => {
 
 
     
-    /*
-    // Log dos detalhes dos arquivos
+   
+     // Log dos detalhes dos arquivos
     console.log("Detalhes dos arquivos:", fileDetails);
 
-    */
 
     // Inicializa o objeto de dados do documento
     let docData = { 
@@ -168,22 +171,25 @@ app.post("/upload/videos", upload.any(), async (req, res) => {
       visibility: req.body.visibility || "public"  // Adiciona a visibilidade, padrão para público se não especificado
     };
 
-    // Adiciona as informações de caminho de arquivos ao docData
-    fileDetails.forEach((file) => {
-      if (file.mimetype.startsWith("image/")) {
-        docData.image = file.path;
-      } else if (file.mimetype.startsWith("video/")) {
-        docData.video = file.path;
-        H265Compress(file.name,file.destination,file.mimetype);
-      }
-    });
+   // Adiciona as informações de caminho de arquivos ao docData
+   fileDetails.forEach((file) => {
+    if (file.mimetype.startsWith("image/")) {
+      docData.image = file.path;
+    } else if (file.mimetype.startsWith("video/")) {
+      docData.video = file.path;
+    } else if (file.mimetype.startsWith("audio/")) {
+      docData.audio = file.path;
+    }
+  });
+
+  // Log do docData antes de enviar ao Firebase
+  console.log("Dados do documento a serem enviados ao Firebase:", docData);
 
 
 
   
 
-    // Log do docData antes de enviar ao Firebase
-    console.log("Dados do documento a serem enviados ao Firebase:", docData);
+    
     // Condicional para salvar como vídeo ou áudio
     if (docData.video && docData.image) {
       const docRef = db.collection("video").doc();
@@ -231,7 +237,7 @@ app.post("/upload/audio", upload.any(), async (req, res) => {
       return res.status(400).send({ message: "Nenhum arquivo foi enviado." });
     }
 
-    // Processa os detalhes dos arquivos e retorna um array com os detalhes de cada ficheiro
+    // Processa os detalhes dos arquivos
     const fileDetails = req.files.map((file) => ({
       name: file.filename,
       destination: file.destination,
@@ -240,9 +246,6 @@ app.post("/upload/audio", upload.any(), async (req, res) => {
       originalname: file.originalname,
       size: file.size,
     }));
-
-    // Log dos detalhes dos arquivos
-    console.log("Detalhes dos arquivos:", fileDetails);
 
     // Inicializa o objeto de dados do documento
     let docData = { 
@@ -253,6 +256,22 @@ app.post("/upload/audio", upload.any(), async (req, res) => {
       
     };
 
+
+// Processa os detalhes dos arquivos e retorna um array com os detalhes de cada ficheiro
+    fileDetails.forEach((file) => {
+      if (file.mimetype.startsWith("image/")) {
+        docData.image = file.path;
+      } else if (file.mimetype.startsWith("video/")) {
+        docData.video = file.path;
+      } else if (file.mimetype.startsWith("audio/")) {
+        docData.audio = file.path;
+      }
+    });
+
+    // Log dos detalhes dos arquivos
+    console.log("Detalhes dos arquivos:", fileDetails);
+
+
     // Adiciona as informações de caminho de arquivos ao docData
     /* fileDetails.forEach((file) => {
       if (file.mimetype.startsWith("image/")) {
@@ -262,7 +281,7 @@ app.post("/upload/audio", upload.any(), async (req, res) => {
        H265Compress(file.name,file.destination,file.mimetype);
 
       }
-    }); */
+    }); 
 
     for (const file of fileDetails) {
       if (file.mimetype.startsWith("image/")) {
@@ -271,7 +290,9 @@ app.post("/upload/audio", upload.any(), async (req, res) => {
         docData.audio = file.path;
         await H265Compress(file.name, file.destination, file.mimetype);
       }
-    }
+    }*/
+
+      
     // Log do docData antes de enviar ao Firebase
     console.log("Dados do documento a serem enviados ao Firebase:", docData);
 

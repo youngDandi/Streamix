@@ -14,7 +14,7 @@ function Login() {
 
     const handleLogin = async () => {
       try {
-        const response = await axios.post('http://localhost:3001/login', { email, password });
+        const response = await axios.post('http://192.168.1.9:3001/login', { email, password });
         const userData = response.data.user;
         alert(`Seja Bem-Vindo Sr.(a) ${userData.nome}`);
         
