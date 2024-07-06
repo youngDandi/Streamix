@@ -6,114 +6,70 @@ const path = require('path');
 
 ffmpeg.setFfmpegPath(ffmpegStatic);
 
-function H265Compress(filename,destination,type){
 
-/*
-if(type.startsWith("video/")){
-ffmpeg().
-input(destination.concat(filename)).
-videoCodec('libx265').
-saveToFile(`assets/temp/${filename}`).
-on('progress',(progress)=>{
-    if(progress.percent){
-        console.log(`Processamente em: ${Math.floor(progress.percent)}%`)
-    }
-}).on('end',()=>{
-    const tempPath = path.join('assets','temp',filename);
-    const destPath = path.join(destination,filename);
 
-    fs.rm(destPath, (error) => {
-        if (error) {
-          if (error.code === 'ENOENT') {
-            console.log('File not found for removal, which is expected if it does not exist:', error);
-          } else {
-            console.log('Erro ao apagar o ficheiro, mensagem:', error);
-          }
-        } else {
-         // console.log('File removed successfully.');
-        }
+function H265Compress(filename, destination, type) {
+  console.log(`Iniciando compressão: ${filename}`);
+  console.log(`Destino: ${destination}`);
+  console.log(`Tipo: ${type}`);
   
-        fs.rename(tempPath, destPath, (error) => {
-          if (error) {
-            console.log('Erro ao mover o ficheiro, mensagem:', error);
-          } else {
-           // console.log('File moved successfully.');
-           // console.log('Compressão terminada.');
-          }
-        });
-      });
+  return new Promise((resolve, reject) => {
+    const inputPath = path.join(destination, filename);
+    console.log(`Arquivo de entrada: ${inputPath}`);
+    
+    const process = ffmpeg().input(inputPath);
 
+    if (type.startsWith("video/")) {
+      console.log("Tipo de arquivo: vídeo");
+      process.videoCodec("libx265");
+    } else {
+      console.log("Tipo de arquivo: áudio");
+      process.audioCodec("libmp3lame");
+    }
 
-}).on('error',(error)=>{
-    console.log(error);
-})
-} else{
-    ffmpeg().
-    input(destination.concat(filename)).
-    audioCodec('libmp3lame').
-    saveToFile(`assets/temp/${filename}`).
-    on('progress',(progress)=>{
-        if(progress.percent){
-            console.log(`Processamente em: ${Math.floor(progress.percent)}%`)
+    const tempFilePath = `assets/temp/${filename}`;
+    console.log(`Arquivo temporário: ${tempFilePath}`);
+    
+    process.saveToFile(tempFilePath)
+      .on('progress', (progress) => {
+        if (progress.percent) {
+          console.log(`Processando: ${Math.floor(progress.percent)}%`);
         }
-    }).on('end',()=>{
-        const tempPath = path.join('assets','temp',filename);
-        const destPath = path.join(destination,filename);
-    
-        fs.rm(destPath, (error) => {
-            if (error) {
-              if (error.code === 'ENOENT') {
-                console.log('File not found for removal, which is expected if it does not exist:', error);
-              } else {
-                console.log('Erro ao apagar o ficheiro, mensagem:', error);
-              }
-            } else {
-             // console.log('File removed successfully.');
-            }
-      
-            fs.rename(tempPath, destPath, (error) => {
-              if (error) {
-                console.log('Erro ao mover o ficheiro, mensagem:', error);
-              } else {
-               // console.log('File moved successfully.');
-               // console.log('Compressão terminada.');
-              }
-            });
-          });
-    
-    
-    }).on('error',(error)=>{
-        console.log(error);
-    })    
+      })
+      .on('end', async () => {
+        console.log("Compressão concluída.");
+        try {
+          const tempPath = path.join('assets', 'temp', filename);
+          const destPath = path.join(destination, filename);
 
-}
-    */
+          console.log(`Caminho temporário: ${tempPath}`);
+          console.log(`Caminho destino: ${destPath}`);
 
-return new Promise((resolve,reject)=>{
-const process = ffmpeg().input(path.join(destination,filename));
+          // Remove o arquivo de destino se ele já existir
+          await fs.promises.rm(destPath, { force: true });
+          console.log(`Arquivo destino removido (se existia): ${destPath}`);
 
-if(type.startsWith("video/")){
-  process.videoCodec("libx265");
-} else {
-  process.audioCodec("libmp3lame");
+          // Move o arquivo comprimido do caminho temporário para o destino final
+          await fs.promises.rename(tempPath, destPath);
+          console.log(`Arquivo movido para o destino final: ${destPath}`);
+
+
+          
+
+          resolve();
+        } catch (error) {
+          console.error(`Erro durante operações de arquivo: ${error.message}`);
+          reject(`Error during file operations: ${error.message}`);
+        }
+      })
+      .on('error', (error) => {
+        console.error(`Erro do FFmpeg: ${error.message}`);
+        reject(`FFmpeg error: ${error.message}`);
+      });
+  });
 }
 
-process.saveToFile(`assets/temp/${filename}`).on('progress',(progress)=>{
-  if(progress.percent){
-    console.log(`Processando: ${Math.floor(progress.percent)}%`)}}).on('end', async()=>{
-      try {
-        const tempPath = path.join('assets','temp',filename);
-        const destPath = path.join(destination,filename);
 
-        await fs.promises.rm(destPath, {force:true});
-        await fs.promises.rename(tempPath,destPath);
-        resolve();
-      } catch(error){
-        reject(`Error during file operations: ${error.message}`)}}).on('error',(error)=>{
-          reject(`FFmpe error: ${error.message}`);
-        })
-});
 
-}
 
 module.exports= {H265Compress};

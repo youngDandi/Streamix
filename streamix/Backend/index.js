@@ -184,6 +184,10 @@ app.post("/upload/videos", upload.any(), async (req, res) => {
 
     // Log do docData antes de enviar ao Firebase
     console.log("Dados do documento a serem enviados ao Firebase:", docData);
+
+   
+
+
     // Condicional para salvar como vídeo ou áudio
     if (docData.video && docData.image) {
       const docRef = db.collection("video").doc();
@@ -275,6 +279,9 @@ app.post("/upload/audio", upload.any(), async (req, res) => {
     // Log do docData antes de enviar ao Firebase
     console.log("Dados do documento a serem enviados ao Firebase:", docData);
 
+    
+    
+    
     // Condicional para salvar como vídeo ou áudio
     if (docData.video && docData.image) {
       const docRef = db.collection("video").doc();
@@ -1288,4 +1295,3 @@ app.get("/radios", async (req, res) => {
 app.listen(port,'0.0.0.0',() => {
   console.log(`Listening on port ${port}`);
 });
-

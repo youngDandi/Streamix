@@ -64,7 +64,7 @@ useEffect(() => {
       try {
         console.log(`Iniciando fetch para userId: ${user.id}`);
         // Faz a solicitação ao endpoint usando o userId
-        const response = await axios.get(`http://localhost:3001/owner/groups/${user.id}`);
+        const response = await axios.get(`http://192.168.1.9:3001/owner/groups/${user.id}`);
         const gruposUsuario = response.data;
         
         // Log detalhado dos grupos retornados
@@ -101,7 +101,7 @@ useEffect(() => {
       try {
         console.log(`Iniciando fetch para userId: ${user.id}`);
         // Faz a solicitação ao endpoint usando o userId para buscar grupos onde o usuário é membro
-        const response = await axios.get(`http://localhost:3001/member/groups/${user.id}`);
+        const response = await axios.get(`http://192.168.1.9:3001/member/groups/${user.id}`);
         const gruposUsuario = response.data;
         
         // Log detalhado dos grupos retornados
@@ -146,7 +146,7 @@ useEffect(() => {
   }, []);
 
   const fetchVideos = () => {
-    axios.get(`http://localhost:3001/videos/${user.id}`)
+    axios.get(`http://192.168.1.9:3001/videos/${user.id}`)
       .then((response) => {
         console.log('Vídeos recebidos do servidor:', response.data.videosFiltrados);
         setVideos(response.data.videosFiltrados);
@@ -216,7 +216,7 @@ useEffect(() => {
     }
     
 
-    axios.post('http://localhost:3001/upload/videos', data, {
+    axios.post('http://192.168.1.9:3001/upload/videos', data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
