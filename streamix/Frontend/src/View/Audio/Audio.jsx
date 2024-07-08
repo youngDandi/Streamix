@@ -8,6 +8,7 @@ import artistPhoto from "../../assets/img/drake.jpg";
 import plusIcon from "../../assets/img/icons8-soma-30_1.png";
 import addVideo from "../../assets/img/addVideo.png";
 import addThumb from "../../assets/img/addThumb.png";
+import download from "../../assets/img/download.png";
 import pause from "../../assets/img/pause.png";
 import play from "../../assets/img/play.png";
 import Modal1 from "../../Components/Modal1/Modal1";
@@ -51,7 +52,7 @@ useEffect(() => {
   const [grupoUserMembro, setGrupoUserMembro] = useState(null);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editAudio, setEditAudio] = useState({ id: "", title: "", artist: "", genre: "", visibility:"", audioFile: null, imageFile: null});
-
+  
 
 
   const selectSong = (music, newIndex) => {
@@ -87,7 +88,7 @@ useEffect(() => {
       try {
         console.log(`Iniciando fetch para userId: ${user.id}`);
         // Faz a solicitação ao endpoint usando o userId
-        const response = await axios.get(`http://localhost:3001/owner/groups/${user.id}`);
+        const response = await axios.get(`http://192.168.1.9:3001/owner/groups/${user.id}`);
         const gruposUsuario = response.data;
         
         // Log detalhado dos grupos retornados
@@ -124,7 +125,7 @@ useEffect(() => {
       try {
         console.log(`Iniciando fetch para userId: ${user.id}`);
         // Faz a solicitação ao endpoint usando o userId para buscar grupos onde o usuário é membro
-        const response = await axios.get(`http://localhost:3001/member/groups/${user.id}`);
+        const response = await axios.get(`http://192.168.1.9:3001/member/groups/${user.id}`);
         const gruposUsuario = response.data;
         
         // Log detalhado dos grupos retornados
@@ -171,7 +172,7 @@ useEffect(() => {
 
     const fetchAudios = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/audio/${user.id}`);
+        const response = await axios.get(`http://192.168.1.9:3001/audio/${user.id}`);
         console.log("Musicas Retornadas do backend "+response.data.musicas);
         setAudios(response.data.musicas);
         
@@ -183,7 +184,7 @@ useEffect(() => {
     const fetchUsers = async () => {
       try {
         // Fazendo a requisição ao endpoint /users para buscar os dados dos usuários
-        const response = await axios.get("http://localhost:3001/users");
+        const response = await axios.get("http://192.168.1.9:3001/users");
         setUsers(response.data.users); // Salvando os dados dos usuários no estado
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -247,6 +248,43 @@ useEffect(() => {
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
+
+  const handleDownload = () => {
+    // Obter a referência ao elemento de áudio
+    const audioElement = audioRef.current;
+    if (!audioElement) return;
+
+    // Obter a URL do áudio atual
+    const currentSrc = audioElement.src;
+
+    // Criar um elemento de link temporário
+    const link = document.createElement("a");
+    link.href = currentSrc;
+    link.download = audios[index] ? `${audios[index].title}.mp3` : "audio.mp3";
+
+    // Adicionar o link ao DOM e simular um clique
+    document.body.appendChild(link);
+    link.click();
+
+    // Usar um setTimeout para aguardar um curto período antes de executar as ações
+    setTimeout(() => {
+        // Confirmar o início do download e prosseguir com as ações
+        // Remover o link temporário do DOM
+        document.body.removeChild(link);
+
+        // Remover o elemento de áudio do DOM para não ficar visível
+        audioElement.remove();
+
+        // Tornar o botão de download visível novamente
+        const downloadButton = document.getElementById("downloadIcon");
+        if (downloadButton) {
+            downloadButton.style.display = "block"; // Ou qualquer estilo usado para torná-lo visível
+        }
+
+        // Redirecionar o usuário para a página de áudio
+        window.location.href = "/Audios"; // Altere para a URL desejada
+    }, 500); // Tempo em milissegundos para aguardar (0.5 segundos neste caso)
+};
 
   
 
@@ -648,7 +686,7 @@ const handleDeleteGroup = async (groupId) => {
           </div>
         </div>
 
-        <audio ref={audioRef} id="song">
+        <audio  ref={audioRef} id="song">
           <source src={audioFile} type="audio/mp3" />
           Seu navegador não suporta o elemento de áudio.
         </audio>
@@ -697,6 +735,13 @@ const handleDeleteGroup = async (groupId) => {
             onChange={handleProgressChange}
           />
           <h9 id="range2">{formatTime(duration)}</h9>
+          <img
+            src={download}
+            id="downloadIcon"
+            alt="Download"
+            onClick={handleDownload}
+          />
+
         </div>
       </div>
 

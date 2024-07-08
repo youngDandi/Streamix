@@ -84,7 +84,7 @@ useEffect(() => {
       console.log("FormData preparado para envio:", formData);
   
       // Faz a requisição PUT usando axios
-      const response = await axios.put(`http://localhost:3001/update/video/${editVideo.id}`, formData, {
+      const response = await axios.put(`http://192.168.1.9:3001/update/video/${editVideo.id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -111,7 +111,7 @@ useEffect(() => {
       try {
         console.log(`Iniciando fetch para userId: ${user.id}`);
         // Faz a solicitação ao endpoint usando o userId
-        const response = await axios.get(`http://localhost:3001/owner/groups/${user.id}`);
+        const response = await axios.get(`http://192.168.1.9:3001/owner/groups/${user.id}`);
         const gruposUsuario = response.data;
         
         // Log detalhado dos grupos retornados
@@ -148,7 +148,7 @@ useEffect(() => {
       try {
         console.log(`Iniciando fetch para userId: ${user.id}`);
         // Faz a solicitação ao endpoint usando o userId para buscar grupos onde o usuário é membro
-        const response = await axios.get(`http://localhost:3001/member/groups/${user.id}`);
+        const response = await axios.get(`http://192.168.1.9:3001/member/groups/${user.id}`);
         const gruposUsuario = response.data;
         
         // Log detalhado dos grupos retornados
@@ -182,7 +182,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchVideo = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/videos/${id}`);
+        const response = await fetch(`http://192.168.1.9:3001/api/videos/${id}`);
         if (!response.ok) {
           throw new Error('Erro ao buscar vídeo');
         }
@@ -211,7 +211,7 @@ useEffect(() => {
       const videoId = video.id; // Use o ID do vídeo para deletar
       console.log("ID do vídeo a ser eliminado:", videoId);
 
-      const response = await axios.delete(`http://localhost:3001/delete/video/${videoId}`);
+      const response = await axios.delete(`http://192.168.1.9:3001/delete/video/${videoId}`);
 
       console.log(response.data.message);
 

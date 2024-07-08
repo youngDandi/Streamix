@@ -27,8 +27,8 @@ router.get('/videos/:id', async (req, res) => {
         title: videoData.title,
         description: videoData.description,
         genre: videoData.genre,
-        thumbnail: `http://localhost:3001/${videoData.image.replace(/\\/g, "/")}`, // Verifique o campo correto no seu documento Firestore
-        videoUrl: `http://localhost:3001/${videoData.video.replace(/\\/g, "/")}`, // Verifique o campo correto no seu documento Firestore
+        thumbnail: `http://192.168.1.9:3001/${videoData.image.replace(/\\/g, "/")}`, // Verifique o campo correto no seu documento Firestore
+        videoUrl: `http://192.168.1.9:3001/${videoData.video.replace(/\\/g, "/")}`, // Verifique o campo correto no seu documento Firestore
         visibility: videoData.visibility || 'public', // Verifique o campo correto no seu documento Firestore
       },
     });
@@ -58,8 +58,8 @@ router.get('/:id', async (req, res) => {
         title: videoData.title || '',
         description: videoData.description || '',
         genre: videoData.genre || [],
-        thumbnail: `http://localhost:3001/${videoData.image.replace(/\\/g, "/")}`, // Verifique o campo correto no seu documento Firestore
-        videoUrl: `http://localhost:3001/${videoData.video.replace(/\\/g, "/")}`, // Verifique o campo correto no seu documento Firestore
+        thumbnail: `http://192.168.1.9:3001/${videoData.image.replace(/\\/g, "/")}`, // Verifique o campo correto no seu documento Firestore
+        videoUrl: `http://192.168.1.9:3001/${videoData.video.replace(/\\/g, "/")}`, // Verifique o campo correto no seu documento Firestore
       };
       console.log("kfvfkkfvkfkf: "+response)
       return res.status(200).send(response);

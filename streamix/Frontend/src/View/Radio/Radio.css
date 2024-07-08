@@ -64,7 +64,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-right: 90px;
+  margin-right: 47px;
   cursor: pointer;
   border-radius: 5px;
 }
@@ -155,54 +155,16 @@
 }
 
 
-#nome1{
+#numero{
+  color: #8A8484;
+}
+
+#nome{
   color: white;
   align-items: center;
 }
 
-#frequencia1{
+#frequencia{
   color: #8A8484;
 }
 
-#numero1{
-  color: #8A8484;
-}
-
-#nome2{
-  color: white;
-  align-items: center;
-}
-
-#frequencia2{
-  color: #8A8484;
-}
-
-#numero2{
-  color: #8A8484;
-}
-
-#nome3{
-  color: white;
-  align-items: center;
-}
-
-#frequencia3{
-  color: #8A8484;
-}
-
-#numero3{
-  color: #8A8484;
-}
-
-#nome4{
-  color: white;
-  align-items: center;
-}
-
-#frequencia4{
-  color: #8A8484;
-}
-
-#numero4{
-  color: #8A8484;
-}

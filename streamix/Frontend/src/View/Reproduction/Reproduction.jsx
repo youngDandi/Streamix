@@ -21,7 +21,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchVideo = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/video/${id}`);
+        const response = await fetch(`http://192.168.1.9:3001/api/video/${id}`);
         if (!response.ok) {
           throw new Error('Erro ao buscar informações do vídeo');
         }
