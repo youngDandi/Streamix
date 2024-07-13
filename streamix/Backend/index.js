@@ -14,13 +14,20 @@ const app = express();
 const port =  3001;
 const videoRoutes = require('./routes/videoRoutes'); // Importa suas rotas de vídeo
 const {H265Compress} = require('./functions/compressionOperations.js');
+const axios= require("axios");
+
+// Configura a base URL para apontar para o backend
+const api = axios.create({
+  baseURL: 'http://192.168.1.9:3001' // Use o endereço IP local do seu servidor
+});
+
 app.use(cors({
   origin: '*', // ou especifique a URL do Ngrok
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization'
 }));
 
-app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(bodyParser.json());
 
 // Configuração das rotas
@@ -375,51 +382,73 @@ app.post("/owner/group", async (req, res) => {
 });
 
 app.get("/assets/:type/:id", async (req, res) => {
+ 
+  
   const fileType = req.params.type;
   const fileId = req.params.id;
   const filePath = path.join(__dirname, "assets", fileType, fileId);
+  
+ 
 
   if (fileType === "videos" && fs.existsSync(filePath)) {
-    const stat = await fs.promises.stat(filePath);
-    const fileSize = stat.size;
-    const range = req.headers.range;
-    const contentType = mime.lookup(filePath) || "application/octet-stream";
+    
 
-    if (range) {
-      const parts = range.replace(/bytes=/, "").split("-");
-      const start = parseInt(parts[0], 10);
-      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-      const chunksize = end - start + 1;
-      const file = fs.createReadStream(filePath, { start, end });
-      const head = {
-        "Content-Range": `bytes ${start}-${end}/${fileSize}`,
-        "Accept-Ranges": "bytes",
-        "Content-Length": chunksize,
-        "Content-Type": contentType,
-      };
-      res.writeHead(206, head);
-      file.pipe(res);
-      return;
+    try {
+      const stat = await fs.promises.stat(filePath);
+      const fileSize = stat.size;
+      const range = req.headers.range;
+      const contentType = mime.lookup(filePath) || "application/octet-stream";
+  
+  
+  
+      if (range) {
+        console.log(`Range header provided: ${range}`);
+        
+        const parts = range.replace(/bytes=/, "").split("-");
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+        const chunksize = end - start + 1;
 
-    } else {
-      const head = {
-        "Content-Length": fileSize,
-        "Content-Type": contentType,
-      };
-      res.writeHead(200, head);
-      fs.createReadStream(filePath).pipe(res);
-      return;
+       
+  
+        const file = fs.createReadStream(filePath, { start, end });
+        const head = {
+          "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+          "Accept-Ranges": "bytes",
+          "Content-Length": chunksize,
+          "Content-Type": contentType,
+        };
+
+      
+        res.writeHead(206, head);
+        file.pipe(res);
+
+      } else {
+        
+        
+        const head = {
+          "Content-Length": fileSize,
+          "Content-Type": contentType,
+        };
+
+        res.writeHead(200, head);
+        fs.createReadStream(filePath).pipe(res);
+      }
+    } catch (error) {
+      console.error("Error retrieving file stats:", error);
+      res.status(500).send("Server error");
     }
   } else {
+    console.log("File type is not 'videos' or file does not exist");
+    
     res.removeHeader('Connection');
     res.sendFile(filePath, (err) => {
       if (err) {
         console.error("Failed to send file:", err);
         res.status(err.status || 500).send("File not found");
-        return; 
-
+      } else {
+        console.log("File sent successfully");
       }
-
     });
   }
 });
@@ -697,8 +726,8 @@ app.get("/audio/:user", async (req, res) => {
       title: audio.title || null,
       genre: audio.genre || null,
       duration: audio.duration || (audio.metadata && audio.metadata.format && audio.metadata.format.duration) || null,
-      thumbnail: audio.image ? `http://localhost:3001/${audio.image}` : null,
-      audioUrl: audio.audio ? `http://localhost:3001/${audio.audio}` : null,
+      thumbnail: audio.image ? `http://192.168.1.9:3001/${audio.image}` : null,
+      audioUrl: audio.audio ? `http://192.168.1.9:3001/${audio.audio}` : null,
       visibility: audio.visibility,
     };
     musicas.push(song);
@@ -719,8 +748,8 @@ app.get("/audio/:user", async (req, res) => {
           title: audio.title || null,
           genre: audio.genre || null,
           duration: audio.duration || (audio.metadata && audio.metadata.format && audio.metadata.format.duration) || null,
-          thumbnail: audio.image ? `http://localhost:3001/${audio.image}` : null,
-          audioUrl: audio.audio ? `http://localhost:3001/${audio.audio}` : null,
+          thumbnail: audio.image ? `http://192.168.1.9:3001/${audio.image}` : null,
+          audioUrl: audio.audio ? `http://192.168.1.9:3001/${audio.audio}` : null,
           visibility: audio.visibility,
         };
         musicas.push(song);
@@ -737,8 +766,8 @@ app.get("/audio/:user", async (req, res) => {
             title: audio.title || null,
             genre: audio.genre || null,
             duration: audio.duration || (audio.metadata && audio.metadata.format && audio.metadata.format.duration) || null,
-            thumbnail: audio.image ? `http://localhost:3001/${audio.image}` : null,
-            audioUrl: audio.audio ? `http://localhost:3001/${audio.audio}` : null,
+            thumbnail: audio.image ? `http://192.168.1.9:3001/${audio.image}` : null,
+            audioUrl: audio.audio ? `http://192.168.1.9:3001/${audio.audio}` : null,
             visibility: audio.visibility,
           };
           musicas.push(song);
@@ -807,8 +836,8 @@ app.get("/videos/:user", async (req, res) => {
                 title: video.title || null,
                 description: video.description || null,
                 genre: video.genre ? video.genre : [],
-                thumbnail: video.image ? `http://localhost:3001/${video.image}` : null,
-                videoUrl: video.video ? `http://localhost:3001/${video.video}` : null,
+                thumbnail: video.image ? `http://192.168.1.9:3001/${video.image}` : null,
+                videoUrl: video.video ? `http://192.168.1.9:3001/${video.video}` : null,
                 visibility: video.visibility,
         };
 
@@ -828,8 +857,8 @@ app.get("/videos/:user", async (req, res) => {
                 title: video.title || null,
                 description: video.description || null,
                 genre: video.genre ? video.genre : [],
-                thumbnail: video.image ? `http://localhost:3001/${video.image}` : null,
-                videoUrl: video.video ? `http://localhost:3001/${video.video}` : null,
+                thumbnail: video.image ? `http://192.168.1.9:3001/${video.image}` : null,
+                videoUrl: video.video ? `http://192.168.1.9:3001/${video.video}` : null,
                 visibility: video.visibility,
             };
 
@@ -846,8 +875,8 @@ app.get("/videos/:user", async (req, res) => {
                 title: video.title || null,
                 description: video.description || null,
                 genre: video.genre ? video.genre : [],
-                thumbnail: video.image ? `http://localhost:3001/${video.image}` : null,
-                videoUrl: video.video ? `http://localhost:3001/${video.video}` : null,
+                thumbnail: video.image ? `http://192.168.1.9:3001/${video.image}` : null,
+                videoUrl: video.video ? `http://192.168.1.9:3001/${video.video}` : null,
                 visibility: video.visibility,
               };
 

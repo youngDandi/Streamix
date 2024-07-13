@@ -90,9 +90,9 @@ useEffect(() => {
           {Radios.map((radio, index) => (
             <React.Fragment key={radio.id}>
               <div className='RadioDiv' onClick={() => handleTogglePlay(radio)}>
-                <h2 id={`numero${index + 1}`}>{`0${index + 1}`}</h2>
-                <h3 id={`nome${index + 1}`}>{radio.nome}</h3>
-                <h4 id={`frequencia${index + 1}`}>{radio.frequencia}</h4>
+                <h2 id={`numero`}>{`0${index + 1}`}</h2>
+                <h3 id={`nome`}>{radio.nome}</h3>
+                <h4 id={`frequencia`}>{radio.frequencia}</h4>
                 {playingRadioId === radio.id && (
                   <>
                     <div className='live'>LIVE</div>

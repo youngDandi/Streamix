@@ -14,6 +14,8 @@
    margin-top: 2%;
   }
 
+  
+
   #btnDelete{
     background-color: rgb(134, 16, 16);
     width: 70px;
@@ -156,7 +158,12 @@
       
   }
 
-  
+  #downloadIcon{
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    margin-left: 2%;
+  }
 
   #daSemana{
    color: #8A8484;
